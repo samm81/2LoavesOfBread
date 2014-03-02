@@ -1,9 +1,16 @@
 package core;
 public class Transaction {
-
+	//These states act as a signal as to where each transaction is at in terms of processing.
+	//We may want to explore a Response Class for extra robustness
+	
+	public final int STATE_SUBMITTED = 0;
+	public final int STATE_PENDING = 1;
+	public final int STATE_ACCEPTED = 2;
+	public final int STATE_INVALID = 3;
+	
 	Commodity commodity1;
 	Commodity commodity2;
-
+	int state = STATE_SUBMITTED;
 	double volume1;
 	double volume2;
 
@@ -38,6 +45,9 @@ public class Transaction {
 
 	public double getTotalVolume() {
 		return volume1 + volume2;
+	}
+	public void setState(int newState){
+		this.state = newState;
 	}
 
 	public Transaction getReversedTransaction() {
