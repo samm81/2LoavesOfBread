@@ -1,3 +1,4 @@
+package core;
 public class Transaction {
 
 	Commodity commodity1;

@@ -1,3 +1,4 @@
+package core;
 public abstract class Simulation implements Runnable {
 
 	double dt;
@@ -29,7 +30,7 @@ public abstract class Simulation implements Runnable {
 	}
 
 	protected abstract void initialize();
-	
+
 	protected abstract void tick();
 
 }

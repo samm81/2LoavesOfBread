@@ -1,3 +1,4 @@
+package core;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
@@ -52,7 +53,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	public void paint(Graphics g) {
 		int width = this.getWidth();
 		int height = this.getHeight();
-		
+
 		if (buffer == null || bufferGraphics == null
 				|| width != bufferWidth
 				|| height != bufferHeight)

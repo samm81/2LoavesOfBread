@@ -1,3 +1,4 @@
+package core;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.util.HashSet;
@@ -8,14 +9,22 @@ import javax.swing.JFrame;
 
 public class MarketSimulation extends Simulation {
 
-	HashSet<Actor> actors;
-	LinkedList<Commodity> commodities;
-	final static String [] comNames = {"Fish","Bread","Watermelon","Pizza"};
+	protected HashSet<Actor> actors;
+	protected LinkedList<Commodity> commodities;
+
 	public static void main(String[] args) {
 		MarketSimulation sim = new MarketSimulation(1);
-		for(int i=0; i < comNames.length;i++){
-			sim.addCommodity(new Commodity(comNames[i]));
-		}
+
+		Fish fish = new Fish();
+		Bread bread = new Bread();
+		Watermelon watermelon = new Watermelon();
+		Pizza pizza = new Pizza();
+
+		sim.addCommodity(fish);
+		sim.addCommodity(bread);
+		sim.addCommodity(watermelon);
+		sim.addCommodity(pizza);
+
 		JFrame f = new JFrame("Two Loaves of Bread");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setResizable(false);
@@ -81,5 +90,13 @@ public class MarketSimulation extends Simulation {
 		commodities.get(commodity1).addTransaction(new Transaction(r.nextInt(9) + 1, commodities.get(commodity1), r.nextInt(9) + 1, commodities.get(commodity2)));
 
 	}
+
+	public static class Bread extends Commodity {}
+
+	public static class Fish extends Commodity {}
+
+	public static class Watermelon extends Commodity {}
+
+	public static class Pizza extends Commodity {}
 
 }
