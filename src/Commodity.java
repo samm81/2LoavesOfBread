@@ -4,18 +4,21 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Random;
 
-public abstract class Commodity {
+public  class Commodity {
 	
 	LinkedList<Transaction> transactions;
 	Hashtable<Class<?>, Graph> graphs;
-	
+	String name;
 	int graphSize = 30;
 	
-	public Commodity() {
+	public Commodity(String commodityName){
+		name = commodityName;
 		transactions = new LinkedList<Transaction>();
 		graphs = new Hashtable<Class<?>, Graph>();
 	}
-	
+	public String getName(){
+		return this.name;
+	}
 	public LinkedList<Transaction> getTransactions() {
 		return transactions;
 	}

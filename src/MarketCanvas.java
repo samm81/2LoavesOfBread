@@ -35,12 +35,12 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		g.fillRoundRect(x, y, width, height, 50, 50);
 		int offset = 3;
 		g.setColor(Color.WHITE);
-		// g.fillRoundRect(x + offset, y + offset, width - offset, height - offset, 50, 50); // cool effect
-		g.fillRoundRect(x + offset, y + offset, width - offset * 2, height - offset * 2, 50, 50);
+		 g.fillRoundRect(x + offset, y + offset, width - offset, height - offset, 50, 50); // cool effect
+		//g.fillRoundRect(x + offset, y + offset, width - offset * 2, height - offset * 2, 50, 50);
 		
 		int titlex = x + 30;
 		int titley = y + 30;
-		String name = commodity.getClass().getSimpleName();
+		String name = commodity.getName();
 		g.setFont(new Font("Sans Serif", Font.BOLD, 22));
 		g.setColor(Color.BLACK);
 		g.drawString(name, titlex, titley);
