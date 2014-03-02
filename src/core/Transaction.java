@@ -1,28 +1,32 @@
 package core;
+import java.util.UUID;
 public class Transaction {
 	//These states act as a signal as to where each transaction is at in terms of processing.
 	//We may want to explore a Response Class for extra robustness
-	
-	public final int STATE_SUBMITTED = 0;
-	public final int STATE_PENDING = 1;
-	public final int STATE_ACCEPTED = 2;
-	public final int STATE_INVALID = 3;
-	
-	Commodity commodity1;
-	Commodity commodity2;
-	int state = STATE_SUBMITTED;
-	double volume1;
-	double volume2;
 
-	public Transaction(double volume1, Commodity commodity1, double volume2,
-			Commodity commodity2) {
+	public static final int STATE_SUBMITTED = 0;
+	public static final int STATE_PENDING = 1;
+	public static final int STATE_ACCEPTED = 2;
+	public static final int STATE_INVALID = 3;
+	public static final int STATE_OFFER = 4;
+	public final UUID id;
+	public Commodity commodity1;
+	public Commodity commodity2;
+	protected int state ;
+	public double volume1;
+	public double volume2;
+
+	public Transaction(double volume1, Commodity commodity1, double volume2,Commodity commodity2) {
+		this.id = UUID.randomUUID();
 		this.commodity1 = commodity1;
 		this.commodity2 = commodity2;
-
 		this.volume1 = volume1;
 		this.volume2 = volume2;
+		this.state = STATE_OFFER;
 	}
-
+	public UUID getID (){
+		return this.id;
+	}
 	public Commodity getCommodity1() {
 		return commodity1;
 	}

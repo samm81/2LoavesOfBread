@@ -32,7 +32,7 @@ public class Runner {
 		f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, 900, 700);
 
 		DoubleBufferedCanvas canvas = new MarketCanvas(40, sim);
-		canvas.setBackground(Color.WHITE);
+		canvas.setBackground(Color.DARK_GRAY);
 		f.add(canvas);
 		f.setVisible(true);
 

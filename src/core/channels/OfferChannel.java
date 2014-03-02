@@ -6,17 +6,15 @@ import core.*;
 //TODO: Have this extend a generic Channel class
 /**
  * @author Brian Oluwo
- * Offer Channel class
- * ########################
  * {@link #OfferChannel(BlockingQueue, HashSet)} -
  * {@link #run()}-Run
- *  
+ *  This is the channel that directs offers to the appropriate actors queue
  */
 public class OfferChannel implements Runnable{
 
-    protected BlockingQueue<Offer> offers = null;
+    protected BlockingQueue<Transaction> offers = null;
     protected HashSet<Actor> actors;
-    public OfferChannel(BlockingQueue<Offer> queue,HashSet<Actor> set) {
+    public OfferChannel(BlockingQueue<Transaction> queue,HashSet<Actor> set) {
         this.offers = queue;
         this.actors = set;
     }
