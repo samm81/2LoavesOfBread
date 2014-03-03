@@ -2,32 +2,42 @@ package core;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import core.commodities.Commodity;
 
 public class MarketSimulation extends Simulation {
 
 	protected HashSet<Actor> actors;
 	protected LinkedList<Commodity> commodities;
-
-	public HashSet<Actor> getActors() {
-		return actors;
-	}
-
-	public LinkedList<Commodity> getCommodities() {
-		return commodities;
-	}
-
+	protected LinkedBlockingQueue<Transaction> globalTrans;
 	public MarketSimulation(double dt) {
 		super(dt);
 		actors = new HashSet<Actor>();
 		commodities = new LinkedList<Commodity>();
+		globalTrans = new LinkedBlockingQueue<Transaction>();
+	}
+	
+	public LinkedBlockingQueue<Transaction> getTrans() {
+		// TODO Auto-generated method stub
+		return this.getTrans();
+	}
+	public HashSet<Actor> getActors() {
+		return this.actors;
 	}
 
+	public LinkedList<Commodity> getCommodities() {
+		return this.commodities;
+	}
+
+
+
 	public void addActor(Actor actor) {
-		actors.add(actor);
+		this.actors.add(actor);
 	}
 
 	public void addCommodity(Commodity commodity) {
-		commodities.add(commodity);
+		this.commodities.add(commodity);
 	}
 
 	@Override
@@ -56,12 +66,7 @@ public class MarketSimulation extends Simulation {
 
 	}
 
-	public static class Bread extends Commodity {}
 
-	public static class Fish extends Commodity {}
-
-	public static class Watermelon extends Commodity {}
-
-	public static class Pizza extends Commodity {}
+	
 
 }

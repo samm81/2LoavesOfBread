@@ -2,16 +2,23 @@ package core;
 
 import java.awt.Color;
 import java.awt.Toolkit;
+
 import javax.swing.JFrame;
-import core.MarketSimulation.Bread;
-import core.MarketSimulation.Fish;
-import core.MarketSimulation.Pizza;
-import core.MarketSimulation.Watermelon;
+
+import core.commodities.Bread;
+import core.commodities.Fish;
+import core.commodities.Pizza;
+import core.commodities.Watermelon;
+
+//import core.channels.TransactionChannel;
 
 public class Runner {
 	public static void main(String[] args) {
 		MarketSimulation sim = new MarketSimulation(1);
 
+		//		TransactionChannel trans = new TransactionChannel(sim.getTrans());
+		//		Thread transactions = new Thread(trans);
+		//		
 		Fish fish = new Fish();
 		Bread bread = new Bread();
 		Watermelon watermelon = new Watermelon();
@@ -38,5 +45,6 @@ public class Runner {
 
 		canvas.start();
 		sim.start();
+		//		transactions.start();
 	}
 }

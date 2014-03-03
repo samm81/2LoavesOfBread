@@ -1,9 +1,11 @@
-package core;
+package core.commodities;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Random;
+
+import core.Transaction;
 
 public abstract class Commodity {
 	

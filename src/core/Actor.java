@@ -1,6 +1,4 @@
 package core;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 //TODO: On a setInterval, check the states of transactions so they can update their respective tracks.
 
@@ -10,11 +8,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Actor {
 	public final String name;
 	protected LinkedBlockingQueue<Transaction> transactions;
-	protected ArrayBlockingQueue<Transaction> globalTrans;//This gets synced with the global transactions
+	protected LinkedBlockingQueue<Transaction> globalTrans;//This gets synced with the global transactions
 	protected LinkedBlockingQueue<Transaction> offers;
-	public Actor(String sentName, BlockingQueue <Transaction> queue){
+	public Actor(String sentName, LinkedBlockingQueue <Transaction> queue){
 		name = sentName;
-		globalTrans = (ArrayBlockingQueue<Transaction>) queue;
+		globalTrans = queue;
 	}
 
 	public String getName(){

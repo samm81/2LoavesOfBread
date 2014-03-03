@@ -1,5 +1,7 @@
 package core;
 import java.util.UUID;
+
+import core.commodities.Commodity;
 public class Transaction {
 	//These states act as a signal as to where each transaction is at in terms of processing.
 	//We may want to explore a Response Class for extra robustness

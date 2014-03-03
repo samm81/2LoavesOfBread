@@ -4,6 +4,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import core.commodities.Commodity;
+
 @SuppressWarnings("serial")
 public class MarketCanvas extends DoubleBufferedCanvas {
 

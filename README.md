@@ -1,7 +1,7 @@
 2LoavesOfBread
 ==============
 
-hashtag 2loaves
+hashtag 2Loaves
 
 A bartering day-trading simulation game
 
