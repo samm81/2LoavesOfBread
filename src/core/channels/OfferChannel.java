@@ -1,7 +1,9 @@
 package core.channels;
 
 import java.util.HashSet;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+
 import core.*;
 //TODO: Have this extend a generic Channel class
 /**
@@ -12,13 +14,11 @@ import core.*;
  */
 public class OfferChannel implements Runnable{
 
-    protected BlockingQueue<Transaction> offers = null;
-    protected HashSet<Actor> actors;
-    public OfferChannel(BlockingQueue<Transaction> queue,HashSet<Actor> set) {
-        this.offers = queue;
-        this.actors = set;
+    protected ArrayBlockingQueue<Transaction> offers;
+    public OfferChannel(BlockingQueue<Transaction> queue) {
+        this.offers = (ArrayBlockingQueue<Transaction>) queue;
     }
-
+//Adds to records of both actors, then take it off queue
     public void run() {
         try {
         	offers.notify();

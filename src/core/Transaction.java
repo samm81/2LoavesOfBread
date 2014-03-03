@@ -9,6 +9,7 @@ public class Transaction {
 	public static final int STATE_ACCEPTED = 2;
 	public static final int STATE_INVALID = 3;
 	public static final int STATE_OFFER = 4;
+	public static final int STATE_DECLINE = 5;
 	public final UUID id;
 	public Commodity commodity1;
 	public Commodity commodity2;
@@ -26,6 +27,9 @@ public class Transaction {
 	}
 	public UUID getID (){
 		return this.id;
+	}
+	public int getState(){
+		return this.state;
 	}
 	public Commodity getCommodity1() {
 		return commodity1;
@@ -56,5 +60,11 @@ public class Transaction {
 
 	public Transaction getReversedTransaction() {
 		return new Transaction(volume2, commodity2, volume1, commodity1);
+	}
+	public boolean equals(Transaction e){
+		if(this.getID() == e.getID())	
+			return true;
+		return false;
+
 	}
 }
