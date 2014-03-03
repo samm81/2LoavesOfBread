@@ -1,3 +1,4 @@
+package core;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Hashtable;
