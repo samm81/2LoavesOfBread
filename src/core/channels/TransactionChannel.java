@@ -76,6 +76,7 @@ public class TransactionChannel implements Runnable{
 			 */
 			System.out.println(t.toString());
 			t.setState(Transaction.STATE_ACCEPTED);
+			//TODO: Set transactionProcessed boolean to true for each actor.
 		}
 		a.clear();
 	}

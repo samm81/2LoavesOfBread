@@ -10,6 +10,7 @@ public class Actor {
 	protected LinkedBlockingQueue<Transaction> transactions;
 	protected LinkedBlockingQueue<Transaction> globalTrans;//This gets synced with the global transactions
 	protected LinkedBlockingQueue<Transaction> offers;
+	protected volatile boolean transactionProcessed = false;
 	public Actor(String sentName, LinkedBlockingQueue <Transaction> queue){
 		name = sentName;
 		globalTrans = queue;
@@ -21,6 +22,27 @@ public class Actor {
 
 	public void reevaluateWeights() {
 		// TODO Auto-generated method stub
+		//Do evaluation stuff here then
+		//Check if any of your transactions have been processed
+		if(this.transactionProcessed){
+			for(Transaction t : this.offers){
+				switch(t.getState()){
+				case Transaction.STATE_ACCEPTED:
+					System.out.println("Transaction" + t.getID() +" has been accepted.");
+					break;
+				case Transaction.STATE_DECLINE:
+					System.out.println("Transaction" + t.getID() +" has been declined by recieving actor.");
+					removeFromOffers(t);
+					break;
+				case Transaction.STATE_INVALID:
+					System.out.println("Transaction" + t.getID() +" is unacceptable.");
+					removeFromOffers(t);
+					break;
+				default:break;
+				}
+			}
+			this.transactionProcessed = false;
+		}
 
 	}
 
@@ -37,16 +59,12 @@ public class Actor {
 	//Actors as well update the global market that a trade happened at a new price.
 	public void acceptOffer(Transaction accept){
 		try{
-			globalTrans.add(accept);
+			globalTrans.put(accept);
 			accept.setState(Transaction.STATE_SUBMITTED);
-		}finally{
-			if(accept.getState() == Transaction.STATE_ACCEPTED){
-				//Do your accept actions
-			}else if (accept.getState() == Transaction.STATE_INVALID){
-				//Tell Actors that their transaction didn't go through for various reasons
-			}
-			
-		}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{}
 	}
 	//If the Actor declines, we set the state to declined and remove it from their list of offers
 	//but leave it in their transaction history

@@ -48,21 +48,21 @@ public class MarketSimulation extends Simulation {
 
 	@Override
 	protected void tick() {
-		for(Actor actor : actors) {
+		for(Actor actor : this.actors) {
 			actor.reevaluateWeights();
 		}
 
-		for(Actor actor : actors) {
+		for(Actor actor : this.actors) {
 			actor.evaluateMarket();
 		}
 
 		Random r = new Random();
-		int commodity1 = r.nextInt(commodities.size());
+		int commodity1 = r.nextInt(this.commodities.size());
 		int commodity2 = 0;
 		do {
-			commodity2 = r.nextInt(commodities.size());
+			commodity2 = r.nextInt(this.commodities.size());
 		} while(commodity2 == commodity1);
-		commodities.get(commodity1).addTransaction(new Transaction(r.nextInt(9) + 1, commodities.get(commodity1), r.nextInt(9) + 1, commodities.get(commodity2)));
+		this.commodities.get(commodity1).addTransaction(new Transaction(r.nextInt(9) + 1, this.commodities.get(commodity1), r.nextInt(9) + 1, commodities.get(commodity2)));
 
 	}
 
