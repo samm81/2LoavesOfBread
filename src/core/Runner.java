@@ -16,9 +16,9 @@ public class Runner {
 	public static void main(String[] args) {
 		MarketSimulation sim = new MarketSimulation(0.1);
 
-		//		TransactionChannel trans = new TransactionChannel(sim.getTrans());
-		//		Thread transactions = new Thread(trans);
-		//		
+		//TransactionChannel trans = new TransactionChannel(sim.getTrans());
+		//Thread transactions = new Thread(trans);
+
 		Fish fish = new Fish();
 		Bread bread = new Bread();
 		Watermelon watermelon = new Watermelon();
@@ -46,6 +46,6 @@ public class Runner {
 
 		canvas.start();
 		sim.start();
-		//		transactions.start();
+		//transactions.start();
 	}
 }

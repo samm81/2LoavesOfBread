@@ -59,7 +59,6 @@ public class Ticker {
 		double datax = x;
 		double datay = y;
 		
-		System.out.println(datum.size());
 		for(double data : datum) {
 			if(data != 0) {
 				datay = y + height - ((double) height * ((double) data / maxData));
