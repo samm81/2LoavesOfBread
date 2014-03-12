@@ -19,10 +19,10 @@ public class Runner {
 		//TransactionChannel trans = new TransactionChannel(sim.getTrans());
 		//Thread transactions = new Thread(trans);
 
-		Fish fish = new Fish();
-		Bread bread = new Bread();
-		Watermelon watermelon = new Watermelon();
-		Pizza pizza = new Pizza();
+		Fish fish = new Fish(Color.BLUE);
+		Bread bread = new Bread(Color.YELLOW.darker());
+		Watermelon watermelon = new Watermelon(Color.GREEN);
+		Pizza pizza = new Pizza(Color.RED);
 
 		sim.addCommodity(fish);
 		sim.addCommodity(bread);

@@ -3,29 +3,32 @@ import java.awt.Color;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.Random;
 
 import core.Transaction;
 
 public abstract class Commodity {
 	
 	LinkedList<Transaction> transactions;
-	Hashtable<Class<?>, Ticker> tickers;
-	Hashtable<Class<?>, Double> mostRecentRatios;
+	Hashtable<Class<? extends Commodity>, Ticker> tickers;
+	Hashtable<Class<? extends Commodity>, Double> mostRecentRatios;
 	
 	int tickerMagnitude = 100;
 	
-	public Commodity() {
+	Color color;
+	
+	public Commodity(Color color) {
 		transactions = new LinkedList<Transaction>();
-		tickers = new Hashtable<Class<?>, Ticker>();
-		mostRecentRatios = new Hashtable<Class<?>, Double>();
+		tickers = new Hashtable<Class<? extends Commodity>, Ticker>();
+		mostRecentRatios = new Hashtable<Class<? extends Commodity>, Double>();
+		
+		this.color = color;
 	}
 	
 	public LinkedList<Transaction> getTransactions() {
 		return transactions;
 	}
 	
-	public Hashtable<Class<?>, Ticker> getTickers() {
+	public Hashtable<Class<? extends Commodity>, Ticker> getTickers() {
 		return tickers;
 	}
 	
@@ -34,20 +37,20 @@ public abstract class Commodity {
 	}
 	
 	
-	public Hashtable<Class<?>, Double> getMostRecentRatios() {
+	public Hashtable<Class<? extends Commodity>, Double> getMostRecentRatios() {
 		return this.mostRecentRatios;
 	}
 	
 	public void createTickersFromCommodities(LinkedList<Commodity> commodities){
 		for(Commodity commodity : commodities){
-			tickers.put(commodity.getClass(), new Ticker(tickerMagnitude, randomColor()));
+			tickers.put(commodity.getClass(), new Ticker(tickerMagnitude, commodity.getColor()));
 			mostRecentRatios.put(commodity.getClass(), 0d);
 		}
 	}
 	
-	private Color randomColor() {
-		Random r = new Random();
-		return new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
+	
+	public Color getColor() {
+		return this.color;
 	}
 	
 	public void addTransaction(Transaction transaction) {

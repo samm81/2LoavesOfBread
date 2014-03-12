@@ -1,3 +1,10 @@
 package core.commodities;
 
-public class Fish extends Commodity {}
+import java.awt.Color;
+
+public class Fish extends Commodity {
+
+	public Fish(Color color) {
+		super(color);
+	}
+}

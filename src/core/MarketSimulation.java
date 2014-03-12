@@ -75,11 +75,11 @@ public class MarketSimulation extends Simulation {
 		this.commodities.get(commodity1).addTransaction(new Transaction(r.nextInt(9) + 1, this.commodities.get(commodity1), r.nextInt(9) + 1, commodities.get(commodity2)));
 		
 		for(Commodity commodity : commodities){ // go through all the commodities
-			Hashtable<Class<?>, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
+			Hashtable<Class<? extends Commodity>, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
 
-			for(Entry<Class<?>, Ticker> entry : tickers.entrySet()){ // find the most recent transaction value for each ticker commodity, and update the ticker
+			for(Entry<Class<? extends Commodity>, Ticker> entry : tickers.entrySet()){ // find the most recent transaction value for each ticker commodity, and update the ticker
 				Ticker ticker = entry.getValue();
-				Class<?> tickerClass = entry.getKey();
+				Class<? extends Commodity> tickerClass = entry.getKey();
 				double dataPoint = commodity.getMostRecentRatios().get(tickerClass);
 				try {
 					ticker.addDataPoint(dataPoint);
