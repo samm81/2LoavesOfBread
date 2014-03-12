@@ -23,17 +23,17 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		Graphics2D g = (Graphics2D) graphics;
 		g.setColor(Color.BLACK);
 
-		drawKey(10, 10, this.getWidth() - 20, 40, g);
-		
 		int i = 0;
 		for(Commodity commodity : sim.getCommodities()) {
-			int x = 10 + (this.getWidth() / 2 * (i % 2));
-			int y = 60 + 210 * (i / 2);
+			int x = 15 + ((this.getWidth() / 2 - 15) * (i % 2));
+			int y = 60 + 205 * (i / 2);
 			int width = this.getWidth() / 2 - 20;
 			int height = 200;
 			drawGraph(x, y, width, height, commodity, g);
 			i++;
 		}
+		
+		drawKey(15, 10, this.getWidth() - 35, 40, g);
 
 	}
 
@@ -56,7 +56,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			g.setColor(color);
 			g.fillOval(labelX, labelY, 10, 10);
 			String name = commodity.getClass().getSimpleName();
-			g.drawString(name, labelX + 15, labelY + 11);// + metrics.getAscent());
+			g.drawString(name, labelX + 15, labelY + 11);
 			
 			labelX += metrics.stringWidth(name) + 27;
 		}
@@ -75,7 +75,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 
 		int tickerx = x + 30;
 		int tickery = y + 50;
-		int tickerWidth = width - 50;
+		int tickerWidth = width - 65;
 		int tickerHeight = height - 70;
 
 		g.setColor(new Color(.1f, .1f, .1f));

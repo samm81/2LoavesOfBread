@@ -60,8 +60,8 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 			resetBuffer();
 
 		bufferGraphics.clearRect(0, 0, bufferWidth, bufferHeight);
-		fpsCounter.paintSelf(bufferGraphics, width - 40, 30);
 		draw(bufferGraphics);
+		fpsCounter.paintSelf(bufferGraphics, width - 40, 30);
 		g.drawImage(buffer, 0, 0, null);
 	}
 
