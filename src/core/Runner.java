@@ -14,7 +14,7 @@ import core.commodities.Watermelon;
 
 public class Runner {
 	public static void main(String[] args) {
-		MarketSimulation sim = new MarketSimulation(1);
+		MarketSimulation sim = new MarketSimulation(0.1);
 
 		//		TransactionChannel trans = new TransactionChannel(sim.getTrans());
 		//		Thread transactions = new Thread(trans);
@@ -28,7 +28,8 @@ public class Runner {
 		sim.addCommodity(bread);
 		sim.addCommodity(watermelon);
 		sim.addCommodity(pizza);
-
+		sim.createTickers();
+		
 		JFrame f = new JFrame("Two Loaves of Bread");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setResizable(false);
@@ -38,7 +39,7 @@ public class Runner {
 		int height = 700;
 		f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, 900, 700);
 
-		DoubleBufferedCanvas canvas = new MarketCanvas(40, sim);
+		DoubleBufferedCanvas canvas = new MarketCanvas(60, sim);
 		canvas.setBackground(Color.DARK_GRAY);
 		f.add(canvas);
 		f.setVisible(true);

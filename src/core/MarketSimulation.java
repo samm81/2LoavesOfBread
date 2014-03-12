@@ -1,11 +1,14 @@
 package core;
 
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import core.commodities.Commodity;
+import core.commodities.Ticker;
 
 public class MarketSimulation extends Simulation {
 	
@@ -20,9 +23,8 @@ public class MarketSimulation extends Simulation {
 		transactions = new LinkedBlockingQueue<Transaction>();
 	}
 	
-	public LinkedBlockingQueue<Transaction> getTrans() {
-		// TODO Auto-generated method stub
-		return this.getTrans();
+	public LinkedBlockingQueue<Transaction> getTransactions() {
+		return transactions;
 	}
 	
 	public HashSet<Actor> getActors() {
@@ -39,6 +41,13 @@ public class MarketSimulation extends Simulation {
 	
 	public void addCommodity(Commodity commodity) {
 		this.commodities.add(commodity);
+	}
+	
+	
+	public void createTickers() {
+		for(Commodity commodity : commodities){
+			commodity.createTickersFromCommodities(commodities);
+		}
 	}
 	
 	@Override
@@ -65,6 +74,20 @@ public class MarketSimulation extends Simulation {
 		} while(commodity2 == commodity1);
 		this.commodities.get(commodity1).addTransaction(new Transaction(r.nextInt(9) + 1, this.commodities.get(commodity1), r.nextInt(9) + 1, commodities.get(commodity2)));
 		
+		for(Commodity commodity : commodities){ // go through all the commodities
+			Hashtable<Class<?>, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
+
+			for(Entry<Class<?>, Ticker> entry : tickers.entrySet()){ // find the most recent transaction value for each ticker commodity, and update the ticker
+				Ticker ticker = entry.getValue();
+				Class<?> tickerClass = entry.getKey();
+				double dataPoint = commodity.getMostRecentRatios().get(tickerClass);
+				try {
+					ticker.addDataPoint(dataPoint);
+				} catch(InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 }

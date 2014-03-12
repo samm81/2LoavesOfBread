@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import core.commodities.Commodity;
+import core.commodities.Ticker;
 
 @SuppressWarnings("serial")
 public class MarketCanvas extends DoubleBufferedCanvas {
@@ -48,30 +49,29 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		g.setColor(Color.BLACK);
 		g.drawString(name, titlex, titley);
 
-		int graphx = x + 30;
-		int graphy = y + 50;
-		int graphWidth = width - 50;
-		int graphHeight = height - 70;
+		int tickerx = x + 30;
+		int tickery = y + 50;
+		int tickerWidth = width - 50;
+		int tickerHeight = height - 70;
 
 		g.setColor(new Color(.1f, .1f, .1f));
-		double dy = graphHeight / 7d;
+		double dy = tickerHeight / 7d;
 		for(int i = 0; i <= 7; i++) {
-			int x1 = graphx;
-			int y1 = graphy + (int) (i * dy);
-			int x2 = graphx + graphWidth;
+			int x1 = tickerx;
+			int y1 = tickery + (int) (i * dy);
+			int x2 = tickerx + tickerWidth;
 			int y2 = y1;
 			g.drawLine(x1, y1, x2, y2);
 		}
 
-		for(Commodity.Graph graph : commodity.getGraphs().values()) {
-			graph.drawSelf(graphx, graphy, graphWidth, graphHeight, g);
+		for(Ticker ticker : commodity.getTickerCollection()) {
+			ticker.drawSelf(tickerx, tickery, tickerWidth, tickerHeight, g);
 		}
 	}
 
 	@Override
 	protected void updateVars() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }

@@ -1,5 +1,4 @@
 package core.commodities;
 
-public class Watermelon extends Commodity {
 
-}
+public class Watermelon extends Commodity {}

@@ -1,5 +1,4 @@
 package core.commodities;
 
-public class Pizza extends Commodity {
 
-}
+public class Pizza extends Commodity {}

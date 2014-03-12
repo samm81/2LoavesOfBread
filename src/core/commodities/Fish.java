@@ -1,5 +1,3 @@
 package core.commodities;
 
-public class Fish extends Commodity {
-
-}
+public class Fish extends Commodity {}
