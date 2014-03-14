@@ -1,9 +1,12 @@
-package core;
+package core.GUI;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
 
 /**
  * 
@@ -24,7 +27,11 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	protected int bufferHeight;
 	protected Graphics bufferGraphics;
 
+	protected HashMap<Integer, Boolean> keys = new HashMap<Integer, Boolean>();
+
 	private FPSCounter fpsCounter;
+
+	private boolean initialized = false;
 
 	/**
 	 * constructor.
@@ -41,7 +48,27 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 
 		fpsCounter = new FPSCounter();
 
+		addKeyListener(new KeyAdapter(){
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				keys.put(key, true);
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				keys.put(key, false);
+			}
+
+		});
+
 		thread = new Thread(this);
+	}
+
+	public boolean keyDown(int keyEvent) {
+		return keys.get(keyEvent) != null && keys.get(keyEvent) == true;
 	}
 
 	@Override
@@ -49,8 +76,18 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 		paint(g);
 	}
 
+	/**
+	 * allows variables to be initialized
+	 */
+	abstract void init();
+
 	@Override
 	public void paint(Graphics g) {
+		if(!initialized){
+			init();
+			initialized = true;
+		}
+
 		int width = this.getWidth();
 		int height = this.getHeight();
 
@@ -96,13 +133,15 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	@Override
 	public void run() {
 		while (Thread.currentThread() == thread) {
-			updateVars();
-			repaint();
-			if (pauseTime > 0) {
-				try {
-					Thread.sleep(pauseTime);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			if(initialized){
+				updateVars();
+				repaint();
+				if (pauseTime > 0) {
+					try {
+						Thread.sleep(pauseTime);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -124,13 +163,15 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 
 		long lastTime;
 
-		int frames = 0;
 		int f = 0;
-
-		float updatesPerSecond = 12f;
+		
+		long lastUpdate;
+		float updatesPerSecond = 8f;
+		float updateTime = 1000f / updatesPerSecond;
 
 		public FPSCounter() {
 			lastTime = System.currentTimeMillis();
+			lastUpdate = lastTime;
 		}
 
 		public void paintSelf(Graphics g, int x, int y) {
@@ -144,15 +185,14 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 		private void tick() {
 			long time = System.currentTimeMillis();
 
-			frames++;
-			long diff = time - lastTime;
-
-			if (diff > 1000f / updatesPerSecond) {
-				f = (int) (frames * updatesPerSecond);
-
-				lastTime = time;
-				frames = 0;
+			long diff = time - lastUpdate;
+			if(diff > updateTime){
+				diff = time - lastTime;
+				f = (int) (1000f / diff);
+				lastUpdate = time;
 			}
+
+			lastTime = time;
 		}
 
 	}

@@ -3,9 +3,9 @@ package core.commodities;
 import java.awt.Color;
 
 
-public class Pizza extends Commodity {
+public class Oxen extends Commodity {
 
-	public Pizza(Color color) {
+	public Oxen(Color color) {
 		super(color);
 	}
 }

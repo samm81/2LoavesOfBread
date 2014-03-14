@@ -1,4 +1,5 @@
 package core.commodities;
+
 import java.awt.Color;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -11,8 +12,6 @@ public abstract class Commodity {
 	LinkedList<Transaction> transactions;
 	Hashtable<Class<? extends Commodity>, Ticker> tickers;
 	Hashtable<Class<? extends Commodity>, Double> mostRecentRatios;
-	
-	int tickerMagnitude = 100;
 	
 	Color color;
 	
@@ -36,18 +35,18 @@ public abstract class Commodity {
 		return tickers.values();
 	}
 	
-	
 	public Hashtable<Class<? extends Commodity>, Double> getMostRecentRatios() {
 		return this.mostRecentRatios;
 	}
 	
-	public void createTickersFromCommodities(LinkedList<Commodity> commodities){
-		for(Commodity commodity : commodities){
-			tickers.put(commodity.getClass(), new Ticker(tickerMagnitude, commodity.getColor()));
-			mostRecentRatios.put(commodity.getClass(), 0d);
+	public void createTickersFromCommodities(LinkedList<Commodity> commodities, int tickerMagnitude) {
+		for(Commodity commodity : commodities) {
+			if(!commodity.getClass().equals(this.getClass())) {
+				tickers.put(commodity.getClass(), new Ticker(tickerMagnitude, commodity.getColor()));
+				mostRecentRatios.put(commodity.getClass(), 0d);
+			}
 		}
 	}
-	
 	
 	public Color getColor() {
 		return this.color;
@@ -61,13 +60,13 @@ public abstract class Commodity {
 		
 		Commodity tradeCommodity = transaction.getCommodity2();
 		/*
-		if(tickers.containsKey(tradeCommodity.getClass())) {
-			tickers.get(tradeCommodity.getClass()).addDataPoint(transaction.getRatio());
-		} else {
-			tickers.put(tradeCommodity.getClass(), new Ticker(tickerMagnitude, randomColor()));
-			tickers.get(tradeCommodity.getClass()).addDataPoint(transaction.getRatio());
-		}
-		*/
+		 * if(tickers.containsKey(tradeCommodity.getClass())) {
+		 * tickers.get(tradeCommodity.getClass()).addDataPoint(transaction.getRatio());
+		 * } else {
+		 * tickers.put(tradeCommodity.getClass(), new Ticker(tickerMagnitude, randomColor()));
+		 * tickers.get(tradeCommodity.getClass()).addDataPoint(transaction.getRatio());
+		 * }
+		 */
 		mostRecentRatios.put(tradeCommodity.getClass(), transaction.getRatio());
 		
 	}
