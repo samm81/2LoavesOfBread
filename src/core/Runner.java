@@ -11,18 +11,24 @@ import core.commodities.Fish;
 import core.commodities.Oxen;
 import core.commodities.Watermelon;
 
-// import core.channels.TransactionChannel;
-
+/**
+ * The runner for the game.  Gets the frame, the canvas, and the
+ * simulation up and going.  Holds all adjustable constants.
+ * @author Sam Maynard
+ *
+ */
 public class Runner {
 	
 	static int tickerMagnitude = 150;
 	
+	static int width = 900;
+	static int height = 700;
+	
 	public static void main(String[] args) {
 		MarketSimulation sim = new MarketSimulation(0.1);
 		
-		//TransactionChannel trans = new TransactionChannel(sim.getTrans());
-		//Thread transactions = new Thread(trans);
-		
+		// ok I agree, there's got to be a better way to do this
+		// enum maybe?
 		Fish fish = new Fish(Color.BLUE);
 		Bread bread = new Bread(Color.YELLOW.darker());
 		Watermelon watermelon = new Watermelon(Color.GREEN);
@@ -32,7 +38,7 @@ public class Runner {
 		sim.addCommodity(bread);
 		sim.addCommodity(watermelon);
 		sim.addCommodity(oxen);
-		sim.createTickers(tickerMagnitude);
+		sim.createTickers(tickerMagnitude); // required
 		
 		JFrame f = new JFrame("Two Loaves of Bread");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,8 +48,6 @@ public class Runner {
 
 		int screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-		int width = 900;
-		int height = 700;
 		f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, width, height);
 		
 		MarketCanvas canvas = new MarketCanvas(60, sim);
@@ -58,6 +62,5 @@ public class Runner {
 		
 		canvas.start();
 		sim.start();
-		//transactions.start();
 	}
 }

@@ -52,8 +52,10 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			graph.drawSelf(x, y, g);
 			i++;
 		}
+		
+		drawInventory(0, this.getHeight() - 150, this.getWidth(), 150, g);
 	}
-	
+
 	private void drawKey(int x, int y, int width, int height, Graphics2D g) {
 		GUIUtils.drawOutline(x, y, width, height, 10, g);
 		
@@ -77,6 +79,13 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			
 			labelX += metrics.stringWidth(name) + 27;
 		}
+	}
+	
+	// draws the inventory: player's amount of stuff, the examine trades button
+	// and the make trade button
+	private void drawInventory(int x, int y, int width, int height, Graphics2D g) {
+		GUIUtils.drawOutline(x, y, width, height, 15, g);
+		//TODO
 	}
 	
 	@Override

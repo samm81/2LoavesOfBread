@@ -10,6 +10,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import core.commodities.Commodity;
 import core.commodities.Ticker;
 
+/**
+ * The main simulation running the game.  Contains all the data objects, and
+ * is given to the canvas in order to draw the graphs.
+ * @author Sam Maynard
+ *
+ */
 public class MarketSimulation extends Simulation {
 	
 	protected HashSet<Actor> actors;
@@ -55,14 +61,12 @@ public class MarketSimulation extends Simulation {
 	@Override
 	protected void tick() {
 		for(Actor actor : this.actors) {
-			actor.reevaluateWeights();
-		}
-		
-		for(Actor actor : this.actors) {
 			actor.evaluateMarket();
 		}
 		
-		//TODO: implement a incremental change in values for testing
+		// START TEMP CODE
+		// will be actors making their offers to the market
+		// and then the market matching the offers
 		Random r = new Random();
 		int commodity1Index = r.nextInt(this.commodities.size());
 		int commodity2Index = 0;
@@ -81,12 +85,12 @@ public class MarketSimulation extends Simulation {
 				trade = ratio + r.nextDouble() / 2 - .25;
 			} while(!(trade > 0));
 		}
-		
 		commodity1.addTransaction(new Transaction(1, commodity1, trade, commodity2));
+		// END TEMP CODE
 		
+		// updates the tickers with the most recent ratio
 		for(Commodity commodity : commodities) { // go through all the commodities
 			Hashtable<Class<? extends Commodity>, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
-			
 			for(Entry<Class<? extends Commodity>, Ticker> entry : tickers.entrySet()) { // find the most recent transaction value for each ticker commodity, and update the ticker
 				Ticker ticker = entry.getValue();
 				Class<? extends Commodity> tickerClass = entry.getKey();

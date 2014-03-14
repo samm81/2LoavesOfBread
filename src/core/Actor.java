@@ -5,28 +5,29 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import core.commodities.Commodity;
 
-public class Actor {
+/**
+ * Abstract class the represents every player.
+ * @author Sam Maynard
+ *
+ */
+abstract class Actor {
 	
-	protected LinkedList<Commodity> commodities;
-	protected LinkedBlockingQueue<Transaction> transactions;
+	protected LinkedList<Commodity> commodities; // list of global commodities
+	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
 	
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
 		this.transactions = transaction;
 	}
 	
-	public void reevaluateWeights() {
-		// TODO Auto-generated method stub
-	}
+	// patrick:
+	// actor figures out what they want the most right now, and places an open offer
+	// for how much they are willing to trade for it
+	public abstract Transaction getBestOffer();
 	
-	public Transaction getBestOffer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public void evaluateMarket() {
-		// TODO Auto-generated method stub
-		
-	}
+	// patrick:
+	// actor should look at their goods, their wants, and the market
+	// then reevaluate how much they are willing to trade for each object
+	public abstract void evaluateMarket();
 	
 }
