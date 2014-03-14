@@ -33,12 +33,6 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 
 	private boolean initialized = false;
 	
-	@Override
-	public void setBounds(int x, int y, int width, int height) {
-		super.setBounds(x, y, width, height);
-		System.out.println("Setting\t" + x + "\t" + y + "\t" + width + "\t" + height);
-	}
-
 	/**
 	 * constructor.
 	 * 
