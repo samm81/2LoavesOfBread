@@ -37,16 +37,24 @@ public class Runner {
 		JFrame f = new JFrame("Two Loaves of Bread");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setResizable(false);
+		f.setLayout(null);
+		f.getContentPane().setBackground(Color.DARK_GRAY);
+
 		int screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		int width = 900;
 		int height = 700;
-		f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, 900, 700);
+		f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, width, height);
 		
 		MarketCanvas canvas = new MarketCanvas(60, sim);
 		canvas.setBackground(Color.DARK_GRAY);
+		// these two are the height and the width that the frame takes up with it's surrounding bar
+		final int frameWidthPadding = 6;
+		final int frameHeightPadding = 29;
+		canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
 		f.add(canvas);
 		f.setVisible(true);
+
 		
 		canvas.start();
 		sim.start();
