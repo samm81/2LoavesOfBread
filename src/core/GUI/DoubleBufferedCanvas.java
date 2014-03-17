@@ -9,9 +9,9 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 /**
+ * Abstract class to deal with making a Double Buffered Canvas.
  * 
  * @author Sam Maynard
- * @description Abstract class to deal with making a Double Buffered Canvas.
  * 
  */
 @SuppressWarnings("serial")
@@ -67,6 +67,12 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 		thread = new Thread(this);
 	}
 
+	/**
+	 * Checks if the given key is pressed.
+	 * 
+	 * @param keyEvent key to check
+	 * @return true if the key is being pressed, false otherwise
+	 */
 	public boolean keyDown(int keyEvent) {
 		return keys.get(keyEvent) != null && keys.get(keyEvent) == true;
 	}

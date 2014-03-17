@@ -7,13 +7,19 @@ import java.util.LinkedList;
 
 import core.Transaction;
 
+/**
+ * Abstract class representing every object that can be traded.
+ * 
+ * @author Sam Maynard
+ * 
+ */
 public abstract class Commodity {
 	
-	LinkedList<Transaction> transactions;
-	Hashtable<Class<? extends Commodity>, Ticker> tickers;
-	Hashtable<Class<? extends Commodity>, Double> mostRecentRatios;
+	LinkedList<Transaction> transactions; // every transaction that has occured involving this commodity
+	Hashtable<Class<? extends Commodity>, Ticker> tickers; // the tickers for the objects it trades for
+	Hashtable<Class<? extends Commodity>, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
 	
-	Color color;
+	Color color; // the commoditie's color
 	
 	public Commodity(Color color) {
 		transactions = new LinkedList<Transaction>();
@@ -39,6 +45,17 @@ public abstract class Commodity {
 		return this.mostRecentRatios;
 	}
 	
+	public Color getColor() {
+		return this.color;
+	}
+	
+	/**
+	 * Fills this commodities tickers with new tickers,
+	 * one for every commodity given (besides itself)
+	 * 
+	 * @param commodities the commodities to create tickers from
+	 * @param tickerMagnitude the number of transactions the ticker shows
+	 */
 	public void createTickersFromCommodities(LinkedList<Commodity> commodities, int tickerMagnitude) {
 		for(Commodity commodity : commodities) {
 			if(!commodity.getClass().equals(this.getClass())) {
@@ -48,10 +65,13 @@ public abstract class Commodity {
 		}
 	}
 	
-	public Color getColor() {
-		return this.color;
-	}
-	
+	/**
+	 * Inserts a transaction into the transactions list,
+	 * and updates mostRecentRatios, which is used to update the
+	 * ticker.
+	 * 
+	 * @param transaction
+	 */
 	public void addTransaction(Transaction transaction) {
 		if(!isOrderedProperly(transaction)) {
 			transaction = transaction.getReversedTransaction();
@@ -71,6 +91,12 @@ public abstract class Commodity {
 		
 	}
 	
+	/**
+	 * Checks if a transaction has this classes commodity first
+	 * 
+	 * @param transaction the transaction to check
+	 * @return true if it is in order, false otherwise
+	 */
 	private boolean isOrderedProperly(Transaction transaction) {
 		return transaction.getCommodity1().getClass().equals(this.getClass());
 	}

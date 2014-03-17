@@ -4,13 +4,13 @@ import java.util.UUID;
 
 import core.commodities.Commodity;
 
-
 /**
  * Class to hold all transactions, past, present and future, in terms
  * of what is being traded and at what values.
  * Primarily a data class.
+ * 
  * @author Brian Oluwo
- *
+ * 
  */
 public class Transaction {
 	

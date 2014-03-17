@@ -10,6 +10,12 @@ import java.util.LinkedList;
 import core.MarketSimulation;
 import core.commodities.Commodity;
 
+/**
+ * The general container for all the games elements.
+ * 
+ * @author Sam Maynard
+ *
+ */
 @SuppressWarnings("serial")
 public class MarketCanvas extends DoubleBufferedCanvas {
 	
@@ -27,6 +33,12 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		graphs = createGraphs(sim.getCommodities(), 200);
 	}
 	
+	/**
+	 * generates the graphs from a list of commodities
+	 * @param commodities the commodities to generate graphs from
+	 * @param height the height of the graphs
+	 * @return LinkedList<Graph> of the graphs created
+	 */
 	private LinkedList<Graph> createGraphs(LinkedList<Commodity> commodities, int height) {
 		LinkedList<Graph> graphs = new LinkedList<Graph>();
 		
@@ -56,6 +68,15 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		drawInventory(0, this.getHeight() - 150, this.getWidth(), 150, g);
 	}
 
+	/**
+	 * Draws the key at the top of the screen
+	 * 
+	 * @param x x coord to draw the key at
+	 * @param y y coord to draw the key at
+	 * @param width width of the key
+	 * @param height height of the key
+	 * @param g Graphics2D object to draw the key with
+	 */
 	private void drawKey(int x, int y, int width, int height, Graphics2D g) {
 		GUIUtils.drawOutline(x, y, width, height, 10, g);
 		
@@ -80,9 +101,17 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			labelX += metrics.stringWidth(name) + 27;
 		}
 	}
-	
-	// draws the inventory: player's amount of stuff, the examine trades button
-	// and the make trade button
+
+		/**
+		 * draws the inventory: player's amount of stuff, the examine trades button
+		 * and the make trade button
+		 * 
+		 * @param x x coord to draw the inventory at
+		 * @param y y coord to draw the inventory at
+		 * @param width width of the inventory
+		 * @param height height of the inventory
+		 * @param g Graphics2D object to draw the inventory with
+		 */
 	private void drawInventory(int x, int y, int width, int height, Graphics2D g) {
 		GUIUtils.drawOutline(x, y, width, height, 15, g);
 		//TODO

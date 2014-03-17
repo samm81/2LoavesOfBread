@@ -1,9 +1,10 @@
 package core;
 
-/** 
+/**
  * Abstract class to encapstulate any simulation.
+ * 
  * @author Sam Maynard
- *
+ * 
  */
 abstract class Simulation implements Runnable {
 	

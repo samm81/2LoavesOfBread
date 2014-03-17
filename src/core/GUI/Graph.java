@@ -7,7 +7,13 @@ import java.awt.Graphics2D;
 import core.commodities.Commodity;
 import core.commodities.Ticker;
 
-
+/**
+ * Class that holds the graphical representation of a commodity and
+ * it's tickers.
+ * 
+ * @author Sam Maynard
+ *
+ */
 public class Graph {
 
 	private int width;
@@ -20,6 +26,12 @@ public class Graph {
 		this.commodity = commodity;
 	}
 
+	/**
+	 * Draws the graph at the specified position.
+	 * @param x x coord to draw the graph at
+	 * @param y y coord to draw the graph at
+	 * @param g Graphics2D object to draw with
+	 */
 	public void drawSelf(int x, int y, Graphics2D g) {
 		GUIUtils.drawOutline(x, y, width, height, 50, g);
 

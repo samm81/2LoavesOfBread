@@ -12,10 +12,11 @@ import core.commodities.Oxen;
 import core.commodities.Watermelon;
 
 /**
- * The runner for the game.  Gets the frame, the canvas, and the
- * simulation up and going.  Holds all adjustable constants.
+ * The runner for the game. Gets the frame, the canvas, and the
+ * simulation up and going. Holds all adjustable constants.
+ * 
  * @author Sam Maynard
- *
+ * 
  */
 public class Runner {
 	
@@ -45,7 +46,7 @@ public class Runner {
 		f.setResizable(false);
 		f.setLayout(null);
 		f.getContentPane().setBackground(Color.DARK_GRAY);
-
+		
 		int screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, width, height);
@@ -53,12 +54,12 @@ public class Runner {
 		MarketCanvas canvas = new MarketCanvas(60, sim);
 		canvas.setBackground(Color.DARK_GRAY);
 		// these two are the height and the width that the frame takes up with it's surrounding bar
+		// found by trial and error
 		final int frameWidthPadding = 6;
 		final int frameHeightPadding = 29;
 		canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
 		f.add(canvas);
 		f.setVisible(true);
-
 		
 		canvas.start();
 		sim.start();
