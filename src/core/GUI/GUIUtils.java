@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 /**
  * Class to hold generally useful GUI utilities.
  * 
- * @author Sam Maynard
+ * @author Sam "Fabulous Hands" Maynard
  *
  */
 public class GUIUtils {

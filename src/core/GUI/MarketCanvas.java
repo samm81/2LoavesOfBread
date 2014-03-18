@@ -13,7 +13,7 @@ import core.commodities.Commodity;
 /**
  * The general container for all the games elements.
  * 
- * @author Sam Maynard
+ * @author Sam "Fabulous Hands" Maynard
  *
  */
 @SuppressWarnings("serial")
