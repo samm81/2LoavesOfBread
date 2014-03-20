@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 
 import core.GUI.MarketCanvas;
+import core.channels.TransactionChannel;
 import core.commodities.Bread;
 import core.commodities.Fish;
 import core.commodities.Oxen;
@@ -27,7 +28,8 @@ public class Runner {
 	
 	public static void main(String[] args) {
 		MarketSimulation sim = new MarketSimulation(0.1);
-		
+		//Creates the transaction thread that evaluates transactions once actors.size()/2 transactions have been submitted.
+		Thread transactions = new Thread(new TransactionChannel(sim.getTransactions(),sim.getActors().size()/2)); 
 		// ok I agree, there's got to be a better way to do this
 		// enum maybe?
 		Fish fish = new Fish(Color.BLUE);
@@ -60,7 +62,7 @@ public class Runner {
 		canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
 		f.add(canvas);
 		f.setVisible(true);
-		
+//		transactions.start();
 		canvas.start();
 		sim.start();
 	}

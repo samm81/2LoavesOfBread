@@ -8,7 +8,8 @@ import core.Transaction;
 
 /**
  * Transaction Thread class
- * {@link #TransactionChannel(BlockingQueue, HashSet)} - Basic Constructor for the thread. Takes in all it needs to create a transactionary environment.
+ * {@link #TransactionChannel(BlockingQueue, HashSet)} - Basic Constructor for the thread. 
+ * Takes in all it needs to create a transactionary environment.
  * {@link #run()}-Blocks until the queue is no longer empty then performs functions.
  * 
  * @author Brian Oluwo
@@ -25,7 +26,8 @@ public class TransactionChannel implements Runnable {
 	private ArrayBlockingQueue<Transaction> evalArray;
 	
 	/**
-	 * This constructor sends in the global transaction queue, but says to evaluate Transactions as soon as they arrive.
+	 * This constructor sends in the global transaction queue, 
+	 * but says to evaluate Transactions as soon as they arrive.
 	 * 
 	 * @param queue- Global Transactions Queue
 	 */
@@ -53,7 +55,9 @@ public class TransactionChannel implements Runnable {
 	public void run() {
 		if(!this.batchMode) {
 			try {
-				Transaction t = transactions.take();//If we want to keep the block processing we would drainTo an array and send that off for processing
+				//If we want to keep the block processing we would drainTo an array 
+				//and send that off for processing
+				Transaction t = transactions.take();
 				process(t);
 			} catch(InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -65,7 +69,7 @@ public class TransactionChannel implements Runnable {
 					this.transactions.drainTo(this.evalArray, this.evalSize);
 				}
 				process(this.evalArray);
-				
+				//For checking reverse: corned hash
 			}
 			
 		}

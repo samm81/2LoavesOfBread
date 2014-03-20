@@ -20,7 +20,6 @@ abstract class Actor {
 		this.commodities = commodities;
 		this.transactions = transaction;
 	}
-	
 	// patrick:
 	// actor figures out what they want the most right now, and places an open offer
 	// for how much they are willing to trade for it
@@ -31,4 +30,7 @@ abstract class Actor {
 	// then reevaluate how much they are willing to trade for each object
 	public abstract void evaluateMarket();
 	
+	public void submitTransction(Commodity s1, Commodity s2, int vol1, int vol2) throws InterruptedException{
+		transactions.put(new Transaction(vol1, s1, vol2, s2));
+	}
 }
