@@ -1,83 +1,36 @@
 package core;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+
+import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
-//TODO: On a setInterval, check the states of transactions so they can update their respective tracks.
 
-//Every actor needs to have a transaction data structure as well,
-//so they can have a history of previous transactions
-//Also has the added benefit of letting me see when Transaction states have changed so we can update the GUI.
-public class Actor {
-	public final String name;
-	protected LinkedBlockingQueue<Transaction> transactions;
-	protected ArrayBlockingQueue<Transaction> globalTrans;//This gets synced with the global transactions
-	protected LinkedBlockingQueue<Transaction> offers;
-	public Actor(String sentName, BlockingQueue <Transaction> queue){
-		name = sentName;
-		globalTrans = (ArrayBlockingQueue<Transaction>) queue;
+import core.commodities.Commodity;
+
+/**
+ * Abstract class the represents every player.
+ * 
+ * @author Sam "Fabulous Hands" Maynard
+ * 
+ */
+abstract class Actor {
+	
+	protected LinkedList<Commodity> commodities; // list of global commodities
+	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
+	
+	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
+		this.commodities = commodities;
+		this.transactions = transaction;
 	}
-
-	public String getName(){
-		return name;
+	// patrick:
+	// actor figures out what they want the most right now, and places an open offer
+	// for how much they are willing to trade for it
+	public abstract Transaction getBestOffer();
+	
+	// patrick:
+	// actor should look at their goods, their wants, and the market
+	// then reevaluate how much they are willing to trade for each object
+	public abstract void evaluateMarket();
+	
+	public void submitTransction(Commodity s1, Commodity s2, int vol1, int vol2) throws InterruptedException{
+		transactions.put(new Transaction(vol1, s1, vol2, s2));
 	}
-
-	public void reevaluateWeights() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public Transaction getBestOffer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void evaluateMarket() {
-		// TODO Auto-generated method stub
-
-	}
-	//If they accept an offer we need to send a transaction to update the resource counts of both
-	//Actors as well update the global market that a trade happened at a new price.
-	public void acceptOffer(Transaction accept){
-		try{
-			globalTrans.add(accept);
-			accept.setState(Transaction.STATE_SUBMITTED);
-		}finally{
-			if(accept.getState() == Transaction.STATE_ACCEPTED){
-				//Do your accept actions
-			}else if (accept.getState() == Transaction.STATE_INVALID){
-				//Tell Actors that their transaction didn't go through for various reasons
-			}
-			
-		}
-	}
-	//If the Actor declines, we set the state to declined and remove it from their list of offers
-	//but leave it in their transaction history
-	public void declineOffer(Transaction decline){
-		try{
-			removeFromOffers(decline);
-		}finally{
-			decline.setState(Transaction.STATE_DECLINE);
-		}
-	}
-	/**
-	 * Remove from Offer List
-	 * @param offer- Transaction to remove from queue
-	 */
-	private void removeFromOffers(Transaction offer) {
-		// TODO Auto-generated method stub
-		for(Transaction o : offers){
-			if(o.equals(offer)){
-				offers.remove(o);
-				break;
-			}
-		}
-	}
-
-	/**
-	 * Quite a useless method. 
-	 * Just a stub, for if we need some exit code to occur for deferring like moving it to the back of the queue.
-	 * @return Nothing for now.
-	 */
-	public void deferOffer(){}
-
 }

@@ -1,8 +1,6 @@
-2LoavesOfBread
-==============
+# 2LoavesOfBread
 
-hashtag 2loaves
+Hashtag 2Loaves
 
 A bartering day-trading simulation game
-
-Currently in development
+:exclamation: Currently in development
