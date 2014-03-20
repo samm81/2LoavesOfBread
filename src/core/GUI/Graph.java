@@ -11,7 +11,7 @@ import core.commodities.Ticker;
  * Class that holds the graphical representation of a commodity and
  * it's tickers.
  * 
- * @author Sam Maynard
+ * @author Sam "Fabulous Hands" Maynard
  *
  */
 public class Graph {
