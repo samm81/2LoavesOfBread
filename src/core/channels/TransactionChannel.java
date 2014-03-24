@@ -17,43 +17,58 @@ import core.Transaction;
  * 
  */
 public class TransactionChannel implements Runnable {
-	
+
 	//Use ArrayBlockingQueue so that when array is full it blocks automatically
 	protected LinkedBlockingQueue<Transaction> transactions = null;
 	//How many transactions to evaluate at a time
-	final private int evalSize;
-	final private boolean batchMode;
-	private ArrayBlockingQueue<Transaction> evalArray;
-	
+	final private int evalSize;//obsolete
+	final private boolean batchMode;//obsolete
+	final private long sysStartTime;
+	private int marketIterations = 0;
+	private double dt;
+	private ArrayBlockingQueue<Transaction> evalArray;//obsolete
+
 	/**
 	 * This constructor sends in the global transaction queue, 
 	 * but says to evaluate Transactions as soon as they arrive.
 	 * 
 	 * @param queue- Global Transactions Queue
 	 */
-	public TransactionChannel(LinkedBlockingQueue<Transaction> queue) {
+	public TransactionChannel(LinkedBlockingQueue<Transaction> queue,double dt) {
 		this.transactions = queue;
 		this.batchMode = false;
 		this.evalSize = 0;
 		this.evalArray = new ArrayBlockingQueue<Transaction>(this.evalSize);
+		this.sysStartTime = System.currentTimeMillis();
+		this.marketIterations=0;
+		this.marketIterations=0;
+		this.dt = dt;
 	}
-	
+
 	/**
 	 * This constructor sends in the global transaction queue, but says to evaluate in batches size evalNum.
 	 * 
 	 * @param queue - Global Transaction Queue
 	 * @param evalNum - Size of each eval batch
+	 * @param dt 
 	 */
-	public TransactionChannel(LinkedBlockingQueue<Transaction> queue, int evalNum) {
+	public TransactionChannel(LinkedBlockingQueue<Transaction> queue, int evalNum, double dt) {
 		this.transactions = queue;
 		this.batchMode = true;
 		this.evalSize = evalNum > 1 ? evalNum : 10;
 		this.evalArray = new ArrayBlockingQueue<Transaction>(this.evalSize);
+		this.sysStartTime = System.currentTimeMillis();
+		this.marketIterations=0;
+		this.dt = dt;
 	}
-	
+
 	@Override
 	public void run() {
-		if(!this.batchMode) {
+		if(System.currentTimeMillis() == this.sysStartTime + ((long)(this.marketIterations * this.dt)/1000)){
+			process();
+		}
+		else{}
+		/*if(!this.batchMode) {
 			try {
 				//If we want to keep the block processing we would drainTo an array 
 				//and send that off for processing
@@ -71,10 +86,10 @@ public class TransactionChannel implements Runnable {
 				process(this.evalArray);
 				//For checking reverse: corned hash
 			}
-			
-		}
+
+		}*/
 	}
-	
+
 	private synchronized void process(ArrayBlockingQueue<Transaction> a) {
 		for(Transaction t : a) {
 			t.setState(Transaction.STATE_PENDING);
@@ -91,7 +106,15 @@ public class TransactionChannel implements Runnable {
 		}
 		a.clear();
 	}
-	
+	private void process(){
+		for(Transaction t  : this.transactions){
+			for(Transaction q : this.transactions){
+				if(t.equals(q.getReversedTransaction())){
+					//Send actor the sign that they have an offer.
+				}
+			}
+		}
+	}
 	private void process(Transaction t) {
 		t.setState(Transaction.STATE_PENDING);
 		/*
@@ -103,6 +126,6 @@ public class TransactionChannel implements Runnable {
 		 */
 		System.out.println(t.toString());
 		t.setState(Transaction.STATE_ACCEPTED);
-		
+
 	}
 }

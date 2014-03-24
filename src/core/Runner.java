@@ -29,7 +29,7 @@ public class Runner {
 	public static void main(String[] args) {
 		MarketSimulation sim = new MarketSimulation(0.1);
 		//Creates the transaction thread that evaluates transactions once actors.size()/2 transactions have been submitted.
-		Thread transactions = new Thread(new TransactionChannel(sim.getTransactions(),sim.getActors().size()/2)); 
+		Thread transactions = new Thread(new TransactionChannel(sim.getTransactions(),sim.getActors().size()/2,sim.dt)); 
 		// ok I agree, there's got to be a better way to do this
 		// enum maybe?
 		Fish fish = new Fish(Color.BLUE);
