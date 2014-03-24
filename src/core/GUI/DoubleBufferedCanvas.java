@@ -14,7 +14,6 @@ import java.util.LinkedList;
 
 /**
  * Abstract class to deal with making a Double Buffered Canvas.
- * 
  * @author Sam Maynard
  * 
  */
@@ -39,19 +38,28 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	private boolean initialized = false;
 	
 	/**
-	 * constructor.
-	 * 
+	 * constructor
 	 * @param fps the frames per second for which the canvas is to run at
 	 */
 	public DoubleBufferedCanvas(int fps) {
+		this(fps, 6f);
+	}
+
+	/**
+	 * constructor
+	 * @param fps frames per second to run the canvas at
+	 * @param fpsCounterUpdatesPerSecond number of times per second to update the FPS counter
+	 */
+	public DoubleBufferedCanvas(int fps, float fpsCounterUpdatesPerSecond) {
 		super();
+		
 		this.fps = fps;
 		if(fps == 0)
 			this.pauseTime = 0;
 		else
 			this.pauseTime = (int) (1000f / (float) fps);
 		
-		fpsCounter = new FPSCounter();
+		fpsCounter = new FPSCounter(fpsCounterUpdatesPerSecond);
 		
 		addKeyListener(new KeyAdapter() {
 			
@@ -83,7 +91,6 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	
 	/**
 	 * Checks if the given key is pressed.
-	 * 
 	 * @param keyEvent key to check
 	 * @return true if the key is being pressed, false otherwise
 	 */
@@ -91,9 +98,22 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 		return keys.get(keyEvent) != null && keys.get(keyEvent) == true;
 	}
 	
-	
+	/**
+	 * Checks if there are mouse clicks unprocessed
+	 * @return true if there are mouse clicks waiting, false otherwise
+	 */
 	public boolean mouseClicksWaiting() {
 		return mouseClicks.size() != 0;
+	}
+	
+	/**
+	 * returns the mouse click queue and clears it
+	 * @return mouse click queue with all MouseEvents that have occurred
+	 */
+	public LinkedList<MouseEvent> flushMouseClickQueue() {
+		LinkedList<MouseEvent> mouseClicks = this.mouseClicks;
+		this.mouseClicks.clear();
+		return mouseClicks;
 	}
 	
 	@Override
@@ -121,7 +141,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 		
 		bufferGraphics.clearRect(0, 0, bufferWidth, bufferHeight);
 		draw(bufferGraphics);
-		fpsCounter.paintSelf(bufferGraphics, width - 40, 30);
+		fpsCounter.paintSelf(width - 40, 30, bufferGraphics);
 		g.drawImage(buffer, 0, 0, null);
 	}
 	
@@ -148,7 +168,6 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	
 	/**
 	 * actually draws the image
-	 * 
 	 * @param g graphics to draw with
 	 */
 	abstract void draw(Graphics g);
@@ -182,6 +201,11 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	 */
 	abstract protected void updateVars();
 	
+	/**
+	 * Class for creating an FPS Counter
+	 * @author Sam Maynard
+	 *
+	 */
 	private class FPSCounter {
 		
 		long lastTime;
@@ -189,15 +213,33 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 		int f = 0;
 		
 		long lastUpdate;
-		float updatesPerSecond = 8f;
-		float updateTime = 1000f / updatesPerSecond;
+		float updateTime;
 		
+		/**
+		 * default constructor
+		 */
+		@SuppressWarnings("unused")
 		public FPSCounter() {
+			this(6f);
+		}
+		
+		/**
+		 * constructor to set the number of times the counter updates per second
+		 * @param updatesPerSecond number of times the counter updates per second
+		 */
+		public FPSCounter(float updatesPerSecond) {
+			this.updateTime = 1000f / updatesPerSecond;
 			lastTime = System.currentTimeMillis();
 			lastUpdate = lastTime;
 		}
 		
-		public void paintSelf(Graphics g, int x, int y) {
+		/**
+		 * paints the FPS counter at a given x and y with Graphics object g
+		 * @param x x coordinate of the FPS counter
+		 * @param y y coordinate of the FPS counter
+		 * @param g Graphics object to draw the FPS counter with
+		 */
+		public void paintSelf(int x, int y, Graphics g) {
 			tick();
 			
 			g.setFont(new Font("Courier New", Font.BOLD, 26));
@@ -205,6 +247,9 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 			g.drawString("" + f, x, y);
 		}
 		
+		/**
+		 * used to track the frames per second
+		 */
 		private void tick() {
 			long time = System.currentTimeMillis();
 			
