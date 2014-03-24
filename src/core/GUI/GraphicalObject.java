@@ -65,4 +65,9 @@ abstract class GraphicalObject implements Clickable {
 		g.fill(makeShape(x + outlineOffset, y + outlineOffset, width - outlineOffset*2, height - outlineOffset*2));
 	}
 	
+	@Override
+	public void clicked() {
+		System.out.println(this.getClass().getSimpleName() + " clicked");
+	}
+	
 }

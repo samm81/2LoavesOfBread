@@ -64,10 +64,4 @@ public class Graph extends GraphicalObject {
 		}
 	}
 	
-	@Override
-	public void clicked() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

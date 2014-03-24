@@ -3,6 +3,7 @@ package core.GUI;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
 import core.MarketSimulation;
@@ -19,9 +20,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	
 	MarketSimulation sim;
 	
-	LinkedList<Graph> graphs;
-	Key key;
-	Inventory inventory;
+	LinkedList<GraphicalObject> graphicalObjects;
 	
 	public MarketCanvas(int fps, MarketSimulation sim) {
 		super(fps);
@@ -30,9 +29,15 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	
 	@Override
 	void init() {
-		graphs = createGraphs(sim.getCommodities(), 200);
-		key = new Key(0, 0, this.getWidth(), 40, sim.getCommodities());
-		inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, sim.getCommodities());
+		LinkedList<Graph> graphs = createGraphs(sim.getCommodities(), 200);
+		Key key = new Key(0, 0, this.getWidth(), 40, sim.getCommodities());
+		Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, sim.getCommodities());
+		
+		graphicalObjects = new LinkedList<GraphicalObject>();
+		graphicalObjects.add(key);
+		graphicalObjects.add(inventory);
+		for(Graph graph : graphs)
+			graphicalObjects.add(graph);
 	}
 	
 	/**
@@ -61,16 +66,24 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		Graphics2D g = (Graphics2D) graphics;
 		g.setColor(Color.BLACK);
 		
-		key.drawSelf(g);
+		for(GraphicalObject graphicalObject : graphicalObjects)
+			graphicalObject.drawSelf(g);
 		
-		for(Graph graph : graphs) {
-			graph.drawSelf(g);
-		}
-		
-		inventory.drawSelf(g);
 	}
 	
 	@Override
-	protected void updateVars() {}
+	protected void updateVars() {
+		if(this.mouseClicksWaiting()){
+			LinkedList<MouseEvent> clicks = this.flushMouseClickQueue();
+			for(MouseEvent click : clicks){
+				int x = click.getX();
+				int y = click.getY();
+				for(GraphicalObject graphicalObject : graphicalObjects){
+					if(graphicalObject.pointInBounds(x, y))
+						graphicalObject.clicked();
+				}
+			}
+		}
+	}
 	
 }

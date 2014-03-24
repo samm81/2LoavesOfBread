@@ -56,10 +56,4 @@ public class Key extends GraphicalObject {
 		}
 	}
 	
-	@Override
-	public void clicked() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

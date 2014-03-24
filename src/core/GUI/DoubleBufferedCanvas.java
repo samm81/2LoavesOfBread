@@ -111,7 +111,10 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	 * @return mouse click queue with all MouseEvents that have occurred
 	 */
 	public LinkedList<MouseEvent> flushMouseClickQueue() {
-		LinkedList<MouseEvent> mouseClicks = this.mouseClicks;
+		LinkedList<MouseEvent> mouseClicks = new LinkedList<MouseEvent>();
+		for(MouseEvent mouseClick : this.mouseClicks){
+			mouseClicks.add(mouseClick);
+		}
 		this.mouseClicks.clear();
 		return mouseClicks;
 	}
