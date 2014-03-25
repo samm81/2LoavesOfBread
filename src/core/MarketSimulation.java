@@ -14,7 +14,7 @@ import core.commodities.Ticker;
  * The main simulation running the game. Contains all the data objects, and
  * is given to the canvas in order to draw the graphs.
  * 
- * @author Sam Maynard
+ * @author Sam "Fabulous Hands" Maynard
  * 
  */
 public class MarketSimulation extends Simulation {
