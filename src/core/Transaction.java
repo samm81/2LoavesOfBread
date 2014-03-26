@@ -22,13 +22,15 @@ public class Transaction {
 	public Commodity commodity2;
 	public double volume1;
 	public double volume2;
+	public final Actor sender;
 
-	public Transaction(double volume1, Commodity commodity1, double volume2, Commodity commodity2) {
+	public Transaction(double volume1, Commodity commodity1, double volume2, Commodity commodity2, Actor sender) {
 		this.id = UUID.randomUUID();
 		this.commodity1 = commodity1;
 		this.commodity2 = commodity2;
 		this.volume1 = volume1;
 		this.volume2 = volume2;
+		this.sender = sender;
 	}
 
 	public UUID getID() {
@@ -59,10 +61,12 @@ public class Transaction {
 	public double getTotalVolume() {
 		return volume1 + volume2;
 	}
-
+	public Actor getSender(){
+		return this.sender;
+	}
 
 	public Transaction getReversedTransaction() {
-		return new Transaction(volume2, commodity2, volume1, commodity1);
+		return new Transaction(this.volume2, this.commodity2, this.volume1, this.commodity1,this.sender);
 	}
 	public boolean compareID (UUID id){
 		if(this.id.equals(id)){

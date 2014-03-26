@@ -22,15 +22,13 @@ import core.commodities.Watermelon;
 public class Runner {
 	
 	static int tickerMagnitude = 150;
-	
 	static int width = 900;
 	static int height = 700;
 	
 	public static void main(String[] args) {
 		MarketSimulation sim = new MarketSimulation(0.1);
-		//Creates the transaction thread that evaluates transactions once actors.size()/2 transactions have been submitted.
-		@SuppressWarnings("unused")
-		Thread transactions = new Thread(new TransactionChannel(sim.getTransactions(), sim.dt)); 
+		//Creates the transaction thread that evaluates transactions, every dt.
+		Thread transactions = new Thread(new TransactionChannel(sim.getTransactions(), sim.dt*4)); 
 		// ok I agree, there's got to be a better way to do this
 		// enum maybe?
 		Fish fish = new Fish(Color.BLUE);
@@ -63,8 +61,9 @@ public class Runner {
 		canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
 		f.add(canvas);
 		f.setVisible(true);
-//		transactions.start();
-		canvas.start();
 		sim.start();
+		transactions.start();
+		canvas.start();
+		
 	}
 }

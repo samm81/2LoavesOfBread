@@ -9,11 +9,9 @@ import core.commodities.Commodity;
 
 /**
  * Abstract class the represents every player.
- * 
  * @author Sam "Fabulous Hands" Maynard
- * 
  */
-abstract class Actor {
+public abstract class Actor {
 	
 	protected LinkedList<Commodity> commodities; // list of global commodities
 	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
@@ -39,9 +37,13 @@ abstract class Actor {
 	public abstract void evaluateMarket();
 	//TODO: Ensure they can actually afford to lose the volume of commodity they are trading.
 	public void submitTransction(Commodity s1, Commodity s2, int vol1, int vol2) throws InterruptedException{
-		transactions.put(new Transaction(vol1, s1, vol2, s2));
+		transactions.put(new Transaction(vol1, s1, vol2, s2,this));
 	}
 	//TODO: Ensure they can actually afford to lose the volume of commodity they are trading.
+	//TODO: Problem occurs if on the second check the Actor doesn't have the required volume of commodities. 
+	//Then we need to negate the transaction on both ends. Can be fixed by utilizing the complex transaction method
+	//Or making the transaction an exchange between two actors so that they can ensure volumes and quickly send
+	//Signals to whether or not something has occured, but this is getting away from the concept of the simple trans
 	public void acceptTransaction(Transaction t){
 		//Update Correlating volumes.
 		this.volumes.put(t.getCommodity1(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));
