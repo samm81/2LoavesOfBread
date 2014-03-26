@@ -59,6 +59,13 @@ public class MarketSimulation extends Simulation {
 	@Override
 	protected void initialize() {}
 	
+	/**
+	 * The main engine behind the game
+	 * tick goes through every actor, gets their best offer
+	 * compares all offers to each other, finds offers
+	 * that match, carry out the offers, inform the actors, 
+	 * and inform the commodities.
+	 */
 	@Override
 	protected void tick() {
 		for(Actor actor : this.actors) {

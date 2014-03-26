@@ -1,7 +1,7 @@
 package core;
 
 /**
- * Abstract class to encapstulate any simulation.
+ * Abstract class to encapsulate any simulation.
  * 
  * @author Sam Maynard
  * 

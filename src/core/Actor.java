@@ -8,7 +8,7 @@ import core.commodities.Commodity;
 /**
  * Abstract class the represents every player.
  * 
- * @author Sam "Fabulous Hands" Maynard
+ * @author Sam Maynard
  * 
  */
 abstract class Actor {
