@@ -47,21 +47,26 @@ abstract class GraphicalObject implements Clickable {
 	}
 	
 	/**
-	 * Draws a rounded rectangle with a white inside and black border at
-	 * the given x and y, with the given width and height, and the given
-	 * rounding of the rectangles.
+	 * Draws a rounded rectangle with a white inside and black border
+	 * based on the shape of the GraphicalObject
 	 * 
-	 * @param x x coord to draw the outline at
-	 * @param y y coord to draw the outline at
-	 * @param width width of the outline
-	 * @param height height of the outline
-	 * @param rounding rounding of rectangles to draw the outline with
 	 * @param g Graphics2D object to do the drawing with
 	 */
 	protected void drawOutline(Graphics2D g) {
+		drawOutline(Color.WHITE, g);
+	}
+	
+	/**
+	 * Draws a rounded rectangle with a white inside and black border
+	 * based on the shape of the GraphicalObject
+	 * 
+	 * @param backgroundColor background color to fill the outline with
+	 * @param g Graphics2D object to do the drawing with
+	 */
+	protected void drawOutline(Color backgroundColor, Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.fill(shape);
-		g.setColor(Color.WHITE);
+		g.setColor(backgroundColor);
 		g.fill(makeShape(x + outlineOffset, y + outlineOffset, width - outlineOffset*2, height - outlineOffset*2));
 	}
 	

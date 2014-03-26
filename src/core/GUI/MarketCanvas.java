@@ -33,10 +33,12 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		LinkedList<Graph> graphs = createGraphs(sim.getCommodities(), 200);
 		Key key = new Key(0, 0, this.getWidth(), 40, sim.getCommodities());
 		Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, sim.getCommodities());
+		MakeOfferButton makeOfferButton = new MakeOfferButton(this.getWidth() - 250, this.getHeight() - 100, 220, 50);
 		
 		graphicalObjects = new LinkedList<GraphicalObject>();
 		graphicalObjects.add(key);
 		graphicalObjects.add(inventory);
+		graphicalObjects.add(makeOfferButton);
 		for(Graph graph : graphs)
 			graphicalObjects.add(graph);
 	}
