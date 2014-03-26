@@ -13,7 +13,11 @@ import core.Transaction;
  * @author Sam Maynard
  * 
  */
-public abstract class Commodity {
+public enum Commodity {
+	Fish(Color.BLUE),
+	Bread(Color.YELLOW.darker()),
+	Watermelon(Color.green),
+	Oxen(Color.RED);
 	
 	LinkedList<Transaction> transactions; // every transaction that has occured involving this commodity
 	Hashtable<Class<? extends Commodity>, Ticker> tickers; // the tickers for the objects it trades for
@@ -21,7 +25,7 @@ public abstract class Commodity {
 	
 	Color color; // the commoditie's color
 	
-	public Commodity(Color color) {
+	private Commodity(Color color) {
 		transactions = new LinkedList<Transaction>();
 		tickers = new Hashtable<Class<? extends Commodity>, Ticker>();
 		mostRecentRatios = new Hashtable<Class<? extends Commodity>, Double>();
@@ -93,7 +97,6 @@ public abstract class Commodity {
 	
 	/**
 	 * Checks if a transaction has this classes commodity first
-	 * 
 	 * @param transaction the transaction to check
 	 * @return true if it is in order, false otherwise
 	 */

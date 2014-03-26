@@ -2,6 +2,7 @@ package core;
 
 import java.util.UUID;
 
+import core.actors.Actor;
 import core.commodities.Commodity;
 
 /**

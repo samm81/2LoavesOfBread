@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import core.actors.Actor;
 import core.commodities.Commodity;
 import core.commodities.Ticker;
 
@@ -25,6 +26,9 @@ public class MarketSimulation extends Simulation {
 	
 	public MarketSimulation(double dt) {
 		super(dt);
+		this.actors = new HashSet<Actor>();
+		this.commodities = new LinkedList<Commodity>();
+		this.transactions = new LinkedBlockingQueue<Transaction>();
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -54,11 +58,7 @@ public class MarketSimulation extends Simulation {
 	}
 	
 	@Override
-	protected void initialize() {
-		this.actors = new HashSet<Actor>();
-		this.commodities = new LinkedList<Commodity>();
-		this.transactions = new LinkedBlockingQueue<Transaction>();
-	}
+	protected void initialize() {}
 	
 	@Override
 	protected void tick() {
