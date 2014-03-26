@@ -24,6 +24,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	
 	protected int fps;
 	private int pauseTime;
+	private long lastTime;
 	
 	protected Image buffer;
 	protected int bufferWidth;
@@ -31,6 +32,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	protected Graphics bufferGraphics;
 	
 	protected HashMap<Integer, Boolean> keys = new HashMap<Integer, Boolean>();
+	protected LinkedList<KeyEvent> keyPresses = new LinkedList<KeyEvent>();
 	protected LinkedList<MouseEvent> mouseClicks = new LinkedList<MouseEvent>();
 	
 	private FPSCounter fpsCounter;
@@ -44,7 +46,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	public DoubleBufferedCanvas(int fps) {
 		this(fps, 6f);
 	}
-
+	
 	/**
 	 * constructor
 	 * @param fps frames per second to run the canvas at
@@ -75,6 +77,11 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 				keys.put(key, false);
 			}
 			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				keyPresses.add(e);
+			}
+			
 		});
 		
 		addMouseListener(new MouseAdapter() {
@@ -99,6 +106,26 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	}
 	
 	/**
+	 * Checks if there are any key presses unprocessed
+	 * @return true if there are key presses waiting, false otherwise
+	 */
+	public boolean keyPressesWaiting() {
+		return keyPresses.size() != 0;
+	}
+	
+	/**
+	 * returns the key press queue and clears it
+	 * @return key press queue with all KeyEvents that have occured
+	 */
+	public LinkedList<KeyEvent> flushKeyPressQueue() {
+		LinkedList<KeyEvent> keyPresses = new LinkedList<KeyEvent>();
+		for(KeyEvent keyPress : this.keyPresses)
+			keyPresses.add(keyPress);
+		this.keyPresses.clear();
+		return keyPresses;
+	}
+	
+	/**
 	 * Checks if there are mouse clicks unprocessed
 	 * @return true if there are mouse clicks waiting, false otherwise
 	 */
@@ -112,9 +139,8 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	 */
 	public LinkedList<MouseEvent> flushMouseClickQueue() {
 		LinkedList<MouseEvent> mouseClicks = new LinkedList<MouseEvent>();
-		for(MouseEvent mouseClick : this.mouseClicks){
+		for(MouseEvent mouseClick : this.mouseClicks)
 			mouseClicks.add(mouseClick);
-		}
 		this.mouseClicks.clear();
 		return mouseClicks;
 	}
@@ -179,15 +205,16 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	public void run() {
 		while(Thread.currentThread() == thread) {
 			if(initialized) {
-				updateVars();
-				repaint();
-				if(pauseTime > 0) {
-					try {
-						Thread.sleep(pauseTime);
-					} catch(InterruptedException e) {
-						e.printStackTrace();
-					}
+				long time = System.currentTimeMillis();
+				long diff = time - lastTime;
+				
+				if(diff > pauseTime){
+					updateVars();
+					repaint();
+					
+					lastTime = time;
 				}
+				processInputs();
 			}
 		}
 	}
@@ -203,6 +230,11 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	 * for any global variable updating that may need to be done
 	 */
 	abstract protected void updateVars();
+	
+	/**
+	 * allows for the processing of mouse clicks and key presses
+	 */
+	abstract protected void processInputs();
 	
 	/**
 	 * Class for creating an FPS Counter

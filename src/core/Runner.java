@@ -7,10 +7,7 @@ import javax.swing.JFrame;
 
 import core.GUI.MarketCanvas;
 import core.channels.TransactionChannel;
-import core.commodities.Bread;
-import core.commodities.Fish;
-import core.commodities.Oxen;
-import core.commodities.Watermelon;
+import core.commodities.Commodity;
 
 /**
  * The runner for the game. Gets the frame, the canvas, and the
@@ -30,17 +27,11 @@ public class Runner {
 		MarketSimulation sim = new MarketSimulation(0.1);
 		//Creates the transaction thread that evaluates transactions once actors.size()/2 transactions have been submitted.
 		Thread transactions = new Thread(new TransactionChannel(sim.getTransactions(),sim.getActors().size()/2)); 
-		// ok I agree, there's got to be a better way to do this
-		// enum maybe?
-		Fish fish = new Fish(Color.BLUE);
-		Bread bread = new Bread(Color.YELLOW.darker());
-		Watermelon watermelon = new Watermelon(Color.GREEN);
-		Oxen oxen = new Oxen(Color.RED);
-		
-		sim.addCommodity(fish);
-		sim.addCommodity(bread);
-		sim.addCommodity(watermelon);
-		sim.addCommodity(oxen);
+
+		sim.addCommodity(Commodity.Fish);
+		sim.addCommodity(Commodity.Bread);
+		sim.addCommodity(Commodity.Watermelon);
+		sim.addCommodity(Commodity.Oxen);
 		sim.createTickers(tickerMagnitude); // required
 		
 		JFrame f = new JFrame("Two Loaves of Bread");
@@ -62,7 +53,7 @@ public class Runner {
 		canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
 		f.add(canvas);
 		f.setVisible(true);
-//		transactions.start();
+		transactions.start();
 		canvas.start();
 		sim.start();
 	}

@@ -44,7 +44,7 @@ public class Inventory extends GraphicalObject {
 		int commodityx = titlex + 10;
 		int commodityy = titley + 25;
 		for(Commodity commodity : commodities){
-			String name = commodity.getClass().getSimpleName();
+			String name = commodity.name();
 			g.setFont(new Font("Sans Serif", Font.BOLD, 16));
 			g.setColor(Color.BLACK);
 			g.drawString("10 " + name, commodityx, commodityy );

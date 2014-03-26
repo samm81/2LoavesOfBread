@@ -13,18 +13,23 @@ import core.Transaction;
  * @author Sam Maynard
  * 
  */
-public abstract class Commodity {
+public enum Commodity {
+	
+	Fish(Color.BLUE),
+	Bread(Color.YELLOW.darker()),
+	Watermelon(Color.GREEN),
+	Oxen(Color.RED);
 	
 	LinkedList<Transaction> transactions; // every transaction that has occured involving this commodity
-	Hashtable<Class<? extends Commodity>, Ticker> tickers; // the tickers for the objects it trades for
-	Hashtable<Class<? extends Commodity>, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
+	Hashtable<String, Ticker> tickers; // the tickers for the objects it trades for
+	Hashtable<String, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
 	
 	Color color; // the commoditie's color
 	
-	public Commodity(Color color) {
+	Commodity(Color color) {
 		transactions = new LinkedList<Transaction>();
-		tickers = new Hashtable<Class<? extends Commodity>, Ticker>();
-		mostRecentRatios = new Hashtable<Class<? extends Commodity>, Double>();
+		tickers = new Hashtable<String, Ticker>();
+		mostRecentRatios = new Hashtable<String, Double>();
 		
 		this.color = color;
 	}
@@ -33,7 +38,7 @@ public abstract class Commodity {
 		return transactions;
 	}
 	
-	public Hashtable<Class<? extends Commodity>, Ticker> getTickers() {
+	public Hashtable<String, Ticker> getTickers() {
 		return tickers;
 	}
 	
@@ -41,7 +46,7 @@ public abstract class Commodity {
 		return tickers.values();
 	}
 	
-	public Hashtable<Class<? extends Commodity>, Double> getMostRecentRatios() {
+	public Hashtable<String, Double> getMostRecentRatios() {
 		return this.mostRecentRatios;
 	}
 	
@@ -58,9 +63,9 @@ public abstract class Commodity {
 	 */
 	public void createTickersFromCommodities(LinkedList<Commodity> commodities, int tickerMagnitude) {
 		for(Commodity commodity : commodities) {
-			if(!commodity.getClass().equals(this.getClass())) {
-				tickers.put(commodity.getClass(), new Ticker(tickerMagnitude, commodity.getColor()));
-				mostRecentRatios.put(commodity.getClass(), 0d);
+			if(!commodity.name().equals(this.name())) {
+				tickers.put(commodity.name(), new Ticker(tickerMagnitude, commodity.getColor()));
+				mostRecentRatios.put(commodity.name(), 0d);
 			}
 		}
 	}
@@ -87,7 +92,7 @@ public abstract class Commodity {
 		 * tickers.get(tradeCommodity.getClass()).addDataPoint(transaction.getRatio());
 		 * }
 		 */
-		mostRecentRatios.put(tradeCommodity.getClass(), transaction.getRatio());
+		mostRecentRatios.put(tradeCommodity.name(), transaction.getRatio());
 		
 	}
 	
@@ -98,7 +103,7 @@ public abstract class Commodity {
 	 * @return true if it is in order, false otherwise
 	 */
 	private boolean isOrderedProperly(Transaction transaction) {
-		return transaction.getCommodity1().getClass().equals(this.getClass());
+		return transaction.getCommodity1().name().equals(this.name());
 	}
 	
 }

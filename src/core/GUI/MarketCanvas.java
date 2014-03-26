@@ -3,6 +3,7 @@ package core.GUI;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
@@ -72,7 +73,10 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	}
 	
 	@Override
-	protected void updateVars() {
+	protected void updateVars() {}
+
+	@Override
+	protected void processInputs() {
 		if(this.mouseClicksWaiting()){
 			LinkedList<MouseEvent> clicks = this.flushMouseClickQueue();
 			for(MouseEvent click : clicks){
@@ -82,6 +86,13 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 					if(graphicalObject.pointInBounds(x, y))
 						graphicalObject.clicked();
 				}
+			}
+		}
+		
+		if(this.keyPressesWaiting()){
+			LinkedList<KeyEvent> keyPresses = this.flushKeyPressQueue();
+			for(KeyEvent keyPress : keyPresses){
+				System.out.println(keyPress.getKeyChar() + " pressed");
 			}
 		}
 	}

@@ -36,7 +36,7 @@ public class Graph extends GraphicalObject {
 		
 		int titlex = x + 30;
 		int titley = y + 30;
-		String name = commodity.getClass().getSimpleName();
+		String name = commodity.name();
 		g.setFont(new Font("Sans Serif", Font.BOLD, 22));
 		g.setColor(Color.BLACK);
 		g.drawString(name, titlex, titley);

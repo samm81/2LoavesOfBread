@@ -49,7 +49,7 @@ public class Key extends GraphicalObject {
 			Color color = commodity.getColor();
 			g.setColor(color);
 			g.fillOval(labelX, labelY, 10, 10);
-			String name = commodity.getClass().getSimpleName();
+			String name = commodity.name();
 			g.drawString(name, labelX + 15, labelY + 11);
 			
 			labelX += metrics.stringWidth(name) + 27;
