@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Shape;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
@@ -22,8 +23,9 @@ public class MakeOfferPopup extends GraphicalObject {
 	SelectionButton rightUp;
 	SelectionButton rightDown;
 	
-	int cursorx = x + 30;
-	int cursory = y + 30;
+	char[] volumes = {' ', ' ', ' ', ' ' };
+	int editingChar = 0;
+	
 	long time;
 	long blink = 450;
 	boolean drawingCursor = true;
@@ -74,6 +76,9 @@ public class MakeOfferPopup extends GraphicalObject {
 		Color commodity1Color = commodity1.getColor();
 		Color commodity2Color = commodity2.getColor();
 		
+		String volume1 = String.valueOf(volumes[0]) + String.valueOf(volumes[1]);
+		String volume2 = String.valueOf(volumes[2]) + String.valueOf(volumes[3]);
+		
 		int textx = x + 30;
 		int texty = y + 60;
 		
@@ -81,6 +86,7 @@ public class MakeOfferPopup extends GraphicalObject {
 		
 		g.setColor(Color.BLACK);
 		g.drawString("__", textx, texty);
+		g.drawString(volume1, textx, texty);
 		
 		textx += 55;
 		g.setColor(commodity1Color);
@@ -99,6 +105,7 @@ public class MakeOfferPopup extends GraphicalObject {
 		textx += 70;
 		g.setColor(Color.BLACK);
 		g.drawString("__", textx, texty);
+		g.drawString(volume2 + "", textx, texty);
 		
 		textx += 55;
 		g.setColor(commodity2Color);
@@ -119,7 +126,15 @@ public class MakeOfferPopup extends GraphicalObject {
 		}
 		if(drawingCursor) {
 			g.setColor(Color.BLACK);
-			g.fillRect(cursorx, cursory, 3, 30);
+			int cursorx = 0;
+			switch(editingChar){
+			case 0: cursorx = x + 30; break;
+			case 1: cursorx = x + 48; break;
+			case 2: cursorx = x + 405; break;
+			case 3: cursorx = x + 424; break;
+			case 4: cursorx = x + 442; break;
+			}
+			g.fillRect(cursorx, texty - 30, 3, 30);
 		}
 	}
 	
@@ -142,6 +157,31 @@ public class MakeOfferPopup extends GraphicalObject {
 			if(!commodity2IndexTopped())
 				commodity2Index++;
 		}
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent keyPress) {
+		if(keyPress.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+			int indexToClear = editingChar - 1;
+			if(indexToClear >= 0){
+				volumes[indexToClear] = ' ';
+				editingChar--;
+			}
+		}
+		
+		char key = keyPress.getKeyChar();
+		try {
+			Integer.parseInt(String.valueOf(key));
+		} catch(NumberFormatException e) {
+			return;
+		}
+		
+		if(editingChar < 4){
+			volumes[editingChar] = key;
+			editingChar++;
+		}
+		
+		
 	}
 	
 	private class SelectionButton {

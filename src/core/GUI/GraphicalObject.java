@@ -3,11 +3,11 @@ package core.GUI;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-
 abstract class GraphicalObject implements Clickable {
-
+	
 	protected int x;
 	protected int y;
 	protected int width;
@@ -46,12 +46,12 @@ abstract class GraphicalObject implements Clickable {
 	public boolean pointInBounds(int x, int y) {
 		return shape.contains(x, y);
 	}
-
-	protected void drawOutline(Color backgroundColor, int outlineOffset, Graphics2D g){
+	
+	protected void drawOutline(Color backgroundColor, int outlineOffset, Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.fill(shape);
 		g.setColor(backgroundColor);
-		g.fill(makeShape(x + outlineOffset, y + outlineOffset, width - outlineOffset*2, height - outlineOffset*2));
+		g.fill(makeShape(x + outlineOffset, y + outlineOffset, width - outlineOffset * 2, height - outlineOffset * 2));
 	}
 	
 	/**
@@ -76,8 +76,12 @@ abstract class GraphicalObject implements Clickable {
 	}
 	
 	@Override
-	public void clicked(MouseEvent e) {
-		System.out.println(this.getClass().getSimpleName() + " clicked");
-	}
+	public void clicked(MouseEvent e) {}
+	
+	/**
+	 * Allows the GraphicalObject to manipulate keyboard input
+	 * @param e the KeyEvent of a key press
+	 */
+	public void keyPressed(KeyEvent e) {}
 	
 }
