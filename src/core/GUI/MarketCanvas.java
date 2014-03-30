@@ -48,11 +48,11 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		Color color = new Color(1f, 1f, 1f, .8f);
 		overlay = new TransparencyOverlay(this, color);
 		
-		int width = 300;
-		int height = 200;
+		int width = 750;
+		int height = 100;
 		int x = this.getWidth() / 2 - width / 2;
 		int y = this.getHeight() / 2 - height / 2;
-		popup = new MakeOfferPopup(x, y, width, height, this);
+		popup = new MakeOfferPopup(x, y, width, height, this, sim.getCommodities());
 	}
 	
 	/**
@@ -68,8 +68,8 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		this.graphicalObjects.add(graphicalObject);
 	}
 	
-	private void removeGraphicalObject(GraphicalObject graphicalObject){
-		if(this.graphicalObjects != null){
+	private void removeGraphicalObject(GraphicalObject graphicalObject) {
+		if(this.graphicalObjects != null) {
 			this.graphicalObjects.remove(graphicalObject);
 		}
 	}
@@ -122,7 +122,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 						topObjectClicked = graphicalObject;
 				}
 				if(topObjectClicked != null)
-					topObjectClicked.clicked();
+					topObjectClicked.clicked(click);
 			}
 		}
 		
@@ -134,6 +134,11 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		}
 	}
 	
+	/**
+	 * Receives messages from the GraphicalObjects
+	 * 
+	 * @param message message from a GraphicalObject
+	 */
 	public void message(String message) {
 		switch(message) {
 		case "MakeOfferOverlay":

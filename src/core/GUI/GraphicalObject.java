@@ -3,6 +3,7 @@ package core.GUI;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.MouseEvent;
 
 
 abstract class GraphicalObject implements Clickable {
@@ -13,8 +14,6 @@ abstract class GraphicalObject implements Clickable {
 	protected int height;
 	DoubleBufferedCanvas canvas;
 	Shape shape;
-	
-	protected final int outlineOffset = 3;
 	
 	public GraphicalObject(int x, int y, int width, int height, DoubleBufferedCanvas canvas) {
 		this.x = x;
@@ -47,6 +46,24 @@ abstract class GraphicalObject implements Clickable {
 	public boolean pointInBounds(int x, int y) {
 		return shape.contains(x, y);
 	}
+
+	protected void drawOutline(Color backgroundColor, int outlineOffset, Graphics2D g){
+		g.setColor(Color.BLACK);
+		g.fill(shape);
+		g.setColor(backgroundColor);
+		g.fill(makeShape(x + outlineOffset, y + outlineOffset, width - outlineOffset*2, height - outlineOffset*2));
+	}
+	
+	/**
+	 * Draws a rounded rectangle with a white inside and black border
+	 * based on the shape of the GraphicalObject
+	 * 
+	 * @param backgroundColor background color to fill the outline with
+	 * @param g Graphics2D object to do the drawing with
+	 */
+	protected void drawOutline(Color backgroundColor, Graphics2D g) {
+		drawOutline(backgroundColor, 3, g);
+	}
 	
 	/**
 	 * Draws a rounded rectangle with a white inside and black border
@@ -58,22 +75,8 @@ abstract class GraphicalObject implements Clickable {
 		drawOutline(Color.WHITE, g);
 	}
 	
-	/**
-	 * Draws a rounded rectangle with a white inside and black border
-	 * based on the shape of the GraphicalObject
-	 * 
-	 * @param backgroundColor background color to fill the outline with
-	 * @param g Graphics2D object to do the drawing with
-	 */
-	protected void drawOutline(Color backgroundColor, Graphics2D g) {
-		g.setColor(Color.BLACK);
-		g.fill(shape);
-		g.setColor(backgroundColor);
-		g.fill(makeShape(x + outlineOffset, y + outlineOffset, width - outlineOffset*2, height - outlineOffset*2));
-	}
-	
 	@Override
-	public void clicked() {
+	public void clicked(MouseEvent e) {
 		System.out.println(this.getClass().getSimpleName() + " clicked");
 	}
 	

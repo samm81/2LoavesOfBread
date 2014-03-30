@@ -3,6 +3,7 @@ package core.GUI;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 
 
@@ -27,8 +28,8 @@ public class TransparencyOverlay extends GraphicalObject {
 	}
 	
 	@Override
-	public void clicked() {
-		super.clicked();
+	public void clicked(MouseEvent e) {
+		super.clicked(e);
 		canvas.message("CloseMakeOffer");
 	}
 	

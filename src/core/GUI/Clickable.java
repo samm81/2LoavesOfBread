@@ -1,5 +1,7 @@
 package core.GUI;
 
+import java.awt.event.MouseEvent;
+
 
 
 /**
@@ -11,6 +13,6 @@ interface Clickable {
 	
 	boolean pointInBounds(int x, int y);
 	
-	void clicked();
+	void clicked(MouseEvent e);
 	
 }

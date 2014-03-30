@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 
@@ -34,8 +35,8 @@ public class MakeOfferButton extends GraphicalObject {
 	}
 	
 	@Override
-	public void clicked() {
-		super.clicked();
+	public void clicked(MouseEvent e) {
+		super.clicked(e);
 		canvas.message("MakeOfferOverlay");
 	}
 	
