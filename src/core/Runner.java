@@ -22,6 +22,9 @@ public class Runner {
 	static int width = 900;
 	static int height = 700;
 	
+	/**
+	 * Sets up the MarketSimulation and JFrame
+	 */
 	public static void main(String[] args) {
 		MarketSimulation sim = new MarketSimulation(0.1);
 		//Creates the transaction thread that evaluates transactions, every dt.

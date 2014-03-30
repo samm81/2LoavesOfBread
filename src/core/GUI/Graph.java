@@ -3,6 +3,8 @@ package core.GUI;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.RoundRectangle2D;
 
 import core.commodities.Commodity;
 import core.commodities.Ticker;
@@ -11,33 +13,30 @@ import core.commodities.Ticker;
  * Class that holds the graphical representation of a commodity and
  * it's tickers.
  * 
- * @author Sam "Fabulous Hands" Maynard
- *
+ * @author Sam Maynard
+ * 
  */
-public class Graph {
-
-	private int width;
-	private int height;
+public class Graph extends GraphicalObject {
+	
 	private Commodity commodity;
 	
-	public Graph(int width, int height, Commodity commodity) {
-		this.width = width;
-		this.height = height;
+	public Graph(int x, int y, int width, int height, DoubleBufferedCanvas canvas, Commodity commodity) {
+		super(x, y, width, height, canvas);
 		this.commodity = commodity;
 	}
-
-	/**
-	 * Draws the graph at the specified position.
-	 * @param x x coord to draw the graph at
-	 * @param y y coord to draw the graph at
-	 * @param g Graphics2D object to draw with
-	 */
-	public void drawSelf(int x, int y, Graphics2D g) {
-		GUIUtils.drawOutline(x, y, width, height, 50, g);
-
+	
+	@Override
+	protected Shape makeShape(int x, int y, int width, int height) {
+		return new RoundRectangle2D.Float(x, y, width, height, 50, 50);
+	}
+	
+	@Override
+	public void drawSelf(Graphics2D g) {
+		drawOutline(g);
+		
 		int titlex = x + 30;
 		int titley = y + 30;
-		String name = commodity.getClass().getSimpleName();
+		String name = commodity.name();
 		g.setFont(new Font("Sans Serif", Font.BOLD, 22));
 		g.setColor(Color.BLACK);
 		g.drawString(name, titlex, titley);

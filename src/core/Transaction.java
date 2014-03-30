@@ -21,11 +21,11 @@ public class Transaction {
 	public final UUID id;
 	public Commodity commodity1;
 	public Commodity commodity2;
-	public double volume1;
-	public double volume2;
+	public int volume1;
+	public int volume2;
 	public final Actor sender;
 
-	public Transaction(double volume1, Commodity commodity1, double volume2, Commodity commodity2, Actor sender) {
+	public Transaction(int volume1, Commodity commodity1, int volume2, Commodity commodity2, Actor sender) {
 		this.id = UUID.randomUUID();
 		this.commodity1 = commodity1;
 		this.commodity2 = commodity2;

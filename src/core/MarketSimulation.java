@@ -60,6 +60,13 @@ public class MarketSimulation extends Simulation {
 	@Override
 	protected void initialize() {}
 	
+	/**
+	 * The main engine behind the game
+	 * tick goes through every actor, gets their best offer
+	 * compares all offers to each other, finds offers
+	 * that match, carry out the offers, inform the actors, 
+	 * and inform the commodities.
+	 */
 	@Override
 	protected void tick() {
 		//Do we want evaluation and update to be sequential or concurrent.
@@ -80,7 +87,7 @@ public class MarketSimulation extends Simulation {
 		Commodity commodity1 = this.commodities.get(commodity1Index);
 		Commodity commodity2 = this.commodities.get(commodity2Index);
 		
-		double ratio = commodity1.getMostRecentRatios().get(commodity2.getClass());
+		double ratio = commodity1.getMostRecentRatios().get(commodity2.name());
 		double trade = 0;
 		if(ratio == 0) {
 			trade = r.nextInt(9);
@@ -95,11 +102,11 @@ public class MarketSimulation extends Simulation {
 		
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : commodities) { // go through all the commodities
-			Hashtable<Class<? extends Commodity>, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
-			for(Entry<Class<? extends Commodity>, Ticker> entry : tickers.entrySet()) { // find the most recent transaction value for each ticker commodity, and update the ticker
+			Hashtable<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
+			for(Entry<String, Ticker> entry : tickers.entrySet()) { // find the most recent transaction value for each ticker commodity, and update the ticker
 				Ticker ticker = entry.getValue();
-				Class<? extends Commodity> tickerClass = entry.getKey();
-				double dataPoint = commodity.getMostRecentRatios().get(tickerClass);
+				String tickerName = entry.getKey();
+				double dataPoint = commodity.getMostRecentRatios().get(tickerName);
 				try {
 					ticker.addDataPoint(dataPoint);
 				} catch(InterruptedException e) {
