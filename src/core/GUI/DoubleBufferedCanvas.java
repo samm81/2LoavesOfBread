@@ -236,6 +236,8 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 	 */
 	abstract protected void processInputs();
 	
+	abstract public void message(String message);
+	
 	/**
 	 * Class for creating an FPS Counter
 	 * @author Sam Maynard

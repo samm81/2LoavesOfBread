@@ -21,8 +21,8 @@ public class Inventory extends GraphicalObject {
 	
 	LinkedList<Commodity> commodities;
 	
-	public Inventory(int x, int y, int width, int height, LinkedList<Commodity> commodities) {
-		super(x, y, width, height);
+	public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities) {
+		super(x, y, width, height, canvas);
 		this.commodities = commodities;
 	}
 	

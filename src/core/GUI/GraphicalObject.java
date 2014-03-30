@@ -11,16 +11,18 @@ abstract class GraphicalObject implements Clickable {
 	protected int y;
 	protected int width;
 	protected int height;
+	DoubleBufferedCanvas canvas;
 	Shape shape;
 	
 	protected final int outlineOffset = 3;
 	
-	public GraphicalObject(int x, int y, int width, int height) {
+	public GraphicalObject(int x, int y, int width, int height, DoubleBufferedCanvas canvas) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.shape = makeShape(x, y, width, height);
+		this.canvas = canvas;
 	}
 	
 	/**

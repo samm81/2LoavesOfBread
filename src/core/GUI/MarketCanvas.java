@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import core.MarketSimulation;
 import core.commodities.Commodity;
@@ -19,9 +20,9 @@ import core.commodities.Commodity;
 @SuppressWarnings("serial")
 public class MarketCanvas extends DoubleBufferedCanvas {
 	
-	MarketSimulation sim;
+	protected MarketSimulation sim;
 	
-	LinkedList<GraphicalObject> graphicalObjects;
+	protected LinkedBlockingQueue<GraphicalObject> graphicalObjects;
 	
 	public MarketCanvas(int fps, MarketSimulation sim) {
 		super(fps);
@@ -31,16 +32,27 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	@Override
 	void init() {
 		LinkedList<Graph> graphs = createGraphs(sim.getCommodities(), 200);
-		Key key = new Key(0, 0, this.getWidth(), 40, sim.getCommodities());
-		Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, sim.getCommodities());
-		MakeOfferButton makeOfferButton = new MakeOfferButton(this.getWidth() - 250, this.getHeight() - 100, 220, 50);
+		Key key = new Key(0, 0, this.getWidth(), 40, this, sim.getCommodities());
+		Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, sim.getCommodities());
+		MakeOfferButton makeOfferButton = new MakeOfferButton(this.getWidth() - 250, this.getHeight() - 100, 220, 50, this);
 		
-		graphicalObjects = new LinkedList<GraphicalObject>();
-		graphicalObjects.add(key);
-		graphicalObjects.add(inventory);
-		graphicalObjects.add(makeOfferButton);
+		addGraphicalObject(key);
+		addGraphicalObject(inventory);
+		addGraphicalObject(makeOfferButton);
 		for(Graph graph : graphs)
-			graphicalObjects.add(graph);
+			addGraphicalObject(graph);
+	}
+	
+	/**
+	 * Adds a GraphicalObject to the list of GraphicalObjects to
+	 * be drawn.
+	 * @param graphicalObject GraphicalObject to be added
+	 */
+	public void addGraphicalObject(GraphicalObject graphicalObject) {
+		if(this.graphicalObjects == null)
+			this.graphicalObjects = new LinkedBlockingQueue<GraphicalObject>();
+		
+		this.graphicalObjects.add(graphicalObject);
 	}
 	
 	/**
@@ -58,7 +70,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		for(Commodity commodity : commodities) {
 			int x = (i % 2) * (this.getWidth() / 2 + 5);
 			int y = 45 + (i / 2) * 203;
-			graphs.add(new Graph(x, y, graphWidth, graphHeight, commodity));
+			graphs.add(new Graph(x, y, graphWidth, graphHeight, this, commodity));
 			i++;
 		}
 		return graphs;
@@ -96,6 +108,16 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			for(KeyEvent keyPress : keyPresses){
 				System.out.println(keyPress.getKeyChar() + " pressed");
 			}
+		}
+	}
+
+	public void message(String message) {
+		switch(message){
+		case "MakeOfferOverlay":
+			Color color = new Color(1f, 1f, 1f, .5f);
+			TransparencyOverlay overlay = new TransparencyOverlay(this, color);
+			addGraphicalObject(overlay);
+			break;
 		}
 	}
 	

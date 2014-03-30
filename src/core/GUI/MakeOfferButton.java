@@ -9,8 +9,8 @@ import java.awt.geom.RoundRectangle2D;
 
 public class MakeOfferButton extends GraphicalObject {
 	
-	public MakeOfferButton(int x, int y, int width, int height) {
-		super(x, y, width, height);
+	public MakeOfferButton(int x, int y, int width, int height, MarketCanvas canvas) {
+		super(x, y, width, height, canvas);
 	}
 
 	@Override
@@ -29,6 +29,12 @@ public class MakeOfferButton extends GraphicalObject {
 		
 		g.setColor(Color.BLACK);
 		g.drawString("MAKE OFFER", textx, texty);
+	}
+	
+	@Override
+	public void clicked() {
+		super.clicked();
+		canvas.message("MakeOfferOverlay");
 	}
 	
 }
