@@ -75,10 +75,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 			public void keyReleased(KeyEvent e) {
 				int key = e.getKeyCode();
 				keys.put(key, false);
-			}
-			
-			@Override
-			public void keyTyped(KeyEvent e) {
+				
 				keyPresses.add(e);
 			}
 			

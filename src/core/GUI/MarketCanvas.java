@@ -129,7 +129,9 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		if(this.keyPressesWaiting()) {
 			LinkedList<KeyEvent> keyPresses = this.flushKeyPressQueue();
 			for(KeyEvent keyPress : keyPresses) {
-				System.out.println(keyPress.getKeyChar() + " pressed");
+				for(GraphicalObject graphicalObject : graphicalObjects){
+					graphicalObject.keyPressed(keyPress);
+				}
 			}
 		}
 	}
