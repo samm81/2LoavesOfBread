@@ -96,10 +96,13 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			for(MouseEvent click : clicks){
 				int x = click.getX();
 				int y = click.getY();
+				GraphicalObject topObjectClicked = null;
 				for(GraphicalObject graphicalObject : graphicalObjects){
 					if(graphicalObject.pointInBounds(x, y))
-						graphicalObject.clicked();
+						topObjectClicked = graphicalObject;
 				}
+				if(topObjectClicked != null)
+					topObjectClicked.clicked();
 			}
 		}
 		
@@ -114,7 +117,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	public void message(String message) {
 		switch(message){
 		case "MakeOfferOverlay":
-			Color color = new Color(1f, 1f, 1f, .5f);
+			Color color = new Color(1f, 1f, 1f, .8f);
 			TransparencyOverlay overlay = new TransparencyOverlay(this, color);
 			addGraphicalObject(overlay);
 			break;
