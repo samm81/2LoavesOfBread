@@ -15,7 +15,7 @@ import core.commodities.Commodity;
  * The general container for all the games elements.
  * 
  * @author Sam Maynard
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class MarketCanvas extends DoubleBufferedCanvas {
@@ -24,6 +24,9 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	
 	protected LinkedBlockingQueue<GraphicalObject> graphicalObjects;
 	
+	protected TransparencyOverlay overlay;
+	protected MakeOfferPopup popup;
+	
 	public MarketCanvas(int fps, MarketSimulation sim) {
 		super(fps);
 		this.sim = sim;
@@ -31,32 +34,49 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	
 	@Override
 	void init() {
-		LinkedList<Graph> graphs = createGraphs(sim.getCommodities(), 200);
 		Key key = new Key(0, 0, this.getWidth(), 40, this, sim.getCommodities());
 		Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, sim.getCommodities());
 		MakeOfferButton makeOfferButton = new MakeOfferButton(this.getWidth() - 250, this.getHeight() - 100, 220, 50, this);
-		
 		addGraphicalObject(key);
 		addGraphicalObject(inventory);
 		addGraphicalObject(makeOfferButton);
+		
+		LinkedList<Graph> graphs = createGraphs(sim.getCommodities(), 200);
 		for(Graph graph : graphs)
 			addGraphicalObject(graph);
+		
+		Color color = new Color(1f, 1f, 1f, .8f);
+		overlay = new TransparencyOverlay(this, color);
+		
+		int width = 300;
+		int height = 200;
+		int x = this.getWidth() / 2 - width / 2;
+		int y = this.getHeight() / 2 - height / 2;
+		popup = new MakeOfferPopup(x, y, width, height, this);
 	}
 	
 	/**
 	 * Adds a GraphicalObject to the list of GraphicalObjects to
 	 * be drawn.
+	 * 
 	 * @param graphicalObject GraphicalObject to be added
 	 */
-	public void addGraphicalObject(GraphicalObject graphicalObject) {
+	private void addGraphicalObject(GraphicalObject graphicalObject) {
 		if(this.graphicalObjects == null)
 			this.graphicalObjects = new LinkedBlockingQueue<GraphicalObject>();
 		
 		this.graphicalObjects.add(graphicalObject);
 	}
 	
+	private void removeGraphicalObject(GraphicalObject graphicalObject){
+		if(this.graphicalObjects != null){
+			this.graphicalObjects.remove(graphicalObject);
+		}
+	}
+	
 	/**
 	 * generates the graphs from a list of commodities
+	 * 
 	 * @param commodities the commodities to generate graphs from
 	 * @param height the height of the graphs
 	 * @return LinkedList<Graph> of the graphs created
@@ -88,16 +108,16 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	
 	@Override
 	protected void updateVars() {}
-
+	
 	@Override
 	protected void processInputs() {
-		if(this.mouseClicksWaiting()){
+		if(this.mouseClicksWaiting()) {
 			LinkedList<MouseEvent> clicks = this.flushMouseClickQueue();
-			for(MouseEvent click : clicks){
+			for(MouseEvent click : clicks) {
 				int x = click.getX();
 				int y = click.getY();
 				GraphicalObject topObjectClicked = null;
-				for(GraphicalObject graphicalObject : graphicalObjects){
+				for(GraphicalObject graphicalObject : graphicalObjects) {
 					if(graphicalObject.pointInBounds(x, y))
 						topObjectClicked = graphicalObject;
 				}
@@ -106,20 +126,23 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			}
 		}
 		
-		if(this.keyPressesWaiting()){
+		if(this.keyPressesWaiting()) {
 			LinkedList<KeyEvent> keyPresses = this.flushKeyPressQueue();
-			for(KeyEvent keyPress : keyPresses){
+			for(KeyEvent keyPress : keyPresses) {
 				System.out.println(keyPress.getKeyChar() + " pressed");
 			}
 		}
 	}
-
+	
 	public void message(String message) {
-		switch(message){
+		switch(message) {
 		case "MakeOfferOverlay":
-			Color color = new Color(1f, 1f, 1f, .8f);
-			TransparencyOverlay overlay = new TransparencyOverlay(this, color);
 			addGraphicalObject(overlay);
+			addGraphicalObject(popup);
+			break;
+		case "CloseMakeOffer":
+			removeGraphicalObject(popup);
+			removeGraphicalObject(overlay);
 			break;
 		}
 	}

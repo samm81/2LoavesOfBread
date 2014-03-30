@@ -84,11 +84,26 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 			
 		});
 		
+		// now with a custom tolerance system
 		addMouseListener(new MouseAdapter() {
+			int x;
+			int y;
+			MouseEvent e;
+			int tolerance = 15;
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				mouseClicks.add(e);
+			public void mousePressed(MouseEvent e) {
+				x = e.getX();
+				y = e.getY();
+				this.e = e;
+			}
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				int x = e.getX();
+				int y = e.getY();
+				if(Math.abs(this.x - x) < tolerance && Math.abs(this.y - y) < tolerance)
+					mouseClicks.add(this.e);
 			}
 			
 		});

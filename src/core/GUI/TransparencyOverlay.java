@@ -26,4 +26,10 @@ public class TransparencyOverlay extends GraphicalObject {
 		g.fill(shape);
 	}
 	
+	@Override
+	public void clicked() {
+		super.clicked();
+		canvas.message("CloseMakeOffer");
+	}
+	
 }

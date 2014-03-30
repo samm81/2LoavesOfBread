@@ -20,12 +20,14 @@ public class MakeOfferButton extends GraphicalObject {
 	
 	@Override
 	public void drawSelf(Graphics2D g) {
-		drawOutline(new Color(.5f, .5f, .8f), g);
+		drawOutline(new Color(.31f, .84f, .92f), g);
 		
 		g.setFont(new Font("Sans Serif", Font.BOLD, 26));
 		
 		int textx = x + 20;
 		int texty = y + 35;
+		
+		//TODO: scale size of text based on button width/height
 		
 		g.setColor(Color.BLACK);
 		g.drawString("MAKE OFFER", textx, texty);
