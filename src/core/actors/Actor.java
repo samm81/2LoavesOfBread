@@ -13,16 +13,17 @@ import core.commodities.Commodity;
  * 
  * @author Sam "Fabulous Hands" Maynard
  */
-public class Actor {
 
-	protected LinkedList<Commodity> commodities; // list of global commodities (Can be used to get the exchange rate)
+public abstract class Actor {
+
+	protected LinkedList<Commodity> commodities; // list of global commodities
 	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
 	
 
 	protected double[][] exchangematrix; //actor's own personal exchange rate
 	protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
 	
-			protected ConcurrentHashMap<String, Integer> volumes;
+	protected ConcurrentHashMap<String, Integer> volumes;
 	private final Integer startingVolumes = new Integer(3); 
 
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
@@ -39,7 +40,6 @@ public class Actor {
 			}
 		for(Commodity s : this.commodities)
 			this.volumes.put(s.name(),this.startingVolumes);
-
 	}
 
 	// patrick:

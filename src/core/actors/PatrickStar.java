@@ -20,13 +20,13 @@ public class PatrickStar extends Actor {
 	public Transaction getBestOffer() {
 		int want = (int) (Math.random()*this.commodities.size()); //item wanted
 		int tradedaway = -1; //item to be traded for want
-		
+
 		int[] inven = new int[commodities.size()];
 		for(int i = 0; i < inven.length; i++)
 		{
 			inven[i] = volumes.get(commodities.get(i));
 		}
-		
+
 
 		for(int i = 0; i < exchangematrix[want].length; i++)
 		{
@@ -38,10 +38,10 @@ public class PatrickStar extends Actor {
 					tradedaway = i;
 			}
 		}
-		
+
 		int vol1 = (int) Math.ceil(inven[tradedaway]/2);
 		int vol2 = (int) (vol1 * exchangematrix[want][tradedaway]);
-		
+
 		/*try {
 			submitTransaction(commodities.get(tradedaway), commodities.get(want), vol1, vol2);
 		} catch (InterruptedException e) {
@@ -58,7 +58,7 @@ public class PatrickStar extends Actor {
 		while(i.hasNext()){
 			Commodity a = i.next();
 			Hashtable<String, Double> exchangerate = a.getMostRecentRatios();
-			
+
 			for(int row = 0; row < exchangematrix.length; row++)
 			{
 				if(row != col)
@@ -66,10 +66,9 @@ public class PatrickStar extends Actor {
 				else
 					exchangematrix[row][col] = 1;
 			}
-			
+
 			col++;
 		}
-		
 	}
 
 }

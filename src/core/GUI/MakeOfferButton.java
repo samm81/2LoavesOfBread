@@ -15,7 +15,7 @@ import java.awt.geom.RoundRectangle2D;
  *
  */
 public class MakeOfferButton extends GraphicalObject {
-	
+
 	public MakeOfferButton(int x, int y, int width, int height, MarketCanvas canvas) {
 		super(x, y, width, height, canvas);
 	}
@@ -24,26 +24,26 @@ public class MakeOfferButton extends GraphicalObject {
 	protected Shape makeShape(int x, int y, int width, int height) {
 		return new RoundRectangle2D.Float(x, y, width, height, 20, 20);
 	}
-	
+
 	@Override
 	public void drawSelf(Graphics2D g) {
 		drawOutline(new Color(.31f, .84f, .92f), g);
-		
+
 		g.setFont(new Font("Sans Serif", Font.BOLD, 26));
-		
+
 		int textx = x + 20;
 		int texty = y + 35;
-		
+
 		//TODO: scale size of text based on button width/height
-		
+
 		g.setColor(Color.BLACK);
 		g.drawString("MAKE OFFER", textx, texty);
 	}
-	
+
 	@Override
 	public void clicked(MouseEvent e) {
 		super.clicked(e);
 		canvas.message("MakeOfferOverlay");
 	}
-	
+
 }
