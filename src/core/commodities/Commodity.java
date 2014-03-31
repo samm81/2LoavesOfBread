@@ -61,7 +61,7 @@ public enum Commodity {
 	 * one for every commodity given (besides itself)
 	 * 
 	 * @param commodities the commodities to create tickers from
-	 * @param tickerMagnitude the number of transactions the ticker shows
+	 * @param tickerMagnitude the number of offers the ticker shows
 	 */
 	public void createTickersFromCommodities(LinkedList<Commodity> commodities, int tickerMagnitude) {
 		for(Commodity commodity : commodities) {
@@ -73,7 +73,7 @@ public enum Commodity {
 	}
 
 	/**
-	 * Inserts a transaction into the transactions list,
+	 * Inserts a transaction into the offers list,
 	 * and updates mostRecentRatios, which is used to update the
 	 * ticker.
 	 * 

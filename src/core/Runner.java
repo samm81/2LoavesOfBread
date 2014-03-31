@@ -2,12 +2,13 @@ package core;
 
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.swing.JFrame;
 
 import core.GUI.MarketCanvas;
 import core.actors.Player;
-import core.channels.TransactionChannel;
+import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
 /**
@@ -22,23 +23,27 @@ public class Runner {
 	static int tickerMagnitude = 150;
 	static int width = 900;
 	static int height = 700;
+	static final double dt = .1d;
 
 	/**
 	 * Sets up the MarketSimulation and JFrame
 	 */
 	public static void main(String[] args) {
-		MarketSimulation sim = new MarketSimulation(0.1);
-		//Creates the transaction thread that evaluates transactions, every dt.
-		Thread transactions = new Thread(new TransactionChannel(sim.getTransactions(), sim.dt*4)); 
+		OfferChannel offers = new OfferChannel(new LinkedBlockingQueue<Transaction>(), 
+				new LinkedBlockingQueue<Transaction>(), dt*4);
+
+		MarketSimulation sim = new MarketSimulation(offers.getGlobalList(),dt);
+		//Creates the transaction thread that evaluates offers, every dt.
+		Thread transactions = new Thread(offers); 
 		// ok I agree, there's got to be a better way to do this
 		// enum maybe?
 		sim.addCommodity(Commodity.Fish);
 		sim.addCommodity(Commodity.Bread);
 		sim.addCommodity(Commodity.Watermelon);
 		sim.addCommodity(Commodity.Oxen);
-		Player p = new Player(sim.getCommodities(),sim.getTransactions());
+		Player p = new Player(sim.getCommodities(),offers.getOfferList());
 		sim.addActor(p);
-		Player p2 = new Player(sim.getCommodities(),sim.getTransactions());
+		Player p2 = new Player(sim.getCommodities(),offers.getOfferList());
 		sim.addActor(p2);
 		sim.createTickers(tickerMagnitude); // required
 

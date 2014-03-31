@@ -14,10 +14,10 @@ public class Player extends Actor {
 
 	Transaction bestOffer = null;
 
-	public Transaction getBestOffer() {
+/*	public Transaction getBestOffer() {
 		return bestOffer;
 	}
-
+*/
 	public void setBestOffer(Transaction bestOffer) {
 		this.bestOffer = bestOffer;
 	}
