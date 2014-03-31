@@ -7,7 +7,13 @@ import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
-
+/**
+ * Class that holds the graphical representation of the
+ * "Make Offer" button.
+ * 
+ * @author Sam Maynard
+ *
+ */
 public class MakeOfferButton extends GraphicalObject {
 	
 	public MakeOfferButton(int x, int y, int width, int height, MarketCanvas canvas) {

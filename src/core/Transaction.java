@@ -83,6 +83,10 @@ public class Transaction {
 		if(this.getID() == e.getID())
 			return true;
 		return false;
-		
+	}
+	
+	@Override
+	public String toString() {
+		return volume1 + " " + commodity1.name() + " for " + volume2 + " " + commodity2.name();
 	}
 }

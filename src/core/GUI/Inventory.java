@@ -7,6 +7,7 @@ import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
 
+import core.Player;
 import core.commodities.Commodity;
 
 /**
@@ -20,10 +21,12 @@ import core.commodities.Commodity;
 public class Inventory extends GraphicalObject {
 	
 	LinkedList<Commodity> commodities;
+	Player player;
 	
-	public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities) {
+	public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities, Player player) {
 		super(x, y, width, height, canvas);
 		this.commodities = commodities;
+		this.player = player;
 	}
 	
 	@Override

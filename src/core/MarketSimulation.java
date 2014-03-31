@@ -78,7 +78,6 @@ public class MarketSimulation extends Simulation {
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket();
 		}
-		System.out.println(player.getBestOffer());
 		
 		// START TEMP CODE
 		// will be actors making their offers to the market

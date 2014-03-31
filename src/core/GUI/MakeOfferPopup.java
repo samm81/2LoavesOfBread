@@ -12,6 +12,13 @@ import java.util.LinkedList;
 
 import core.commodities.Commodity;
 
+/**
+ * Contains all the bits and pieces for the make offer
+ * popup. Also handles input for it.
+ * 
+ * @author Sam Maynard
+ *
+ */
 public class MakeOfferPopup extends GraphicalObject {
 	
 	LinkedList<Commodity> commodities;
@@ -210,6 +217,13 @@ public class MakeOfferPopup extends GraphicalObject {
 		}
 	}
 	
+	/**
+	 * Class that holds the graphical representation of the
+	 * up/down arrows that select the commodity.
+	 * 
+	 * @author Sam Maynard
+	 *
+	 */
 	private class SelectionButton {
 		
 		private Polygon triangle;
