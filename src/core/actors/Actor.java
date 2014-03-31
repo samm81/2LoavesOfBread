@@ -24,6 +24,7 @@ public abstract class Actor {
 		this.volumes= new ConcurrentHashMap<String, Integer>(this.commodities.size());
 		for(Commodity s : this.commodities)
 			this.volumes.put(s.name(),this.startingVolumes);
+	
 	}
 	// patrick:
 	// actor figures out what they want the most right now, and places an open offer
@@ -46,7 +47,11 @@ public abstract class Actor {
 
 	public void acceptTransaction(Transaction t){
 		//Update Correlating volumes.
-		this.volumes.put(t.getCommodity1().name(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() - t.getVolume1())));
-		this.volumes.put(t.getCommodity2().name(), new Integer((int) (this.volumes.get(t.getCommodity2()).intValue() + t.getVolume2())));
+		this.volumes.put(t.getCommodity1().name(), 
+				new Integer(
+						(int) 
+						(this.volumes.get(t.getCommodity1().name()).intValue() //Null pointer thrown here because actor doesn't have volumes
+								- t.getVolume1())));
+		this.volumes.put(t.getCommodity2().name(), new Integer((int) (this.volumes.get(t.getCommodity2().name()).intValue() + t.getVolume2())));
 	}
 }

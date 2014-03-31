@@ -20,58 +20,63 @@ import core.commodities.Ticker;
  * 
  */
 public class MarketSimulation extends Simulation {
-	
+
 	Player player;
 	Player player2;
-	
+
 	protected HashSet<Actor> actors;
 	protected LinkedList<Commodity> commodities;
 	protected LinkedBlockingQueue<Transaction> transactions;
-	
+
 	public MarketSimulation(double dt) {
 		super(dt);
 		this.actors = new HashSet<Actor>();
 		this.commodities = new LinkedList<Commodity>();
 		this.transactions = new LinkedBlockingQueue<Transaction>();
-		this.player = new Player(commodities, transactions);
-		this.player2 = new Player(commodities, transactions);
-		this.actors.add(this.player);
-		this.actors.add(this.player2);
+		//Players Cannot be added here because commodities have not been added yet.
 	}
-	
+
 	public LinkedBlockingQueue<Transaction> getTransactions() {
 		return transactions;
 	}
-	
+
 	public HashSet<Actor> getActors() {
 		return this.actors;
 	}
-	
+
 	public LinkedList<Commodity> getCommodities() {
 		return this.commodities;
 	}
-	
+
 	public void addActor(Actor actor) {
 		this.actors.add(actor);
+		if(this.player == null){
+			this.player = (Player) actor;
+			return;
+		}
+		else {
+			if(this.player2 == null){
+				this.player2 = (Player) actor;
+				return;
+			}
+		}
 	}
-	
+	public Player getPlayer(){
+		return this.player;
+	}
 	public void addCommodity(Commodity commodity) {
 		this.commodities.add(commodity);
 	}
-	
-	public Player getPlayer() {
-		return this.player;
-	}
-	
+
 	public void createTickers(int tickerMagnitude) {
 		for(Commodity commodity : commodities) {
 			commodity.createTickersFromCommodities(commodities, tickerMagnitude);
 		}
 	}
-	
+
 	@Override
 	protected void initialize() {}
-	
+
 	/**
 	 * The main engine behind the game
 	 * tick goes through every actor, gets their best offer
@@ -86,7 +91,7 @@ public class MarketSimulation extends Simulation {
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket();
 		}
-		
+
 		// START TEMP CODE
 		// will be actors making their offers to the market
 		// and then the market matching the offers
@@ -98,11 +103,12 @@ public class MarketSimulation extends Simulation {
 		} while(commodity2Index == commodity1Index);
 		Commodity commodity1 = this.commodities.get(commodity1Index);
 		Commodity commodity2 = this.commodities.get(commodity2Index);
-		
+
 		double ratio = commodity1.getMostRecentRatios().get(commodity2.name());
 		double trade = 0;
 		if(ratio == 0) {
-			trade = r.nextInt(9);
+			int x = r.nextInt(9);
+			trade = x > 0 ? x : 1;
 		} else {
 			do {
 				trade = ratio + r.nextDouble() / 2 - .25;
@@ -113,7 +119,7 @@ public class MarketSimulation extends Simulation {
 		//Line below creates problems, as there is no Actor to reference who made the trade
 		//commodity1.addTransaction(new Transaction(1, commodity1, (int) trade, commodity2,this.player));
 		// END TEMP CODE
-		
+
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : commodities) { // go through all the commodities
 			Hashtable<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
@@ -129,5 +135,5 @@ public class MarketSimulation extends Simulation {
 			}
 		}
 	}
-	
+
 }

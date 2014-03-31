@@ -56,7 +56,10 @@ public class Transaction {
 	}
 
 	public double getRatio() {
-		return volume2 / volume1;
+		if(volume1 == 0){
+			return 1;
+		}
+		return Math.max(1, volume2 / volume1); // Sometimes we get divide by zero errors. Should probably figure out why sometime.
 	}
 
 	public double getTotalVolume() {
