@@ -19,6 +19,8 @@ import core.commodities.Ticker;
  */
 public class MarketSimulation extends Simulation {
 	
+	Player player;
+	
 	protected HashSet<Actor> actors;
 	protected LinkedList<Commodity> commodities;
 	protected LinkedBlockingQueue<Transaction> transactions;
@@ -28,6 +30,7 @@ public class MarketSimulation extends Simulation {
 		actors = new HashSet<Actor>();
 		commodities = new LinkedList<Commodity>();
 		transactions = new LinkedBlockingQueue<Transaction>();
+		player = new Player();
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -48,6 +51,10 @@ public class MarketSimulation extends Simulation {
 	
 	public void addCommodity(Commodity commodity) {
 		this.commodities.add(commodity);
+	}
+	
+	public Player getPlayer() {
+		return this.player;
 	}
 	
 	public void createTickers(int tickerMagnitude) {
@@ -71,6 +78,7 @@ public class MarketSimulation extends Simulation {
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket();
 		}
+		System.out.println(player.getBestOffer());
 		
 		// START TEMP CODE
 		// will be actors making their offers to the market

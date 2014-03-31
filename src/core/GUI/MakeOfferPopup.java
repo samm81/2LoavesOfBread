@@ -23,7 +23,7 @@ public class MakeOfferPopup extends GraphicalObject {
 	SelectionButton rightUp;
 	SelectionButton rightDown;
 	
-	char[] volumes = {' ', ' ', ' ', ' ' };
+	char[] volumes = { ' ', ' ', ' ', ' ' };
 	int editingChar = 0;
 	
 	long time;
@@ -42,6 +42,24 @@ public class MakeOfferPopup extends GraphicalObject {
 		buttonx += 50 + 70 + 55 + 200;
 		rightUp = new SelectionButton(buttonx, buttony - 27, 15, 15, true);
 		rightDown = new SelectionButton(buttonx, buttony - 7, 15, 15, false);
+	}
+	
+	public int getVolume1() {
+		String volume1String = String.valueOf(volumes[0]) + String.valueOf(volumes[1]);
+		return Integer.parseInt(volume1String);
+	}
+	
+	public int getVolume2() {
+		String volume2String = String.valueOf(volumes[2]) + String.valueOf(volumes[3]);
+		return Integer.parseInt(volume2String);
+	}
+	
+	public Commodity getCommodity1() {
+		return commodities.get(commodity1Index);
+	}
+	
+	public Commodity getCommodity2() {
+		return commodities.get(commodity2Index);
 	}
 	
 	@Override
@@ -127,12 +145,22 @@ public class MakeOfferPopup extends GraphicalObject {
 		if(drawingCursor) {
 			g.setColor(Color.BLACK);
 			int cursorx = 0;
-			switch(editingChar){
-			case 0: cursorx = x + 30; break;
-			case 1: cursorx = x + 48; break;
-			case 2: cursorx = x + 405; break;
-			case 3: cursorx = x + 424; break;
-			case 4: cursorx = x + 442; break;
+			switch(editingChar) {
+			case 0:
+				cursorx = x + 30;
+				break;
+			case 1:
+				cursorx = x + 48;
+				break;
+			case 2:
+				cursorx = x + 405;
+				break;
+			case 3:
+				cursorx = x + 424;
+				break;
+			case 4:
+				cursorx = x + 442;
+				break;
 			}
 			g.fillRect(cursorx, texty - 30, 3, 30);
 		}
@@ -161,9 +189,9 @@ public class MakeOfferPopup extends GraphicalObject {
 	
 	@Override
 	public void keyPressed(KeyEvent keyPress) {
-		if(keyPress.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+		if(keyPress.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 			int indexToClear = editingChar - 1;
-			if(indexToClear >= 0){
+			if(indexToClear >= 0) {
 				volumes[indexToClear] = ' ';
 				editingChar--;
 			}
@@ -176,12 +204,10 @@ public class MakeOfferPopup extends GraphicalObject {
 			return;
 		}
 		
-		if(editingChar < 4){
+		if(editingChar < 4) {
 			volumes[editingChar] = key;
 			editingChar++;
 		}
-		
-		
 	}
 	
 	private class SelectionButton {
