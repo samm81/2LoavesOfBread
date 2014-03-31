@@ -17,7 +17,7 @@ public class Transaction {
 
 	//These states act as a signal as to where each transaction is at in terms of processing.
 	//We may want to explore a Response Class for extra robustness
-	public static final double tranSlippage = .9d;
+	public static final double tranSlippage = 1d;
 	public final UUID id;
 	public Commodity commodity1;
 	public Commodity commodity2;
@@ -75,10 +75,9 @@ public class Transaction {
 		}
 		return false;
 	}
-<<<<<<< Upstream, based on origin/actor
 	public boolean equals(Transaction e) {
-		if(this.commodity1.getClass().getSimpleName().equals(e.getCommodity1().getClass().getSimpleName()) 
-				&& this.commodity2.getClass().getSimpleName().equals(e.getCommodity2().getClass().getSimpleName())
+		if(this.commodity1.name().equals(e.getCommodity1().name()) 
+				&& this.commodity2.name().equals(e.getCommodity2().name())
 				&& this.getVolume1() <= (e.getVolume1() + Transaction.tranSlippage) 
 				&& this.getVolume1() >= (e.getVolume1() - Transaction.tranSlippage)
 				&& this.getVolume2() <= (e.getVolume2() + Transaction.tranSlippage) 
@@ -87,15 +86,11 @@ public class Transaction {
 			return true;
 		}
 
-
-
 		return false;
-
-=======
-	
+	}
 	@Override
 	public String toString() {
 		return volume1 + " " + commodity1.name() + " for " + volume2 + " " + commodity2.name();
->>>>>>> c582ea6 toString on transaction and comments
+
 	}
 }

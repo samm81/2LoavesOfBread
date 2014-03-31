@@ -1,7 +1,10 @@
 package core.actors;
 
+<<<<<<< Upstream, based on origin/actor
 import java.util.Hashtable;
 import java.util.Iterator;
+=======
+>>>>>>> e80bd60 Issues abound. Do not use.
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -18,15 +21,21 @@ public class Actor {
 	
 	protected LinkedList<Commodity> commodities; // list of global commodities (Can be used to get the exchange rate)
 	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
+<<<<<<< Upstream, based on origin/actor
 	protected ConcurrentHashMap<Commodity, Integer> volumes;
 	private final Integer startingVolumes = 3;
 	
 	protected double[][] exchangematrix; //actor's own personal exchange rate
 	protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
+=======
+	protected ConcurrentHashMap<String, Integer> volumes;
+	private final Integer startingVolumes = new Integer(3); 
+>>>>>>> e80bd60 Issues abound. Do not use.
 	
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
 		this.transactions = transaction;
+<<<<<<< Upstream, based on origin/actor
 		this.volumes = new ConcurrentHashMap<Commodity, Integer>(this.commodities.size());
 		this.exchangematrix = new double[commodities.size()][commodities.size()];
 		
@@ -38,6 +47,11 @@ public class Actor {
 			for(int col = 0; col < exchangematrix[row].length; col++) {
 				exchangematrix[row][col] = Math.random();
 			}
+=======
+		this.volumes= new ConcurrentHashMap<String, Integer>(this.commodities.size());
+		for(Commodity s : this.commodities)
+			this.volumes.put(s.name(),this.startingVolumes);
+>>>>>>> e80bd60 Issues abound. Do not use.
 	}
 	
 	// patrick:
@@ -74,6 +88,7 @@ public class Actor {
 	// patrick:
 	// actor should look at their goods, their wants, and the market
 	// then reevaluate how much they are willing to trade for each object
+<<<<<<< Upstream, based on origin/actor
 	
 	//This method will simply average the exchange rate and the new ratio for MVP. Then add/subtract a random amount.
 	public void evaluateMarket() {
@@ -94,6 +109,16 @@ public class Actor {
 			}
 			
 			col++;
+=======
+	public abstract void evaluateMarket();
+	//TODO: Ensure they can actually afford to lose the volume of commodity they are trading.
+	public void submitTransction(int vol1, Commodity s1, int vol2, Commodity s2){
+		try {
+			transactions.put(new Transaction(vol1, s1, vol2, s2,this));
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+>>>>>>> e80bd60 Issues abound. Do not use.
 		}
 	}
 	
@@ -111,10 +136,15 @@ public class Actor {
 	
 	public void acceptTransaction(Transaction t) {
 		//Update Correlating volumes.
+<<<<<<< Upstream, based on origin/actor
 		if(this.volumes.get(t.commodity1.name()) - t.volume1 > 0) {
 			this.volumes.put(t.getCommodity1(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));
 			this.volumes.put(t.getCommodity2(), new Integer((int) (this.volumes.get(t.getCommodity2()).intValue() + t.getVolume2())));
 		}
+=======
+		this.volumes.put(t.getCommodity1().name(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() - t.getVolume1())));
+		this.volumes.put(t.getCommodity2().name(), new Integer((int) (this.volumes.get(t.getCommodity2()).intValue() + t.getVolume2())));
+>>>>>>> e80bd60 Issues abound. Do not use.
 	}
 }
 

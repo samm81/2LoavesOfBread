@@ -65,8 +65,9 @@ public class Runner {
 		f.add(canvas);
 		f.setVisible(true);
 		sim.start();
-		transactions.start();
+		
 		canvas.start();
+		transactions.start();
 		
 	}
 }
