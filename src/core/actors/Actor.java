@@ -14,7 +14,7 @@ import core.commodities.Commodity;
  * Abstract class the represents every player.
  * @author Sam "Fabulous Hands" Maynard
  */
-public abstract class Actor {
+public class Actor {
 	
 	protected LinkedList<Commodity> commodities; // list of global commodities (Can be used to get the exchange rate)
 	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
@@ -34,10 +34,8 @@ public abstract class Actor {
 		while(i.hasNext()){
 			Commodity a = i.next();
 			this.volumes.put(a,new Integer(this.startingVolumes));
-			
-			
 		}
-		i = this.commodities.iterator();
+	/*	i = this.commodities.iterator();
 		int col = 0;
 		while(i.hasNext()){
 			Commodity a = i.next();
@@ -46,13 +44,20 @@ public abstract class Actor {
 			for(int row = 0; row < exchangematrix.length; row++)
 			{
 				if(row != col)
-					exchangematrix[row][col] = exchangerate.get(a.name());
+					exchangematrix[row][col] = exchangerate.get(commodities.get(row).name());
 				else
 					exchangematrix[row][col] = 1;
 			}
 			
 			col++;
-		}
+		}*/
+		
+		//random values to start with
+		for(int row = 0; row < exchangematrix.length; row++)
+			for(int col = 0; col < exchangematrix[row].length; col++)
+			{
+				exchangematrix[row][col] = Math.random();
+			}
 		
 	}
 	// patrick:
@@ -61,8 +66,9 @@ public abstract class Actor {
 	
 	//For MVP: Selects a random thing and then picks an offer that they can actually make.
 	//If they cannot afford making any offers it picks another random offer.
-	public Transaction getBestOffer()
+	public void getBestOffer()
 	{
+		System.out.println("Running BestOffer()");
 		int want = (int) (Math.random()*this.commodities.size()); //item wanted
 		int tradedaway = -1; //item to be traded for want
 		
@@ -89,12 +95,10 @@ public abstract class Actor {
 		
 		try {
 			submitTransaction(commodities.get(tradedaway), commodities.get(want), vol1, vol2);
-			return new Transaction(vol1, commodities.get(tradedaway), vol2, commodities.get(want), this);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
 	}
 	
 	// patrick:
@@ -104,6 +108,7 @@ public abstract class Actor {
 	//This method will simply average the exchange rate and the new ratio for MVP. Then add/subtract a random amount.
 	public void evaluateMarket()
 	{
+		System.out.println("EVALUATING MARKETS! :D");
 		Iterator<Commodity> i = this.commodities.iterator();
 		int col = 0;
 		while(i.hasNext()){
@@ -112,7 +117,9 @@ public abstract class Actor {
 			
 			for(int row = 0; row < exchangematrix.length; row++)
 			{
-				if(row != col)
+				if(exchangerate.get(a) == null)
+					continue;
+				else if(row != col)
 					exchangematrix[row][col] = Math.abs((exchangematrix[row][col] + exchangerate.get(a.name()) / 2) + Math.random());
 				else
 					exchangematrix[row][col] = 1;
@@ -120,12 +127,14 @@ public abstract class Actor {
 			
 			col++;
 		}
+		getBestOffer();
 	}
 	
 	//TODO: Ensure they can actually afford to lose the volume of commodity they are trading.
 	//Patrick: Done
 	public void submitTransaction(Commodity s1, Commodity s2, int vol1, int vol2) throws InterruptedException{
-		if(this.volumes.get(s1.name()) - vol1 > 0)
+		System.out.println("Check out this transaction doe");
+		if(this.volumes.get(s1) - vol1 > 0)
 			transactions.put(new Transaction(vol1, s1, vol2, s2,this));
 	}
 	//TODO: Ensure they can actually afford to lose the volume of commodity they are trading.
@@ -133,6 +142,7 @@ public abstract class Actor {
 
 	public void acceptTransaction(Transaction t){
 		//Update Correlating volumes.
+		System.out.println("Check out that deal! Score!");
 		if(this.volumes.get(t.commodity1.name()) - t.volume1 > 0)
 		{
 		this.volumes.put(t.getCommodity1(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));

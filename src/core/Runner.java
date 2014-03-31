@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 
 import core.GUI.MarketCanvas;
+import core.actors.Actor;
 import core.channels.TransactionChannel;
 import core.commodities.Commodity;
 
@@ -35,6 +36,13 @@ public class Runner {
 		sim.addCommodity(Commodity.Bread);
 		sim.addCommodity(Commodity.Watermelon);
 		sim.addCommodity(Commodity.Oxen);
+		
+		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+		
 		sim.createTickers(tickerMagnitude); // required
 		
 		JFrame f = new JFrame("Two Loaves of Bread");
