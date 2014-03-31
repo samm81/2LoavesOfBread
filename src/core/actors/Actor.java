@@ -22,7 +22,7 @@ public abstract class Actor {
 	private final Integer startingVolumes = new Integer(3); 
 	
 	
-	private double[][] exchangematrix; //actor's own personal exchange rate
+	protected double[][] exchangematrix; //actor's own personal exchange rate
 	
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
@@ -61,7 +61,7 @@ public abstract class Actor {
 	
 	//For MVP: Selects a random thing and then picks an offer that they can actually make.
 	//If they cannot afford making any offers it picks another random offer.
-	public abstract Transaction getBestOffer();
+	public Transaction getBestOffer()
 	{
 		int want = (int) (Math.random()*this.commodities.size()); //item wanted
 		int tradedaway = -1; //item to be traded for want
@@ -89,10 +89,12 @@ public abstract class Actor {
 		
 		try {
 			submitTransaction(commodities.get(tradedaway), commodities.get(want), vol1, vol2);
+			return new Transaction(vol1, commodities.get(tradedaway), vol2, commodities.get(want), this);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	// patrick:
@@ -100,7 +102,7 @@ public abstract class Actor {
 	// then reevaluate how much they are willing to trade for each object
 	
 	//This method will simply average the exchange rate and the new ratio for MVP. Then add/subtract a random amount.
-	public abstract void evaluateMarket();
+	public void evaluateMarket()
 	{
 		Iterator<Commodity> i = this.commodities.iterator();
 		int col = 0;
