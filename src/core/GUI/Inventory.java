@@ -7,7 +7,7 @@ import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
 
-import core.Player;
+import core.actors.Player;
 import core.commodities.Commodity;
 
 /**
