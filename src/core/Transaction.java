@@ -75,6 +75,7 @@ public class Transaction {
 		}
 		return false;
 	}
+<<<<<<< Upstream, based on origin/actor
 	public boolean equals(Transaction e) {
 		if(this.commodity1.getClass().getSimpleName().equals(e.getCommodity1().getClass().getSimpleName()) 
 				&& this.commodity2.getClass().getSimpleName().equals(e.getCommodity2().getClass().getSimpleName())
@@ -90,5 +91,11 @@ public class Transaction {
 
 		return false;
 
+=======
+	
+	@Override
+	public String toString() {
+		return volume1 + " " + commodity1.name() + " for " + volume2 + " " + commodity2.name();
+>>>>>>> c582ea6 toString on transaction and comments
 	}
 }

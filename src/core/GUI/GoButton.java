@@ -7,7 +7,13 @@ import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
-
+/**
+ * Class that holds the graphical representation of
+ * the go button on the make trade popup.
+ * 
+ * @author Sam Maynard
+ *
+ */
 public class GoButton extends GraphicalObject {
 	
 	public GoButton(int x, int y, int width, int height, DoubleBufferedCanvas canvas) {

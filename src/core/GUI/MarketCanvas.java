@@ -37,7 +37,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	@Override
 	void init() {
 		Key key = new Key(0, 0, this.getWidth(), 40, this, sim.getCommodities());
-		Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, sim.getCommodities());
+		Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, sim.getCommodities(), sim.getPlayer());
 		MakeOfferButton makeOfferButton = new MakeOfferButton(this.getWidth() - 250, this.getHeight() - 100, 220, 50, this);
 		addGraphicalObject(key);
 		addGraphicalObject(inventory);
@@ -164,6 +164,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			Commodity commodity2 = makeOfferPopup.getCommodity2();
 			Transaction offer = new Transaction(volume1, commodity1, volume2, commodity2);
 			sim.getPlayer().setBestOffer(offer);
+			this.message("CloseMakeOffer");
 			break;
 		}
 	}
