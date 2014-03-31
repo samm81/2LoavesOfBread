@@ -1,4 +1,5 @@
 package core.actors;
+
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,10 +23,8 @@ public abstract class Actor {
 
 	protected double[][] exchangematrix; //actor's own personal exchange rate
 	protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
-	
 	protected ConcurrentHashMap<String, Integer> volumes;
 	private final Integer startingVolumes = new Integer(3); 
-
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
 		this.transactions = transaction;
@@ -40,6 +39,7 @@ public abstract class Actor {
 			}
 		for(Commodity s : this.commodities)
 			this.volumes.put(s.name(),this.startingVolumes);
+		this.exchangematrix = new double[commodities.size()][commodities.size()];
 	}
 
 	// patrick:
@@ -73,20 +73,22 @@ public abstract class Actor {
 		return new Transaction(vol1, this.commodities.get(tradedaway), vol2, this.commodities.get(want), this);
 	}
 
+	//For MVP: Selects a random thing and then picks an offer that they can actually make.
+	//If they cannot afford making any offers it picks another random offer.
 	// patrick:
 	// actor should look at their goods, their wants, and the market
 	// then reevaluate how much they are willing to trade for each object
-
 	//This method will simply average the exchange rate and the new ratio for MVP. Then add/subtract a random amount.
-	public void evaluateMarket() {
+	public void evaluateMarket(){
 		System.out.println("EVALUATING MARKETS! :D");
 		Iterator<Commodity> i = this.commodities.iterator();
 		int col = 0;
-		while(i.hasNext()) {
+		while(i.hasNext()){
 			Commodity a = i.next();
 			Hashtable<String, Double> exchangerate = a.getMostRecentRatios();
 
-			for(int row = 0; row < exchangematrix.length; row++) {
+			for(int row = 0; row < exchangematrix.length; row++)
+			{
 				if(exchangerate.get(a) == null)
 					continue;
 				else if(row != col)
@@ -97,8 +99,8 @@ public abstract class Actor {
 
 			col++;
 		}
+//		getBestOffer();
 	}
-
 	//TODO: Ensure they can actually afford to lose the volume of commodity they are trading.
 	//Patrick: Done
 	public void submitTransaction(Commodity s1, Commodity s2, int vol1, int vol2) throws InterruptedException {
@@ -106,10 +108,6 @@ public abstract class Actor {
 			transactions.put(new Transaction(vol1, s1, vol2, s2, this));
 	}
 
-	public void submitTransaction(Transaction t) throws InterruptedException {
-		if(this.volumes.get(t.commodity1) - t.getVolume1() > 0)
-			transactions.put(t);
-	}
 
 	public void acceptTransaction(Transaction t) {
 		//Update Correlating volumes.

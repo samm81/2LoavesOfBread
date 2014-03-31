@@ -28,12 +28,13 @@ public class MarketSimulation extends Simulation {
 	protected LinkedList<Commodity> commodities;
 	protected LinkedBlockingQueue<Transaction> transactions;
 
-	public MarketSimulation(double dt) {
+	public MarketSimulation(LinkedBlockingQueue<Transaction> linkedBlockingQueue, double dt) {
 		super(dt);
 		this.actors = new HashSet<Actor>();
 		this.commodities = new LinkedList<Commodity>();
 		this.transactions = new LinkedBlockingQueue<Transaction>();
 		//Players Cannot be added here because commodities have not been added yet.
+		this.transactions = linkedBlockingQueue;
 	}
 
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -47,7 +48,10 @@ public class MarketSimulation extends Simulation {
 	public LinkedList<Commodity> getCommodities() {
 		return this.commodities;
 	}
-
+	/**
+	 * This is very stupid, 
+	 * @param actor
+	 */
 	public void addActor(Actor actor) {
 		this.actors.add(actor);
 		if(this.player == null){
@@ -114,8 +118,10 @@ public class MarketSimulation extends Simulation {
 				trade = ratio + r.nextDouble() / 2 - .25;
 			} while(!(trade > 0));
 		}
-//		this.player.submitTransction(1, commodity1, (int) trade, commodity2);
-//		this.player2.submitTransction((int)trade, commodity2, 1, commodity1);
+////		this.player.submitTransction(1, commodity1, (int) trade, commodity2);
+////		this.player2.submitTransction((int)trade, commodity2, 1, commodity1);
+//		this.player.submitTransaction(1, commodity1, (int) trade, commodity2);
+//		this.player2.submitTransaction((int)trade, commodity2, 1, commodity1);
 		//Line below creates problems, as there is no Actor to reference who made the trade
 		//commodity1.addTransaction(new Transaction(1, commodity1, (int) trade, commodity2,this.player));
 		// END TEMP CODE
