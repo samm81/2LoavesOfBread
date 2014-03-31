@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 import core.GUI.MarketCanvas;
 import core.actors.Actor;
+import core.actors.Player;
 import core.channels.TransactionChannel;
 import core.commodities.Commodity;
 
@@ -36,13 +37,18 @@ public class Runner {
 		sim.addCommodity(Commodity.Bread);
 		sim.addCommodity(Commodity.Watermelon);
 		sim.addCommodity(Commodity.Oxen);
+
 		
-		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-		
+//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
+
+		Player p = new Player(sim.getCommodities(),sim.getTransactions());
+		sim.addActor(p);
+		Player p2 = new Player(sim.getCommodities(),sim.getTransactions());
+		sim.addActor(p2);
 		sim.createTickers(tickerMagnitude); // required
 		
 		JFrame f = new JFrame("Two Loaves of Bread");
@@ -63,10 +69,10 @@ public class Runner {
 		final int frameHeightPadding = 29;
 		canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
 		f.add(canvas);
-		f.setVisible(true);
-		sim.start();
-		
+		f.setVisible(true);		
 		canvas.start();
+		sim.start();
+		transactions.setDaemon(true);
 		transactions.start();
 		
 	}
