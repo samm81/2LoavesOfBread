@@ -14,19 +14,17 @@ import core.Transaction;
  * 
  */
 public enum Commodity {
-	
 	Fish(Color.BLUE),
 	Bread(Color.YELLOW.darker()),
-	Watermelon(Color.GREEN),
+	Watermelon(Color.green),
 	Oxen(Color.RED);
-	
 	LinkedList<Transaction> transactions; // every transaction that has occured involving this commodity
 	Hashtable<String, Ticker> tickers; // the tickers for the objects it trades for
 	Hashtable<String, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
 	
 	Color color; // the commoditie's color
 	
-	Commodity(Color color) {
+	private Commodity(Color color) {
 		transactions = new LinkedList<Transaction>();
 		tickers = new Hashtable<String, Ticker>();
 		mostRecentRatios = new Hashtable<String, Double>();
@@ -98,7 +96,6 @@ public enum Commodity {
 	
 	/**
 	 * Checks if a transaction has this classes commodity first
-	 * 
 	 * @param transaction the transaction to check
 	 * @return true if it is in order, false otherwise
 	 */

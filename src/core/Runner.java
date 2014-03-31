@@ -13,13 +13,12 @@ import core.commodities.Commodity;
  * The runner for the game. Gets the frame, the canvas, and the
  * simulation up and going. Holds all adjustable constants.
  * 
- * @author Sam Maynard
+ * @author Sam "Fabulous Hands" Maynard
  * 
  */
 public class Runner {
 	
 	static int tickerMagnitude = 150;
-	
 	static int width = 900;
 	static int height = 700;
 	
@@ -28,9 +27,10 @@ public class Runner {
 	 */
 	public static void main(String[] args) {
 		MarketSimulation sim = new MarketSimulation(0.1);
-		//Creates the transaction thread that evaluates transactions once actors.size()/2 transactions have been submitted.
-		Thread transactions = new Thread(new TransactionChannel(sim.getTransactions(),sim.getActors().size()/2)); 
-
+		//Creates the transaction thread that evaluates transactions, every dt.
+		Thread transactions = new Thread(new TransactionChannel(sim.getTransactions(), sim.dt*4)); 
+		// ok I agree, there's got to be a better way to do this
+		// enum maybe?
 		sim.addCommodity(Commodity.Fish);
 		sim.addCommodity(Commodity.Bread);
 		sim.addCommodity(Commodity.Watermelon);
@@ -56,8 +56,9 @@ public class Runner {
 		canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
 		f.add(canvas);
 		f.setVisible(true);
+		sim.start();
 		transactions.start();
 		canvas.start();
-		sim.start();
+		
 	}
 }

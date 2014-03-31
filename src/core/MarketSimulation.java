@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import core.actors.Actor;
 import core.commodities.Commodity;
 import core.commodities.Ticker;
 
@@ -14,7 +15,7 @@ import core.commodities.Ticker;
  * The main simulation running the game. Contains all the data objects, and
  * is given to the canvas in order to draw the graphs.
  * 
- * @author Sam Maynard
+ * @author Sam "Fabulous Hands" Maynard
  * 
  */
 public class MarketSimulation extends Simulation {
@@ -27,10 +28,10 @@ public class MarketSimulation extends Simulation {
 	
 	public MarketSimulation(double dt) {
 		super(dt);
-		actors = new HashSet<Actor>();
-		commodities = new LinkedList<Commodity>();
-		transactions = new LinkedBlockingQueue<Transaction>();
-		player = new Player();
+		this.actors = new HashSet<Actor>();
+		this.commodities = new LinkedList<Commodity>();
+		this.transactions = new LinkedBlockingQueue<Transaction>();
+		this.player = new Player(commodities, transactions);
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -75,6 +76,8 @@ public class MarketSimulation extends Simulation {
 	 */
 	@Override
 	protected void tick() {
+		//Do we want evaluation and update to be sequential or concurrent.
+		//Seems smarter to have them operate at same time so actors always have the most up to date info.
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket();
 		}
@@ -100,7 +103,8 @@ public class MarketSimulation extends Simulation {
 				trade = ratio + r.nextDouble() / 2 - .25;
 			} while(!(trade > 0));
 		}
-		commodity1.addTransaction(new Transaction(1, commodity1, trade, commodity2));
+		//Line below creates problems, as there is no Actor to reference who made the trade
+		//commodity1.addTransaction(new Transaction(1, commodity1, trade, commodity2));
 		// END TEMP CODE
 		
 		// updates the tickers with the most recent ratio
