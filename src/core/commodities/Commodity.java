@@ -16,15 +16,19 @@ import core.Transaction;
 public enum Commodity {
 	Fish(Color.BLUE),
 	Bread(Color.YELLOW.darker()),
-	Watermelon(Color.green),
+	Watermelon(Color.GREEN),
 	Oxen(Color.RED);
+	
 	LinkedList<Transaction> transactions; // every transaction that has occured involving this commodity
 	Hashtable<String, Ticker> tickers; // the tickers for the objects it trades for
 	Hashtable<String, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
 	
 	Color color; // the commoditie's color
 	
+
 	private Commodity(Color color) {
+
+
 		transactions = new LinkedList<Transaction>();
 		tickers = new Hashtable<String, Ticker>();
 		mostRecentRatios = new Hashtable<String, Double>();

@@ -14,8 +14,11 @@ public class TransactionChannel implements Runnable {
 
 	//Use ArrayBlockingQueue so that when array is full it blocks automatically
 	protected LinkedBlockingQueue<Transaction> transactions = null;
+	@SuppressWarnings("unused")
 	final private long sysStartTime;
+	@SuppressWarnings("unused")
 	private int marketIterations = 0;
+	@SuppressWarnings("unused")
 	private double dt;
 
 
@@ -38,10 +41,14 @@ public class TransactionChannel implements Runnable {
 	 * Untested
 	 */
 	public void run() {
-		if(System.currentTimeMillis() == this.sysStartTime + ((long)(this.marketIterations * this.dt * 1000))){
-			process();
+		while(true){
+			//if(System.currentTimeMillis() == this.sysStartTime + ((long)(this.marketIterations * this.dt * 1000))){
+				process();
+		//	}
+			//else{
+				
+//			}
 		}
-		else{}
 	}
 	/**
 	 * Untested.
@@ -52,13 +59,14 @@ public class TransactionChannel implements Runnable {
 				if(t.equals(q.getReversedTransaction())){
 					t.getSender().acceptTransaction(t);
 					q.getSender().acceptTransaction(q);
-					//TODO: Implement enum, so it can just be an iterative search for which commodity to add to.
-					//What I'm about to write is just dummy code while I wait for an implementation.
 					t.getCommodity1().addTransaction(t);
 					t.getCommodity2().addTransaction(q);
+					this.transactions.remove(t);
+					this.transactions.remove(q);
+					System.err.println("Processed");
 				}
 			}
 		}
 	}
-	
+
 }

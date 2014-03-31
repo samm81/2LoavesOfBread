@@ -3,8 +3,8 @@ package core;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import core.actors.Actor;
@@ -22,6 +22,7 @@ import core.commodities.Ticker;
 public class MarketSimulation extends Simulation {
 	
 	Player player;
+	Player player2;
 	
 	protected HashSet<Actor> actors;
 	protected LinkedList<Commodity> commodities;
@@ -33,6 +34,9 @@ public class MarketSimulation extends Simulation {
 		this.commodities = new LinkedList<Commodity>();
 		this.transactions = new LinkedBlockingQueue<Transaction>();
 		this.player = new Player(commodities, transactions);
+		this.player2 = new Player(commodities, transactions);
+		this.actors.add(this.player);
+		this.actors.add(this.player2);
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -104,8 +108,10 @@ public class MarketSimulation extends Simulation {
 				trade = ratio + r.nextDouble() / 2 - .25;
 			} while(!(trade > 0));
 		}
+		this.player.submitTransction(1, commodity1, (int) trade, commodity2);
+		this.player2.submitTransction((int)trade, commodity2, 1, commodity1);
 		//Line below creates problems, as there is no Actor to reference who made the trade
-		//commodity1.addTransaction(new Transaction(1, commodity1, trade, commodity2));
+		//commodity1.addTransaction(new Transaction(1, commodity1, (int) trade, commodity2,this.player));
 		// END TEMP CODE
 		
 		// updates the tickers with the most recent ratio
