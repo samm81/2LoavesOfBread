@@ -14,11 +14,8 @@ public class TransactionChannel implements Runnable {
 
 	//Use ArrayBlockingQueue so that when array is full it blocks automatically
 	protected LinkedBlockingQueue<Transaction> transactions = null;
-	@SuppressWarnings("unused")
 	final private long sysStartTime;
-	@SuppressWarnings("unused")
 	private int marketIterations = 0;
-	@SuppressWarnings("unused")
 	private double dt;
 
 
@@ -41,13 +38,8 @@ public class TransactionChannel implements Runnable {
 	 * Untested
 	 */
 	public void run() {
-		while(true){
-			//if(System.currentTimeMillis() == this.sysStartTime + ((long)(this.marketIterations * this.dt * 1000))){
-				process();
-		//	}
-			//else{
-				
-//			}
+		while(! (System.currentTimeMillis() == this.sysStartTime + ((long)(this.marketIterations * this.dt * 1000)))){
+			process();
 		}
 	}
 	/**
@@ -56,14 +48,16 @@ public class TransactionChannel implements Runnable {
 	private void process(){
 		for(Transaction t : this.transactions){
 			for(Transaction q : this.transactions){
-				if(t.equals(q.getReversedTransaction())){
+				if(t.equals(q.getReversedTransaction()) && t.getState() == false && q.getState() == false){
+					t.setState(true);
+					q.setState(true);
 					t.getSender().acceptTransaction(t);
 					q.getSender().acceptTransaction(q);
 					t.getCommodity1().addTransaction(t);
 					t.getCommodity2().addTransaction(q);
 					this.transactions.remove(t);
 					this.transactions.remove(q);
-					System.err.println("Processed");
+					//System.err.println("Processed");
 				}
 			}
 		}

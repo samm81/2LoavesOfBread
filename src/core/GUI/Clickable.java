@@ -10,9 +10,9 @@ import java.awt.event.MouseEvent;
  *
  */
 interface Clickable {
-	
+
 	boolean pointInBounds(int x, int y);
-	
+
 	void clicked(MouseEvent e);
-	
+
 }

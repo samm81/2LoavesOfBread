@@ -23,7 +23,7 @@ public class PatrickStar extends Actor {
 	@Override
 	public void evaluateMarket() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

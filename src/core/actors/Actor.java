@@ -12,19 +12,19 @@ import core.commodities.Commodity;
  * @author Sam "Fabulous Hands" Maynard
  */
 public abstract class Actor {
-	
+
 	protected LinkedList<Commodity> commodities; // list of global commodities
 	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
 	protected ConcurrentHashMap<String, Integer> volumes;
 	private final Integer startingVolumes = new Integer(3); 
-	
+
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
 		this.transactions = transaction;
 		this.volumes= new ConcurrentHashMap<String, Integer>(this.commodities.size());
 		for(Commodity s : this.commodities)
 			this.volumes.put(s.name(),this.startingVolumes);
-	
+
 	}
 	// patrick:
 	// actor figures out what they want the most right now, and places an open offer

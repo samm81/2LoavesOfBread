@@ -18,13 +18,13 @@ public enum Commodity {
 	Bread(Color.YELLOW.darker()),
 	Watermelon(Color.GREEN),
 	Oxen(Color.RED);
-	
+
 	LinkedList<Transaction> transactions; // every transaction that has occured involving this commodity
 	Hashtable<String, Ticker> tickers; // the tickers for the objects it trades for
 	Hashtable<String, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
-	
+
 	Color color; // the commoditie's color
-	
+
 
 	private Commodity(Color color) {
 
@@ -32,30 +32,30 @@ public enum Commodity {
 		transactions = new LinkedList<Transaction>();
 		tickers = new Hashtable<String, Ticker>();
 		mostRecentRatios = new Hashtable<String, Double>();
-		
+
 		this.color = color;
 	}
-	
+
 	public LinkedList<Transaction> getTransactions() {
 		return transactions;
 	}
-	
+
 	public Hashtable<String, Ticker> getTickers() {
 		return tickers;
 	}
-	
+
 	public Collection<Ticker> getTickerCollection() {
 		return tickers.values();
 	}
-	
+
 	public Hashtable<String, Double> getMostRecentRatios() {
 		return this.mostRecentRatios;
 	}
-	
+
 	public Color getColor() {
 		return this.color;
 	}
-	
+
 	/**
 	 * Fills this commodities tickers with new tickers,
 	 * one for every commodity given (besides itself)
@@ -71,7 +71,7 @@ public enum Commodity {
 			}
 		}
 	}
-	
+
 	/**
 	 * Inserts a transaction into the transactions list,
 	 * and updates mostRecentRatios, which is used to update the
@@ -84,7 +84,7 @@ public enum Commodity {
 			transaction = transaction.getReversedTransaction();
 		}
 		transactions.add(transaction);
-		
+
 		Commodity tradeCommodity = transaction.getCommodity2();
 		/*
 		 * if(tickers.containsKey(tradeCommodity.getClass())) {
@@ -95,9 +95,9 @@ public enum Commodity {
 		 * }
 		 */
 		mostRecentRatios.put(tradeCommodity.name(), transaction.getRatio());
-		
+
 	}
-	
+
 	/**
 	 * Checks if a transaction has this classes commodity first
 	 * @param transaction the transaction to check
@@ -106,5 +106,5 @@ public enum Commodity {
 	private boolean isOrderedProperly(Transaction transaction) {
 		return transaction.getCommodity1().name().equals(this.name());
 	}
-	
+
 }

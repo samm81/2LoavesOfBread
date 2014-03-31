@@ -1,7 +1,5 @@
 package core;
 
-import java.util.UUID;
-
 import core.actors.Actor;
 import core.commodities.Commodity;
 
@@ -18,26 +16,20 @@ public class Transaction {
 	//These states act as a signal as to where each transaction is at in terms of processing.
 	//We may want to explore a Response Class for extra robustness
 	public static final double tranSlippage = 1d;
-	public final UUID id;
 	public Commodity commodity1;
 	public Commodity commodity2;
 	public int volume1;
 	public int volume2;
 	public final Actor sender;
+	public boolean processed = false;
 
 	public Transaction(int volume1, Commodity commodity1, int volume2, Commodity commodity2, Actor sender) {
-		this.id = UUID.randomUUID();
 		this.commodity1 = commodity1;
 		this.commodity2 = commodity2;
 		this.volume1 = volume1;
 		this.volume2 = volume2;
 		this.sender = sender;
 	}
-
-	public UUID getID() {
-		return this.id;
-	}
-
 
 	public Commodity getCommodity1() {
 		return commodity1;
@@ -59,7 +51,7 @@ public class Transaction {
 		if(volume1 == 0){
 			return 1;
 		}
-		return Math.max(1, volume2 / volume1); // Sometimes we get divide by zero errors. Should probably figure out why sometime.
+		return volume2 / volume1; // Sometimes we get divide by zero errors. Should probably figure out why sometime.
 	}
 
 	public double getTotalVolume() {
@@ -68,15 +60,14 @@ public class Transaction {
 	public Actor getSender(){
 		return this.sender;
 	}
-
+	public boolean getState (){
+		return this.processed;
+	}
+	public void setState (boolean bool){
+		this.processed = bool;
+	}
 	public Transaction getReversedTransaction() {
 		return new Transaction(this.volume2, this.commodity2, this.volume1, this.commodity1,this.sender);
-	}
-	public boolean compareID (UUID id){
-		if(this.id.equals(id)){
-			return true;
-		}
-		return false;
 	}
 	public boolean equals(Transaction e) {
 		if(this.commodity1.name().equals(e.getCommodity1().name()) 
@@ -88,9 +79,6 @@ public class Transaction {
 				){
 			return true;
 		}
-
-
-
 		return false;
 
 	}

@@ -20,20 +20,20 @@ import core.commodities.Commodity;
  */
 @SuppressWarnings("serial")
 public class MarketCanvas extends DoubleBufferedCanvas {
-	
+
 	protected MarketSimulation sim;
-	
+
 	protected LinkedBlockingQueue<GraphicalObject> graphicalObjects;
-	
+
 	protected TransparencyOverlay overlay;
 	protected MakeOfferPopup makeOfferPopup;
 	protected GoButton goButton;
-	
+
 	public MarketCanvas(int fps, MarketSimulation sim) {
 		super(fps);
 		this.sim = sim;
 	}
-	
+
 	@Override
 	void init() {
 		Key key = new Key(0, 0, this.getWidth(), 40, this, sim.getCommodities());
@@ -42,23 +42,23 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		addGraphicalObject(key);
 		addGraphicalObject(inventory);
 		addGraphicalObject(makeOfferButton);
-		
+
 		LinkedList<Graph> graphs = createGraphs(sim.getCommodities(), 200);
 		for(Graph graph : graphs)
 			addGraphicalObject(graph);
-		
+
 		Color color = new Color(1f, 1f, 1f, .8f);
 		overlay = new TransparencyOverlay(this, color);
-		
+
 		int width = 800;
 		int height = 100;
 		int x = this.getWidth() / 2 - width / 2;
 		int y = this.getHeight() / 2 - height / 2;
 		makeOfferPopup = new MakeOfferPopup(x, y, width, height, this, sim.getCommodities());
-		
+
 		goButton = new GoButton(x + width - 95, y + 25, 75, 50, this);
 	}
-	
+
 	/**
 	 * Adds a GraphicalObject to the list of GraphicalObjects to
 	 * be drawn.
@@ -68,16 +68,16 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	private void addGraphicalObject(GraphicalObject graphicalObject) {
 		if(this.graphicalObjects == null)
 			this.graphicalObjects = new LinkedBlockingQueue<GraphicalObject>();
-		
+
 		this.graphicalObjects.add(graphicalObject);
 	}
-	
+
 	private void removeGraphicalObject(GraphicalObject graphicalObject) {
 		if(this.graphicalObjects != null) {
 			this.graphicalObjects.remove(graphicalObject);
 		}
 	}
-	
+
 	/**
 	 * generates the graphs from a list of commodities
 	 * 
@@ -87,7 +87,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	 */
 	private LinkedList<Graph> createGraphs(LinkedList<Commodity> commodities, int height) {
 		LinkedList<Graph> graphs = new LinkedList<Graph>();
-		
+
 		int graphWidth = this.getWidth() / 2 - 5;
 		int graphHeight = height;
 		int i = 0;
@@ -99,20 +99,20 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		}
 		return graphs;
 	}
-	
+
 	@Override
 	void draw(Graphics graphics) {
 		Graphics2D g = (Graphics2D) graphics;
 		g.setColor(Color.BLACK);
-		
+
 		for(GraphicalObject graphicalObject : graphicalObjects)
 			graphicalObject.drawSelf(g);
-		
+
 	}
-	
+
 	@Override
 	protected void updateVars() {}
-	
+
 	@Override
 	protected void processInputs() {
 		if(this.mouseClicksWaiting()) {
@@ -129,7 +129,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 					topObjectClicked.clicked(click);
 			}
 		}
-		
+
 		if(this.keyPressesWaiting()) {
 			LinkedList<KeyEvent> keyPresses = this.flushKeyPressQueue();
 			for(KeyEvent keyPress : keyPresses) {
@@ -139,7 +139,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			}
 		}
 	}
-	
+
 	/**
 	 * Receives messages from the GraphicalObjects
 	 * 
@@ -168,5 +168,5 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			break;
 		}
 	}
-	
+
 }

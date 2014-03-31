@@ -121,7 +121,7 @@ public class MarketSimulation extends Simulation {
 		// END TEMP CODE
 
 		// updates the tickers with the most recent ratio
-		for(Commodity commodity : commodities) { // go through all the commodities
+		for(Commodity commodity : this.commodities) { // go through all the commodities
 			Hashtable<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
 			for(Entry<String, Ticker> entry : tickers.entrySet()) { // find the most recent transaction value for each ticker commodity, and update the ticker
 				Ticker ticker = entry.getValue();
