@@ -23,12 +23,14 @@ public class Actor {
 	
 	
 	protected double[][] exchangematrix; //actor's own personal exchange rate
+	protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
 	
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
 		this.transactions = transaction;
 		this.volumes= new ConcurrentHashMap<Commodity, Integer>(this.commodities.size());
 		this.exchangematrix = new double[commodities.size()][commodities.size()];
+		
 		
 		Iterator<Commodity> i = this.commodities.iterator();
 		while(i.hasNext()){
@@ -66,16 +68,16 @@ public class Actor {
 	
 	//For MVP: Selects a random thing and then picks an offer that they can actually make.
 	//If they cannot afford making any offers it picks another random offer.
-	public void getBestOffer()
+	public Transaction getBestOffer()
 	{
 		System.out.println("Running BestOffer()");
 		int want = (int) (Math.random()*this.commodities.size()); //item wanted
 		int tradedaway = -1; //item to be traded for want
 		
-		int[] inven = new int[commodities.size()];
+		int[] inven = new int[this.commodities.size()];
 		for(int i = 0; i < inven.length; i++)
 		{
-			inven[i] = volumes.get(commodities.get(i));
+			inven[i] = volumes.get(this.commodities.get(i));
 		}
 		
 
@@ -93,12 +95,7 @@ public class Actor {
 		int vol1 = (int) Math.ceil(inven[tradedaway]/2);
 		int vol2 = (int) (vol1 * exchangematrix[want][tradedaway]);
 		
-		try {
-			submitTransaction(commodities.get(tradedaway), commodities.get(want), vol1, vol2);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		return new Transaction(vol1, this.commodities.get(tradedaway), vol2, this.commodities.get(want), this);
 	}
 	
 	// patrick:
@@ -127,56 +124,59 @@ public class Actor {
 			
 			col++;
 		}
-		getBestOffer();
 	}
 	
 	//TODO: Ensure they can actually afford to lose the volume of commodity they are trading.
 	//Patrick: Done
 	public void submitTransaction(Commodity s1, Commodity s2, int vol1, int vol2) throws InterruptedException{
-		System.out.println("Check out this transaction doe");
 		if(this.volumes.get(s1) - vol1 > 0)
 			transactions.put(new Transaction(vol1, s1, vol2, s2,this));
+	}
+	
+	public void submitTransaction(Transaction t) throws InterruptedException
+	{
+		if(this.volumes.get(t.commodity1) - t.getVolume1() > 0)
+			transactions.put(t);
 	}
 	//TODO: Ensure they can actually afford to lose the volume of commodity they are trading.
 	//Patrick: Done
 
 	public void acceptTransaction(Transaction t){
 		//Update Correlating volumes.
-		System.out.println("Check out that deal! Score!");
 		if(this.volumes.get(t.commodity1.name()) - t.volume1 > 0)
 		{
 		this.volumes.put(t.getCommodity1(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));
 		this.volumes.put(t.getCommodity2(), new Integer((int) (this.volumes.get(t.getCommodity2()).intValue() + t.getVolume2())));
 		}
-		
-		
-		/*
-		 * This is code that will pick an offer in the list that best matches the wants and needs.
-		 * It does not account for whether or not they can make that transaction though.
-		 * 
-		 * 		Transaction t = null;
-		
-		Iterator<Transaction> i = transactions.iterator();
-		while(i.hasNext())
-		{
-			if(t == null)
-			{
-				t = i.next();
-			}
-			else
-			{
-				Transaction t2 = i.next();
-				double currRatio = t.getRatio();
-				double newRatio = t2.getRatio();
-				t = (newRatio > currRatio)?t2:t;
-				
-			}
-		}
-		
-		if(t != null)
-		{
-			acceptTransaction(t);
-		}
-		 */
 	}
 }
+
+
+/*
+ * This is code that will pick an offer in the list that best matches the wants and needs.
+ * It does not account for whether or not they can make that transaction though.
+ * 
+ * 		Transaction t = null;
+
+Iterator<Transaction> i = transactions.iterator();
+while(i.hasNext())
+{
+	if(t == null)
+	{
+		t = i.next();
+	}
+	else
+	{
+		Transaction t2 = i.next();
+		double currRatio = t.getRatio();
+		double newRatio = t2.getRatio();
+		t = (newRatio > currRatio)?t2:t;
+		
+	}
+}
+
+if(t != null)
+{
+	acceptTransaction(t);
+}
+ */
