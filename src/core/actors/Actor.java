@@ -55,7 +55,7 @@ public abstract class Actor {
 
 		int[] inven = new int[this.commodities.size()];
 		for(int i = 0; i < inven.length; i++) {
-			inven[i] = volumes.get(this.commodities.get(i));
+			inven[i] = volumes.get(this.commodities.get(i).name());
 		}
 
 		for(int i = 0; i < exchangematrix[want].length; i++) {
@@ -99,21 +99,12 @@ public abstract class Actor {
 
 			col++;
 		}
-//		getBestOffer();
 	}
-	//TODO: Ensure they can actually afford to lose the volume of commodity they are trading.
-	//Patrick: Done
-	public void submitTransaction(Commodity s1, Commodity s2, int vol1, int vol2) throws InterruptedException {
-		if(this.volumes.get(s1) - vol1 > 0)
-			transactions.put(new Transaction(vol1, s1, vol2, s2, this));
-	}
-
-
 	public void acceptTransaction(Transaction t) {
 		//Update Correlating volumes.
 		if(this.volumes.get(t.commodity1.name()) - t.volume1 > 0) {
-			this.volumes.put(t.getCommodity1().name(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));
-			this.volumes.put(t.getCommodity2().name(), new Integer((int) (this.volumes.get(t.getCommodity2()).intValue() + t.getVolume2())));
+			this.volumes.put(t.getCommodity1().name(), new Integer((int) (this.volumes.get(t.getCommodity1().name()).intValue() + t.getVolume1())));
+			this.volumes.put(t.getCommodity2().name(), new Integer((int) (this.volumes.get(t.getCommodity2().name()).intValue() + t.getVolume2())));
 		}
 
 	}

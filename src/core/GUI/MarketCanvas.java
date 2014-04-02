@@ -162,7 +162,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			int volume2 = makeOfferPopup.getVolume2();
 			Commodity commodity1 = makeOfferPopup.getCommodity1();
 			Commodity commodity2 = makeOfferPopup.getCommodity2();
-			Transaction offer = new Transaction(volume1, commodity1, volume2, commodity2);
+			Transaction offer = new Transaction(volume1, commodity1, volume2, commodity2, sim.getPlayer());
 			sim.getPlayer().setBestOffer(offer);
 			this.message("CloseMakeOffer");
 			break;

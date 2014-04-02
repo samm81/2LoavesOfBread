@@ -1,8 +1,10 @@
 package core.channels;
 
+import java.util.HashSet;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import core.Transaction;
+import core.actors.*;
 
 /**
  * Transaction Thread class
@@ -14,6 +16,7 @@ public class OfferChannel implements Runnable {
 
 	//Use ArrayBlockingQueue so that when array is full it blocks automatically
 	protected LinkedBlockingQueue<Transaction> offers = null;
+	protected HashSet <Actor> actors;
 	final private long sysStartTime;
 	private int marketIterations = 0;
 	private double dt;
@@ -32,12 +35,16 @@ public class OfferChannel implements Runnable {
 		this.marketIterations=0;
 		this.dt = dt;
 		this.globalTransactions = globalTransactions;
+		this.actors = null;
 	}
 	public LinkedBlockingQueue<Transaction> getOfferList(){
 		return this.offers;
 	}
 	public LinkedBlockingQueue<Transaction> getGlobalList(){
 		return this.globalTransactions;
+	}
+	public void setActorList(HashSet<Actor> actors) {
+		this.actors = actors;
 	}
 	@Override
 	/**
@@ -47,6 +54,14 @@ public class OfferChannel implements Runnable {
 	 */
 	public void run() {
 		while(!(System.currentTimeMillis() == this.sysStartTime + ((long)(this.marketIterations * this.dt * 1000)))){
+			for(Actor a  : this.actors){
+				try {
+					this.offers.put(a.getBestOffer());
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			process();
 		}
 	}
@@ -54,9 +69,10 @@ public class OfferChannel implements Runnable {
 	 * Untested.
 	 */
 	private void process(){
+		System.out.println(offers.size());
 		for(Transaction t : this.offers){
 			for(Transaction q : this.offers){
-				if(t.equals(q.getReversedTransaction()) && t.getState() == false && q.getState() == false){
+				if(true){//t.equals(q.getReversedTransaction()) && t.getState() == false && q.getState() == false){
 					t.setState(true);
 					q.setState(true);
 					t.getSender().acceptTransaction(t);
@@ -72,6 +88,7 @@ public class OfferChannel implements Runnable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					System.err.println("Processed");
 				}
 			}
 		}

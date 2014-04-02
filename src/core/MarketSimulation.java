@@ -119,9 +119,9 @@ public class MarketSimulation extends Simulation {
 			} while(!(trade > 0));
 		}
 ////		this.player.submitTransction(1, commodity1, (int) trade, commodity2);
-////		this.player2.submitTransction((int)trade, commodity2, 1, commodity1);
-//		this.player.submitTransaction(1, commodity1, (int) trade, commodity2);
-//		this.player2.submitTransaction((int)trade, commodity2, 1, commodity1);
+//////		this.player2.submitTransction((int)trade, commodity2, 1, commodity1);
+//		this.player.submitTransaction(new Transaction(1, commodity1, (int) trade, commodity2));
+//		this.player2.submitTransaction(new Transaction((int)trade, commodity2, 1, commodity1));
 		//Line below creates problems, as there is no Actor to reference who made the trade
 		//commodity1.addTransaction(new Transaction(1, commodity1, (int) trade, commodity2,this.player));
 		// END TEMP CODE

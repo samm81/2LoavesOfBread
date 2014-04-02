@@ -32,6 +32,7 @@ public class Runner {
 		OfferChannel offers = new OfferChannel(new LinkedBlockingQueue<Transaction>(), 
 				new LinkedBlockingQueue<Transaction>(), dt*4);
 		MarketSimulation sim = new MarketSimulation(offers.getGlobalList(),dt);
+		offers.setActorList(sim.getActors());
 		//Creates the transaction thread that evaluates offers, every dt.
 		Thread transactions = new Thread(offers); 
 		// ok I agree, there's got to be a better way to do this
