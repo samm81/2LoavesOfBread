@@ -1,29 +1,29 @@
 package core;
 
 /**
- * Abstract class to encapstulate any simulation.
+ * Abstract class to encapsulate any simulation.
  * 
  * @author Sam Maynard
  * 
  */
 abstract class Simulation implements Runnable {
-	
+
 	double dt;
-	
+
 	Thread thread;
-	
+
 	public Simulation(double dt) {
 		super();
 		this.dt = dt;
-		
+
 		this.thread = new Thread(this);
 	}
-	
+
 	public void start() {
 		initialize();
 		thread.start();
 	}
-	
+
 	@Override
 	public void run() {
 		while(Thread.currentThread() == thread) {
@@ -35,9 +35,9 @@ abstract class Simulation implements Runnable {
 			}
 		}
 	}
-	
+
 	protected abstract void initialize();
-	
+
 	protected abstract void tick();
-	
+
 }

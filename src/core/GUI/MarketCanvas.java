@@ -1,123 +1,172 @@
 package core.GUI;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import core.MarketSimulation;
+import core.Transaction;
 import core.commodities.Commodity;
 
 /**
  * The general container for all the games elements.
  * 
- * @author Sam "Fabulous Hands" Maynard
- *
+ * @author Sam Maynard
+ * 
  */
 @SuppressWarnings("serial")
 public class MarketCanvas extends DoubleBufferedCanvas {
-	
-	MarketSimulation sim;
-	
-	LinkedList<Graph> graphs;
-	
+
+	protected MarketSimulation sim;
+
+	protected LinkedBlockingQueue<GraphicalObject> graphicalObjects;
+
+	protected TransparencyOverlay overlay;
+	protected MakeOfferPopup makeOfferPopup;
+	protected GoButton goButton;
+
 	public MarketCanvas(int fps, MarketSimulation sim) {
 		super(fps);
 		this.sim = sim;
 	}
-	
+
 	@Override
 	void init() {
-		graphs = createGraphs(sim.getCommodities(), 200);
+		Key key = new Key(0, 0, this.getWidth(), 40, this, sim.getCommodities());
+		Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, sim.getCommodities(), sim.getPlayer());
+		MakeOfferButton makeOfferButton = new MakeOfferButton(this.getWidth() - 250, this.getHeight() - 100, 220, 50, this);
+		addGraphicalObject(key);
+		addGraphicalObject(inventory);
+		addGraphicalObject(makeOfferButton);
+
+		LinkedList<Graph> graphs = createGraphs(sim.getCommodities(), 200);
+		for(Graph graph : graphs)
+			addGraphicalObject(graph);
+
+		Color color = new Color(1f, 1f, 1f, .8f);
+		overlay = new TransparencyOverlay(this, color);
+
+		int width = 800;
+		int height = 100;
+		int x = this.getWidth() / 2 - width / 2;
+		int y = this.getHeight() / 2 - height / 2;
+		makeOfferPopup = new MakeOfferPopup(x, y, width, height, this, sim.getCommodities());
+
+		goButton = new GoButton(x + width - 95, y + 25, 75, 50, this);
 	}
-	
+
+	/**
+	 * Adds a GraphicalObject to the list of GraphicalObjects to
+	 * be drawn.
+	 * 
+	 * @param graphicalObject GraphicalObject to be added
+	 */
+	private void addGraphicalObject(GraphicalObject graphicalObject) {
+		if(this.graphicalObjects == null)
+			this.graphicalObjects = new LinkedBlockingQueue<GraphicalObject>();
+
+		this.graphicalObjects.add(graphicalObject);
+	}
+
+	private void removeGraphicalObject(GraphicalObject graphicalObject) {
+		if(this.graphicalObjects != null) {
+			this.graphicalObjects.remove(graphicalObject);
+		}
+	}
+
 	/**
 	 * generates the graphs from a list of commodities
+	 * 
 	 * @param commodities the commodities to generate graphs from
 	 * @param height the height of the graphs
 	 * @return LinkedList<Graph> of the graphs created
 	 */
 	private LinkedList<Graph> createGraphs(LinkedList<Commodity> commodities, int height) {
 		LinkedList<Graph> graphs = new LinkedList<Graph>();
-		
+
 		int graphWidth = this.getWidth() / 2 - 5;
 		int graphHeight = height;
+		int i = 0;
 		for(Commodity commodity : commodities) {
-			graphs.add(new Graph(graphWidth, graphHeight, commodity));
+			int x = (i % 2) * (this.getWidth() / 2 + 5);
+			int y = 45 + (i / 2) * 203;
+			graphs.add(new Graph(x, y, graphWidth, graphHeight, this, commodity));
+			i++;
 		}
 		return graphs;
 	}
-	
+
 	@Override
 	void draw(Graphics graphics) {
 		Graphics2D g = (Graphics2D) graphics;
 		g.setColor(Color.BLACK);
-		
-		drawKey(0, 0, this.getWidth(), 40, g);
-		
-		int i = 0;
-		for(Graph graph : graphs) {
-			int x = (i % 2) * (this.getWidth() / 2 + 5);
-			int y = 45 + (i / 2) * 203;
-			graph.drawSelf(x, y, g);
-			i++;
+
+		for(GraphicalObject graphicalObject : graphicalObjects)
+			graphicalObject.drawSelf(g);
+
+	}
+
+	@Override
+	protected void updateVars() {}
+
+	@Override
+	protected void processInputs() {
+		if(this.mouseClicksWaiting()) {
+			LinkedList<MouseEvent> clicks = this.flushMouseClickQueue();
+			for(MouseEvent click : clicks) {
+				int x = click.getX();
+				int y = click.getY();
+				GraphicalObject topObjectClicked = null;
+				for(GraphicalObject graphicalObject : graphicalObjects) {
+					if(graphicalObject.pointInBounds(x, y))
+						topObjectClicked = graphicalObject;
+				}
+				if(topObjectClicked != null)
+					topObjectClicked.clicked(click);
+			}
 		}
-		
-		drawInventory(0, this.getHeight() - 150, this.getWidth(), 150, g);
+
+		if(this.keyPressesWaiting()) {
+			LinkedList<KeyEvent> keyPresses = this.flushKeyPressQueue();
+			for(KeyEvent keyPress : keyPresses) {
+				for(GraphicalObject graphicalObject : graphicalObjects){
+					graphicalObject.keyPressed(keyPress);
+				}
+			}
+		}
 	}
 
 	/**
-	 * Draws the key at the top of the screen
+	 * Receives messages from the GraphicalObjects
 	 * 
-	 * @param x x coord to draw the key at
-	 * @param y y coord to draw the key at
-	 * @param width width of the key
-	 * @param height height of the key
-	 * @param g Graphics2D object to draw the key with
+	 * @param message message from a GraphicalObject
 	 */
-	private void drawKey(int x, int y, int width, int height, Graphics2D g) {
-		GUIUtils.drawOutline(x, y, width, height, 10, g);
-		
-		g.setFont(new Font("Sans Serif", Font.PLAIN, 18));
-		FontMetrics metrics = g.getFontMetrics();
-		
-		int labelX = x + 10;
-		int labelY = y + 15;
-		
-		g.setColor(Color.BLACK);
-		g.drawString("KEY:", labelX, labelY + 11);
-		
-		labelX += 50;
-		
-		for(Commodity commodity : sim.getCommodities()) {
-			Color color = commodity.getColor();
-			g.setColor(color);
-			g.fillOval(labelX, labelY, 10, 10);
-			String name = commodity.getClass().getSimpleName();
-			g.drawString(name, labelX + 15, labelY + 11);
-			
-			labelX += metrics.stringWidth(name) + 27;
+	public void message(String message) {
+		switch(message) {
+		case "MakeOfferOverlay":
+			addGraphicalObject(overlay);
+			addGraphicalObject(makeOfferPopup);
+			addGraphicalObject(goButton);
+			break;
+		case "CloseMakeOffer":
+			removeGraphicalObject(makeOfferPopup);
+			removeGraphicalObject(overlay);
+			removeGraphicalObject(goButton);
+			break;
+		case "OfferMade":
+			int volume1 = makeOfferPopup.getVolume1();
+			int volume2 = makeOfferPopup.getVolume2();
+			Commodity commodity1 = makeOfferPopup.getCommodity1();
+			Commodity commodity2 = makeOfferPopup.getCommodity2();
+			Transaction offer = new Transaction(volume1, commodity1, volume2, commodity2, sim.getPlayer());
+			sim.getPlayer().setBestOffer(offer);
+			this.message("CloseMakeOffer");
+			break;
 		}
 	}
 
-		/**
-		 * draws the inventory: player's amount of stuff, the examine trades button
-		 * and the make trade button
-		 * 
-		 * @param x x coord to draw the inventory at
-		 * @param y y coord to draw the inventory at
-		 * @param width width of the inventory
-		 * @param height height of the inventory
-		 * @param g Graphics2D object to draw the inventory with
-		 */
-	private void drawInventory(int x, int y, int width, int height, Graphics2D g) {
-		GUIUtils.drawOutline(x, y, width, height, 15, g);
-		//TODO
-	}
-	
-	@Override
-	protected void updateVars() {}
-	
 }
