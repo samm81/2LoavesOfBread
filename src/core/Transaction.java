@@ -32,33 +32,33 @@ public class Transaction {
 	}
 
 	public Commodity getCommodity1() {
-		return commodity1;
+		return this.commodity1;
 	}
 
 	public Commodity getCommodity2() {
-		return commodity2;
+		return this.commodity2;
 	}
 
 	public double getVolume1() {
-		return volume1;
+		return this.volume1;
 	}
 
 	public double getVolume2() {
-		return volume2;
+		return this.volume2;
 	}
 	//TODO: Do we need to handle possible overflow?
 	public double getRatio() {
-		assert volume1 > 0 : "Volume 1 was less than or equal to 0!";
-		assert volume2 > 0 : "Volume 2 was less than or equal to 0!";
-		if(volume1 == 0){
-			return 1;
+		assert this.volume1 > 0 : "Volume 1 was less than or equal to 0!";
+		assert this.volume2 > 0 : "Volume 2 was less than or equal to 0!";
+		if(this.volume1 == 0){
+			return this.volume2/(Math.random()*10);
 		}
 		// TODO: Sometimes we get divide by zero errors. Should probably figure out why sometime.
-		return volume2 / volume1;
+		return this.volume2 / this.volume1;
 	}
 
 	public double getTotalVolume() {
-		return volume1 + volume2;
+		return this.volume1 + this.volume2;
 	}
 	public Actor getSender(){
 		return this.sender;
@@ -85,7 +85,7 @@ public class Transaction {
 	}
 	@Override
 	public String toString() {
-		return volume1 + " " + commodity1.name() + " for " + volume2 + " " + commodity2.name();
+		return this.volume1 + " " + this.commodity1.name() + " for " + this.volume2 + " " + this.commodity2.name();
 
 	}
 }

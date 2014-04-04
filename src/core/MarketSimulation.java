@@ -1,7 +1,7 @@
 package core;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -14,9 +14,7 @@ import core.commodities.Ticker;
 /**
  * The main simulation running the game. Contains all the data objects, and
  * is given to the canvas in order to draw the graphs.
- * 
  * @author Sam "Fabulous Hands" Maynard
- * 
  */
 public class MarketSimulation extends Simulation {
 	
@@ -45,8 +43,6 @@ public class MarketSimulation extends Simulation {
 	}
 	
 	/**
-	 * This is very stupid,
-	 * 
 	 * @param actor
 	 */
 	public void addActor(Actor actor) {
@@ -63,8 +59,8 @@ public class MarketSimulation extends Simulation {
 	}
 	
 	public void createTickers(int tickerMagnitude) {
-		for(Commodity commodity : commodities) {
-			commodity.createTickersFromCommodities(commodities, tickerMagnitude);
+		for(Commodity commodity : this.commodities) {
+			commodity.createTickersFromCommodities(this.commodities, tickerMagnitude);
 		}
 	}
 	
@@ -85,10 +81,9 @@ public class MarketSimulation extends Simulation {
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket();
 		}
-		
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : this.commodities) { // go through all the commodities
-			Hashtable<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
+			HashMap<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
 			for(Entry<String, Ticker> entry : tickers.entrySet()) { // find the most recent transaction value for each ticker commodity, and update the ticker
 				Ticker ticker = entry.getValue();
 				String tickerName = entry.getKey();
@@ -101,5 +96,4 @@ public class MarketSimulation extends Simulation {
 			}
 		}
 	}
-	
 }

@@ -21,46 +21,46 @@ public class Ticker {
 		this.color = color;
 		this.magnitude = magnitude;
 
-		datum = new LinkedBlockingQueue<Double>(magnitude);
-		while(datum.offer(0d));
+		this.datum = new LinkedBlockingQueue<Double>(magnitude);
+		while(this.datum.offer(5d));
 
 		this.maxData = baseMaxData;
 		findMaxData();
 	}
 
 	private void findMaxData() {
-		for(double data : datum) {
-			if(data > maxData) {
-				maxData = data;
+		for(double data : this.datum) {
+			if(data > this.maxData) {
+				this.maxData = data;
 			}
 		}
 	}
 
 	public void addDataPoint(double dataPoint) throws InterruptedException {
-		double first = datum.poll();
-		datum.offer(dataPoint);
-		if(first == maxData) {
-			maxData = baseMaxData;
+		double first = this.datum.poll();
+		this.datum.offer(dataPoint);
+		if(first == this.maxData) {
+			this.maxData = this.baseMaxData;
 			findMaxData();
 		}
 
-		if(dataPoint > maxData) {
-			maxData = dataPoint;
+		if(dataPoint > this.maxData) {
+			this.maxData = dataPoint;
 		}
 
 	}
 
 	public void drawSelf(int x, int y, int width, int height, Graphics2D g) {
-		g.setColor(color);
+		g.setColor(this.color);
 
-		double dx = (double) width / (double) (magnitude - 1);
+		double dx = (double) width / (double) (this.magnitude - 1);
 		double datax = x;
 		double datay = y;
 
-		for(double data : datum) {
+		for(double data : this.datum) {
 			if(data != 0) {
-				datay = y + height - ((double) height * ((double) data / maxData));
-				g.fillOval((int) (datax - radius / 2d), (int) (datay - radius / 2d), radius, radius);
+				datay = y + height - ((double) height * ((double) data / this.maxData));
+				g.fillOval((int) (datax - this.radius / 2d), (int) (datay - this.radius / 2d), this.radius, this.radius);
 			}
 
 			datax += dx;
@@ -72,8 +72,8 @@ public class Ticker {
 		g.setColor(this.color);
 
 		double dy = (double) height / (double) numLables;
-		double label = maxData;
-		double dlabel = maxData / numLables;
+		double label = this.maxData;
+		double dlabel = this.maxData / numLables;
 		double labely = y;
 
 		for(int i = 0; i <= numLables; i++) {

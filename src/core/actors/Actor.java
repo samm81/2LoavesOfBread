@@ -1,6 +1,6 @@
 package core.actors;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,23 +16,22 @@ import core.commodities.Commodity;
  */
 
 public abstract class Actor {
-	
+
 	protected LinkedList<Commodity> commodities;
 	protected LinkedBlockingQueue<Transaction> transactions;
-	
+
 	protected double[][] exchangematrix; //actor's own personal exchange rate
 	protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
-	
 	protected ConcurrentHashMap<Commodity, Integer> volumes;
 	private final Integer startingVolumes = new Integer(3);
-	
+
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
 		this.transactions = transaction;
-		
+
 		this.volumes = new ConcurrentHashMap<Commodity, Integer>(this.commodities.size());
 		this.exchangematrix = new double[commodities.size()][commodities.size()];
-		
+
 		//random values to start with
 		for(int row = 0; row < exchangematrix.length; row++) {
 			for(int col = 0; col < exchangematrix[row].length; col++) {
@@ -43,7 +42,7 @@ public abstract class Actor {
 			this.volumes.put(s, this.startingVolumes);
 		this.exchangematrix = new double[commodities.size()][commodities.size()];
 	}
-	
+
 	public Transaction getBestOffer() {
 		int want = (int) (Math.random() * this.commodities.size()); //item wanted
 		int tradedaway = -1; //item to be traded for want
@@ -63,33 +62,52 @@ public abstract class Actor {
 		double vol2 = (vol1 * exchangematrix[want][tradedaway]);
 		return new Transaction(vol1, this.commodities.get(tradedaway), vol2, this.commodities.get(want), this);
 	}
-	
+
+	//For MVP: Selects a random thing and then picks an offer that they can actually make.
+	//If they cannot afford making any offers it picks another random offer.
+	// patrick:
+	// actor should look at their goods, their wants, and the market
+	// then reevaluate how much they are willing to trade for each object
+	//This method will simply average the exchange rate and the new ratio for MVP. Then add/subtract a random amount.
+
 	public void evaluateMarket() {
 		System.out.println("EVALUATING MARKETS! :D");
 		Iterator<Commodity> i = this.commodities.iterator();
 		int col = 0;
-		while(i.hasNext()) {
-			Commodity a = i.next();
-			Hashtable<String, Double> exchangerate = a.getMostRecentRatios();
-			
-			for(int row = 0; row < exchangematrix.length; row++) {
-				if(exchangerate.get(a) == null)
+		boolean pass = false;
+		Commodity a = Commodity.Bread;
+		while(i.hasNext()) {			
+			HashMap<String, Double> exchangerate = a.getMostRecentRatios();
+			for(Commodity z : Commodity.values()){
+				if(!pass){
+					pass = true;
 					continue;
+				}
+				else{
+					exchangerate.putAll(z.getMostRecentRatios());
+					break;
+				}
+			}
+			for(int row = 0; row < exchangematrix.length && col < exchangematrix[row].length; row++) {
+				if(exchangerate.get(a.name()) == null){
+					continue;
+				}
 				else if(row != col)
 					exchangematrix[row][col] = Math.abs((exchangematrix[row][col] + exchangerate.get(a) / 2) + Math.random());
 				else
 					exchangematrix[row][col] = 1;
 			}
 			col++;
+			a = i.next();
 		}
 	}
-	
+
 	public void acceptTransaction(Transaction t) {
 		if(this.volumes.get(t.commodity1) - t.volume1 > 0) {
 			this.volumes.put(t.getCommodity1(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));
 			this.volumes.put(t.getCommodity2(), new Integer((int) (this.volumes.get(t.getCommodity2()).intValue() + t.getVolume2())));
 		}
-		
+
 	}
 }
 

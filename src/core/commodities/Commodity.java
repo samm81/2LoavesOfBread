@@ -2,53 +2,46 @@ package core.commodities;
 
 import java.awt.Color;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import core.Transaction;
 
 /**
  * Abstract class representing every object that can be traded.
- * 
  * @author Sam Maynard
- * 
  */
 public enum Commodity {
-	Fish(Color.BLUE),
 	Bread(Color.YELLOW.darker()),
-	Watermelon(Color.GREEN),
-	Oxen(Color.RED);
+	Fish(Color.BLUE),
+	Oxen(Color.RED),
+	Watermelon(Color.GREEN);
 
 	LinkedList<Transaction> transactions; // every transaction that has occured involving this commodity
-	Hashtable<String, Ticker> tickers; // the tickers for the objects it trades for
-	Hashtable<String, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
-
+	HashMap<String, Ticker> tickers; // the tickers for the objects it trades for
+	HashMap<String, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
 	Color color; // the commodity's color
-
-
+	
 	private Commodity(Color color) {
-
-
-		transactions = new LinkedList<Transaction>();
-		tickers = new Hashtable<String, Ticker>();
-		mostRecentRatios = new Hashtable<String, Double>();
-
+		this.transactions = new LinkedList<Transaction>();
+		this.tickers = new HashMap<String, Ticker>();
+		this.mostRecentRatios = new HashMap<String, Double>();
 		this.color = color;
 	}
 
 	public LinkedList<Transaction> getTransactions() {
-		return transactions;
+		return this.transactions;
 	}
 
-	public Hashtable<String, Ticker> getTickers() {
-		return tickers;
+	public HashMap<String, Ticker> getTickers() {
+		return this.tickers;
 	}
 
 	public Collection<Ticker> getTickerCollection() {
-		return tickers.values();
+		return this.tickers.values();
 	}
 
-	public Hashtable<String, Double> getMostRecentRatios() {
+	public HashMap<String, Double> getMostRecentRatios() {
 		return this.mostRecentRatios;
 	}
 
@@ -66,8 +59,8 @@ public enum Commodity {
 	public void createTickersFromCommodities(LinkedList<Commodity> commodities, int tickerMagnitude) {
 		for(Commodity commodity : commodities) {
 			if(!commodity.name().equals(this.name())) {
-				tickers.put(commodity.name(), new Ticker(tickerMagnitude, commodity.getColor()));
-				mostRecentRatios.put(commodity.name(), 0d);
+				this.tickers.put(commodity.name(), new Ticker(tickerMagnitude, commodity.getColor()));
+				this.mostRecentRatios.put(commodity.name(), 5d);
 			}
 		}
 	}
@@ -83,7 +76,7 @@ public enum Commodity {
 		if(!isOrderedProperly(transaction)) {
 			transaction = transaction.getReversedTransaction();
 		}
-		transactions.add(transaction);
+		this.transactions.add(transaction);
 
 		Commodity tradeCommodity = transaction.getCommodity2();
 		/*
@@ -94,7 +87,7 @@ public enum Commodity {
 		 * tickers.get(tradeCommodity.getClass()).addDataPoint(transaction.getRatio());
 		 * }
 		 */
-		mostRecentRatios.put(tradeCommodity.name(), transaction.getRatio());
+		this.mostRecentRatios.put(tradeCommodity.name(), transaction.getRatio());
 
 	}
 
@@ -106,5 +99,4 @@ public enum Commodity {
 	private boolean isOrderedProperly(Transaction transaction) {
 		return transaction.getCommodity1().name().equals(this.name());
 	}
-
 }
