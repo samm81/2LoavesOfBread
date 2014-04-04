@@ -1,6 +1,6 @@
 package core.actors;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +23,7 @@ public abstract class Actor {
 	protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
 	protected ConcurrentHashMap<String, Integer> volumes;
 	private final Integer startingVolumes = new Integer(3); 
-	
+
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
 		this.transactions = transaction;
@@ -46,7 +46,6 @@ public abstract class Actor {
 	//For MVP: Selects a random thing and then picks an offer that they can actually make.
 	//If they cannot afford making any offers it picks another random offer.
 	public Transaction getBestOffer() {
-		System.out.println("Running BestOffer()");
 		int want = (int) (Math.random() * this.commodities.size()); //item wanted
 		int tradedaway = -1; //item to be traded for want
 		int[] inven = new int[this.commodities.size()];
@@ -72,28 +71,40 @@ public abstract class Actor {
 	// actor should look at their goods, their wants, and the market
 	// then reevaluate how much they are willing to trade for each object
 	//This method will simply average the exchange rate and the new ratio for MVP. Then add/subtract a random amount.
-	public void evaluateMarket(){
+	public void evaluateMarket() {
 		System.out.println("EVALUATING MARKETS! :D");
 		Iterator<Commodity> i = this.commodities.iterator();
 		int col = 0;
-		while(i.hasNext()){
-			Commodity a = i.next();
-			Hashtable<String, Double> exchangerate = a.getMostRecentRatios();
-
-			for(int row = 0; row < exchangematrix.length; row++){
-				if(exchangerate.get(a) == null)
+		boolean pass = false;
+		Commodity a = Commodity.Bread;
+		while(i.hasNext()) {			
+			HashMap<String, Double> exchangerate = a.getMostRecentRatios();
+			for(Commodity z : Commodity.values()){
+				if(!pass){
+					pass = true;
 					continue;
+				}
+				else{
+					exchangerate.putAll(z.getMostRecentRatios());
+					break;
+				}
+			}
+			for(int row = 0; row < exchangematrix.length && col < exchangematrix[row].length; row++) {
+				if(exchangerate.get(a.name()) == null){
+						continue;
+				}
 				else if(row != col)
 					exchangematrix[row][col] = Math.abs((exchangematrix[row][col] + exchangerate.get(a.name()) / 2) + Math.random());
 				else
 					exchangematrix[row][col] = 1;
 			}
 			col++;
+			a = i.next();
 		}
 	}
 	public void acceptTransaction(Transaction t) {
 		//Update Correlating volumes.
-		if(this.volumes.get(t.commodity1.name()) - t.volume1 > 0) {
+		if(this.volumes.get(t.commodity1.name()).intValue() - t.volume1 > 0) {
 			this.volumes.put(t.getCommodity1().name(), new Integer((int) (this.volumes.get(t.getCommodity1().name()).intValue() + t.getVolume1())));
 			this.volumes.put(t.getCommodity2().name(), new Integer((int) (this.volumes.get(t.getCommodity2().name()).intValue() + t.getVolume2())));
 		}

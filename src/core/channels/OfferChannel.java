@@ -68,7 +68,7 @@ public class OfferChannel implements Runnable {
 		System.err.println(offers.size());
 		for(Transaction t : this.offers){
 			for(Transaction q : this.offers){
-				if(true){//t.equals(q.getReversedTransaction()) && t.getState() == false && q.getState() == false){
+				if(t.equals(q.getReversedTransaction()) && t.getState() == false && q.getState() == false){
 					t.setState(true);
 					q.setState(true);
 					t.getSender().acceptTransaction(t);

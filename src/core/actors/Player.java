@@ -22,7 +22,4 @@ public class Player extends Actor {
 		this.bestOffer = bestOffer;
 	}
 
-	@Override
-	public void evaluateMarket() {}
-
 }
