@@ -12,46 +12,44 @@ import core.commodities.Commodity;
 /**
  * Abstract class the represents every player.
  * 
- * @author Sam "Fabulous Hands" Maynard
+ * @author Patrick Shan
  */
 
 public abstract class Actor {
-
-	protected LinkedList<Commodity> commodities; // list of global commodities
-	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
+	
+	protected LinkedList<Commodity> commodities;
+	protected LinkedBlockingQueue<Transaction> transactions;
+	
 	protected double[][] exchangematrix; //actor's own personal exchange rate
 	protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
-	protected ConcurrentHashMap<String, Integer> volumes;
-	private final Integer startingVolumes = new Integer(3); 
+	
+	protected ConcurrentHashMap<Commodity, Integer> volumes;
+	private final Integer startingVolumes = new Integer(3);
 	
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
 		this.transactions = transaction;
-		this.volumes = new ConcurrentHashMap<String, Integer>(this.commodities.size());
+		
+		this.volumes = new ConcurrentHashMap<Commodity, Integer>(this.commodities.size());
 		this.exchangematrix = new double[commodities.size()][commodities.size()];
+		
 		//random values to start with
-		for(int row = 0; row < exchangematrix.length; row++)
+		for(int row = 0; row < exchangematrix.length; row++) {
 			for(int col = 0; col < exchangematrix[row].length; col++) {
 				exchangematrix[row][col] = Math.random();
 			}
+		}
 		for(Commodity s : this.commodities)
-			this.volumes.put(s.name(),this.startingVolumes);
+			this.volumes.put(s, this.startingVolumes);
 		this.exchangematrix = new double[commodities.size()][commodities.size()];
 	}
-
-	// patrick:
-	// actor figures out what they want the most right now, and places an open offer
-	// for how much they are willing to trade for it
-
-	//For MVP: Selects a random thing and then picks an offer that they can actually make.
-	//If they cannot afford making any offers it picks another random offer.
+	
 	public Transaction getBestOffer() {
-		System.out.println("Running BestOffer()");
 		int want = (int) (Math.random() * this.commodities.size()); //item wanted
 		int tradedaway = -1; //item to be traded for want
 		int[] inven = new int[this.commodities.size()];
 		for(int i = 0; i < inven.length; i++) {
-			inven[i] = volumes.get(this.commodities.get(i).name());
+			inven[i] = volumes.get(this.commodities.get(i));
 		}
 		for(int i = 0; i < exchangematrix[want].length; i++) {
 			if(tradedaway == -1)
@@ -61,43 +59,37 @@ public abstract class Actor {
 					tradedaway = i;
 			}
 		}
-		double vol1 =  Math.ceil(inven[tradedaway] / 2);
-		double vol2 =  (vol1 * exchangematrix[want][tradedaway]);
+		double vol1 = Math.ceil(inven[tradedaway] / 2);
+		double vol2 = (vol1 * exchangematrix[want][tradedaway]);
 		return new Transaction(vol1, this.commodities.get(tradedaway), vol2, this.commodities.get(want), this);
 	}
-
-	//For MVP: Selects a random thing and then picks an offer that they can actually make.
-	//If they cannot afford making any offers it picks another random offer.
-	// patrick:
-	// actor should look at their goods, their wants, and the market
-	// then reevaluate how much they are willing to trade for each object
-	//This method will simply average the exchange rate and the new ratio for MVP. Then add/subtract a random amount.
-	public void evaluateMarket(){
+	
+	public void evaluateMarket() {
 		System.out.println("EVALUATING MARKETS! :D");
 		Iterator<Commodity> i = this.commodities.iterator();
 		int col = 0;
-		while(i.hasNext()){
+		while(i.hasNext()) {
 			Commodity a = i.next();
 			Hashtable<String, Double> exchangerate = a.getMostRecentRatios();
-
-			for(int row = 0; row < exchangematrix.length; row++){
+			
+			for(int row = 0; row < exchangematrix.length; row++) {
 				if(exchangerate.get(a) == null)
 					continue;
 				else if(row != col)
-					exchangematrix[row][col] = Math.abs((exchangematrix[row][col] + exchangerate.get(a.name()) / 2) + Math.random());
+					exchangematrix[row][col] = Math.abs((exchangematrix[row][col] + exchangerate.get(a) / 2) + Math.random());
 				else
 					exchangematrix[row][col] = 1;
 			}
 			col++;
 		}
 	}
+	
 	public void acceptTransaction(Transaction t) {
-		//Update Correlating volumes.
-		if(this.volumes.get(t.commodity1.name()) - t.volume1 > 0) {
-			this.volumes.put(t.getCommodity1().name(), new Integer((int) (this.volumes.get(t.getCommodity1().name()).intValue() + t.getVolume1())));
-			this.volumes.put(t.getCommodity2().name(), new Integer((int) (this.volumes.get(t.getCommodity2().name()).intValue() + t.getVolume2())));
+		if(this.volumes.get(t.commodity1) - t.volume1 > 0) {
+			this.volumes.put(t.getCommodity1(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));
+			this.volumes.put(t.getCommodity2(), new Integer((int) (this.volumes.get(t.getCommodity2()).intValue() + t.getVolume2())));
 		}
-
+		
 	}
 }
 

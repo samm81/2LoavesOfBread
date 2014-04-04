@@ -7,56 +7,43 @@ import core.Transaction;
 import core.actors.*;
 
 /**
- * Transaction Thread class
- * {@link #OfferChannel(LinkedBlockingQueue, Double)} - Basic Constructor for the thread. 
- * Takes in all it needs to create a transactionary environment.
- * {@link #run()}-Blocks until the queue is no longer empty then performs functions.
+ * Transaction Thread class {@link #OfferChannel(LinkedBlockingQueue, Double)} - Basic Constructor for the thread.
+ * Takes in all it needs to create a transactionary environment. {@link #run()}-Blocks until the queue is no longer empty then performs functions.
  */
 public class OfferChannel implements Runnable {
-
+	
 	//Use ArrayBlockingQueue so that when array is full it blocks automatically
-	protected LinkedBlockingQueue<Transaction> offers = null;
-	protected HashSet <Actor> actors;
+	protected LinkedBlockingQueue<Transaction> offers;
+	protected HashSet<Actor> actors;
 	final private long sysStartTime;
-	private int marketIterations = 0;
+	private int marketIterations;
 	private double dt;
-	protected LinkedBlockingQueue<Transaction> globalTransactions = null;
-
+	protected LinkedBlockingQueue<Transaction> globalTransactions;
+	
 	/**
 	 * This constructor sends in the global transaction queue, but says to evaluate offers every dt.
 	 * 
-	 * @param queue - Global Transaction Queue
-	 * @param evalNum - Size of each eval batch
-	 * @param dt - How often the transaction queue should be evaluated.
+	 * @param globalTransactions
+	 * @param dt
 	 */
-	public OfferChannel(LinkedBlockingQueue<Transaction> queue, LinkedBlockingQueue<Transaction> globalTransactions, double dt) {
-		this.offers = queue;
-		this.sysStartTime = System.currentTimeMillis();
-		this.marketIterations=0;
-		this.dt = dt;
+	public OfferChannel(LinkedBlockingQueue<Transaction> globalTransactions, HashSet<Actor> actors, double dt) {
 		this.globalTransactions = globalTransactions;
-		this.actors = null;
-	}
-	public LinkedBlockingQueue<Transaction> getOfferList(){
-		return this.offers;
-	}
-	public LinkedBlockingQueue<Transaction> getGlobalList(){
-		return this.globalTransactions;
-	}
-	public void setActorList(HashSet<Actor> actors) {
 		this.actors = actors;
+		this.dt = dt;
+
+		this.offers = new LinkedBlockingQueue<Transaction>();
+
+		this.sysStartTime = System.currentTimeMillis();
+		this.marketIterations = 0;
 	}
+	
 	@Override
-	/**
-	 * This returns a transaction which is submitted to the transaction queue.
-	 */
 	public void run() {
-		while(!(System.currentTimeMillis() == this.sysStartTime + ((long)(this.marketIterations * this.dt * 1000)))){
-			for(Actor a  : this.actors){
+		while(!(System.currentTimeMillis() == this.sysStartTime + ((long) (this.marketIterations * this.dt * 1000)))) {
+			for(Actor actor : this.actors) {
 				try {
-					this.offers.put(a.getBestOffer());
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					this.offers.put(actor.getBestOffer());
+				} catch(InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
@@ -64,11 +51,10 @@ public class OfferChannel implements Runnable {
 		}
 	}
 	
-	private void process(){
-		System.err.println(offers.size());
-		for(Transaction t : this.offers){
-			for(Transaction q : this.offers){
-				if(true){//t.equals(q.getReversedTransaction()) && t.getState() == false && q.getState() == false){
+	private void process() {
+		for(Transaction t : this.offers) {
+			for(Transaction q : this.offers) {
+				if(true) {//t.equals(q.getReversedTransaction()) && t.getState() == false && q.getState() == false){
 					t.setState(true);
 					q.setState(true);
 					t.getSender().acceptTransaction(t);
@@ -80,14 +66,13 @@ public class OfferChannel implements Runnable {
 					try {
 						this.globalTransactions.put(t);
 						this.globalTransactions.put(q);
-					} catch (InterruptedException e) {
+					} catch(InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			}
 		}
-		System.err.println("Processed");
 	}
-
+	
 }
