@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import core.actors.Actor;
@@ -21,9 +20,7 @@ import core.commodities.Ticker;
  */
 public class MarketSimulation extends Simulation {
 
-	Player player;
-	Player player2;
-
+	protected Player player;
 	protected HashSet<Actor> actors;
 	protected LinkedList<Commodity> commodities;
 	protected LinkedBlockingQueue<Transaction> transactions;
@@ -32,9 +29,9 @@ public class MarketSimulation extends Simulation {
 		super(dt);
 		this.actors = new HashSet<Actor>();
 		this.commodities = new LinkedList<Commodity>();
-		this.transactions = new LinkedBlockingQueue<Transaction>();
-		//Players Cannot be added here because commodities have not been added yet.
 		this.transactions = linkedBlockingQueue;
+		//Players Cannot be added here because commodities have not been added yet.
+
 	}
 
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -53,17 +50,8 @@ public class MarketSimulation extends Simulation {
 	 * @param actor
 	 */
 	public void addActor(Actor actor) {
+		assert actor != null : "Null Actor.";
 		this.actors.add(actor);
-		if(this.player == null){
-			this.player = (Player) actor;
-			return;
-		}
-		else {
-			if(this.player2 == null){
-				this.player2 = (Player) actor;
-				return;
-			}
-		}
 	}
 	public Player getPlayer(){
 		return this.player;
@@ -95,36 +83,6 @@ public class MarketSimulation extends Simulation {
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket();
 		}
-
-		// START TEMP CODE
-		// will be actors making their offers to the market
-		// and then the market matching the offers
-		Random r = new Random();
-		int commodity1Index = r.nextInt(this.commodities.size());
-		int commodity2Index = 0;
-		do {
-			commodity2Index = r.nextInt(this.commodities.size());
-		} while(commodity2Index == commodity1Index);
-		Commodity commodity1 = this.commodities.get(commodity1Index);
-		Commodity commodity2 = this.commodities.get(commodity2Index);
-
-		double ratio = commodity1.getMostRecentRatios().get(commodity2.name());
-		double trade = 0;
-		if(ratio == 0) {
-			int x = r.nextInt(9);
-			trade = x > 0 ? x : 1;
-		} else {
-			do {
-				trade = ratio + r.nextDouble() / 2 - .25;
-			} while(!(trade > 0));
-		}
-////		this.player.submitTransction(1, commodity1, (int) trade, commodity2);
-//////		this.player2.submitTransction((int)trade, commodity2, 1, commodity1);
-//		this.player.submitTransaction(new Transaction(1, commodity1, (int) trade, commodity2));
-//		this.player2.submitTransaction(new Transaction((int)trade, commodity2, 1, commodity1));
-		//Line below creates problems, as there is no Actor to reference who made the trade
-		//commodity1.addTransaction(new Transaction(1, commodity1, (int) trade, commodity2,this.player));
-		// END TEMP CODE
 
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : this.commodities) { // go through all the commodities

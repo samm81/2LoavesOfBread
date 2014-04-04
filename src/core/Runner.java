@@ -24,7 +24,7 @@ public class Runner {
 	static int width = 900;
 	static int height = 700;
 	static final double dt = .1d;
-
+	static final int numActors = 6;
 	/**
 	 * Sets up the MarketSimulation and JFrame
 	 */
@@ -34,25 +34,12 @@ public class Runner {
 		MarketSimulation sim = new MarketSimulation(offers.getGlobalList(),dt);
 		offers.setActorList(sim.getActors());
 		//Creates the transaction thread that evaluates offers, every dt.
-		Thread transactions = new Thread(offers); 
-		// ok I agree, there's got to be a better way to do this
-		// enum maybe?
-		sim.addCommodity(Commodity.Fish);
-		sim.addCommodity(Commodity.Bread);
-		sim.addCommodity(Commodity.Watermelon);
-		sim.addCommodity(Commodity.Oxen);
-
-		
-//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-//		sim.addActor(new Actor(sim.getCommodities(), sim.getTransactions()));
-
-		Player p = new Player(sim.getCommodities(),offers.getOfferList());
-		sim.addActor(p);
-		Player p2 = new Player(sim.getCommodities(),sim.getTransactions());
-		sim.addActor(p2);
+		Thread offerProcessor = new Thread(null,offers,"offerProcessor");
+		for(Commodity item : Commodity.values()){
+			sim.addCommodity(item);
+		}
+		for (int i = 0; i < numActors; i++)
+			sim.addActor(new Player(sim.getCommodities(), offers.getOfferList()));
 		sim.createTickers(tickerMagnitude); // required
 
 		JFrame f = new JFrame("Two Loaves of Bread");
@@ -64,7 +51,6 @@ public class Runner {
 		int screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, width, height);
-
 		MarketCanvas canvas = new MarketCanvas(60, sim);
 		canvas.setBackground(Color.DARK_GRAY);
 		// these two are the height and the width that the frame takes up with it's surrounding bar
@@ -75,9 +61,9 @@ public class Runner {
 		f.add(canvas);
 		f.setVisible(true);		
 		canvas.start();
+		offerProcessor.setDaemon(true);
+		offerProcessor.start();
 		sim.start();
-		transactions.setDaemon(true);
-		transactions.start();
 
 	}
 }

@@ -23,7 +23,7 @@ public enum Commodity {
 	Hashtable<String, Ticker> tickers; // the tickers for the objects it trades for
 	Hashtable<String, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
 
-	Color color; // the commoditie's color
+	Color color; // the commodity's color
 
 
 	private Commodity(Color color) {

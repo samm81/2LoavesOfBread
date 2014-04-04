@@ -48,9 +48,7 @@ public class OfferChannel implements Runnable {
 	}
 	@Override
 	/**
-	 * TODO: Change to thread that runs through all the actors and calls get best offer. 
 	 * This returns a transaction which is submitted to the transaction queue.
-	 * TODO: Give Offers access to the actors, and make it a hashmap so i can use the actors as keys.
 	 */
 	public void run() {
 		while(!(System.currentTimeMillis() == this.sysStartTime + ((long)(this.marketIterations * this.dt * 1000)))){
@@ -65,11 +63,9 @@ public class OfferChannel implements Runnable {
 			process();
 		}
 	}
-	/**
-	 * Untested.
-	 */
+	
 	private void process(){
-		System.out.println(offers.size());
+		System.err.println(offers.size());
 		for(Transaction t : this.offers){
 			for(Transaction q : this.offers){
 				if(true){//t.equals(q.getReversedTransaction()) && t.getState() == false && q.getState() == false){
@@ -88,10 +84,10 @@ public class OfferChannel implements Runnable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					System.err.println("Processed");
 				}
 			}
 		}
+		System.err.println("Processed");
 	}
 
 }

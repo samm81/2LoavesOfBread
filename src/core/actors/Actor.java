@@ -19,19 +19,16 @@ public abstract class Actor {
 
 	protected LinkedList<Commodity> commodities; // list of global commodities
 	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
-	
-
 	protected double[][] exchangematrix; //actor's own personal exchange rate
 	protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
 	protected ConcurrentHashMap<String, Integer> volumes;
 	private final Integer startingVolumes = new Integer(3); 
+	
 	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
 		this.commodities = commodities;
 		this.transactions = transaction;
 		this.volumes = new ConcurrentHashMap<String, Integer>(this.commodities.size());
 		this.exchangematrix = new double[commodities.size()][commodities.size()];
-
-
 		//random values to start with
 		for(int row = 0; row < exchangematrix.length; row++)
 			for(int col = 0; col < exchangematrix[row].length; col++) {
@@ -52,12 +49,10 @@ public abstract class Actor {
 		System.out.println("Running BestOffer()");
 		int want = (int) (Math.random() * this.commodities.size()); //item wanted
 		int tradedaway = -1; //item to be traded for want
-
 		int[] inven = new int[this.commodities.size()];
 		for(int i = 0; i < inven.length; i++) {
 			inven[i] = volumes.get(this.commodities.get(i).name());
 		}
-
 		for(int i = 0; i < exchangematrix[want].length; i++) {
 			if(tradedaway == -1)
 				tradedaway = i;
@@ -66,10 +61,8 @@ public abstract class Actor {
 					tradedaway = i;
 			}
 		}
-
-		int vol1 = (int) Math.ceil(inven[tradedaway] / 2);
-		int vol2 = (int) (vol1 * exchangematrix[want][tradedaway]);
-
+		double vol1 =  Math.ceil(inven[tradedaway] / 2);
+		double vol2 =  (vol1 * exchangematrix[want][tradedaway]);
 		return new Transaction(vol1, this.commodities.get(tradedaway), vol2, this.commodities.get(want), this);
 	}
 
@@ -87,8 +80,7 @@ public abstract class Actor {
 			Commodity a = i.next();
 			Hashtable<String, Double> exchangerate = a.getMostRecentRatios();
 
-			for(int row = 0; row < exchangematrix.length; row++)
-			{
+			for(int row = 0; row < exchangematrix.length; row++){
 				if(exchangerate.get(a) == null)
 					continue;
 				else if(row != col)
@@ -96,7 +88,6 @@ public abstract class Actor {
 				else
 					exchangematrix[row][col] = 1;
 			}
-
 			col++;
 		}
 	}

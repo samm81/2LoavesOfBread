@@ -18,12 +18,12 @@ public class Transaction {
 	public static final double tranSlippage = 1d;
 	public Commodity commodity1;
 	public Commodity commodity2;
-	public int volume1;
-	public int volume2;
+	public double volume1;
+	public double volume2;
 	public final Actor sender;
 	public boolean processed = false;
 
-	public Transaction(int volume1, Commodity commodity1, int volume2, Commodity commodity2, Actor sender) {
+	public Transaction(double volume1, Commodity commodity1, double volume2, Commodity commodity2, Actor sender) {
 		this.commodity1 = commodity1;
 		this.commodity2 = commodity2;
 		this.volume1 = volume1;
@@ -46,12 +46,15 @@ public class Transaction {
 	public double getVolume2() {
 		return volume2;
 	}
-
+	//TODO: Do we need to handle possible overflow?
 	public double getRatio() {
+		assert volume1 > 0 : "Volume 1 was less than or equal to 0!";
+		assert volume2 > 0 : "Volume 2 was less than or equal to 0!";
 		if(volume1 == 0){
 			return 1;
 		}
-		return volume2 / volume1; // Sometimes we get divide by zero errors. Should probably figure out why sometime.
+		// TODO: Sometimes we get divide by zero errors. Should probably figure out why sometime.
+		return volume2 / volume1;
 	}
 
 	public double getTotalVolume() {
@@ -73,10 +76,8 @@ public class Transaction {
 	public boolean equals(Transaction e) {
 		if(this.commodity1.name().equals(e.getCommodity1().name()) 
 				&& this.commodity2.name().equals(e.getCommodity2().name())
-				&& this.getVolume1() <= (e.getVolume1() + Transaction.tranSlippage) 
-				&& this.getVolume1() >= (e.getVolume1() - Transaction.tranSlippage)
-				&& this.getVolume2() <= (e.getVolume2() + Transaction.tranSlippage) 
-				&& this.getVolume2() >= (e.getVolume2() - Transaction.tranSlippage)
+				&& this.getRatio() <= (e.getRatio() + Transaction.tranSlippage) 
+				&& this.getRatio() >= (e.getRatio() - Transaction.tranSlippage)
 				){
 			return true;
 		}
