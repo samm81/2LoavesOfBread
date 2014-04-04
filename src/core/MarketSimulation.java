@@ -17,32 +17,31 @@ import core.commodities.Ticker;
  * @author Sam "Fabulous Hands" Maynard
  */
 public class MarketSimulation extends Simulation {
-
+	
 	protected Player player;
 	protected HashSet<Actor> actors;
 	protected LinkedList<Commodity> commodities;
 	protected LinkedBlockingQueue<Transaction> transactions;
-
-	public MarketSimulation(LinkedBlockingQueue<Transaction> linkedBlockingQueue, double dt) {
+	
+	public MarketSimulation(double dt) {
 		super(dt);
 		this.actors = new HashSet<Actor>();
 		this.commodities = new LinkedList<Commodity>();
-		this.transactions = linkedBlockingQueue;
-		//Players Cannot be added here because commodities have not been added yet.
-
+		this.transactions = new LinkedBlockingQueue<Transaction>();
 	}
-
+	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
 		return transactions;
 	}
-
+	
 	public HashSet<Actor> getActors() {
 		return this.actors;
 	}
-
+	
 	public LinkedList<Commodity> getCommodities() {
 		return this.commodities;
 	}
+	
 	/**
 	 * @param actor
 	 */
@@ -50,27 +49,29 @@ public class MarketSimulation extends Simulation {
 		assert actor != null : "Null Actor.";
 		this.actors.add(actor);
 	}
-	public Player getPlayer(){
+	
+	public Player getPlayer() {
 		return this.player;
 	}
+	
 	public void addCommodity(Commodity commodity) {
 		this.commodities.add(commodity);
 	}
-
+	
 	public void createTickers(int tickerMagnitude) {
 		for(Commodity commodity : this.commodities) {
 			commodity.createTickersFromCommodities(this.commodities, tickerMagnitude);
 		}
 	}
-
+	
 	@Override
 	protected void initialize() {}
-
+	
 	/**
 	 * The main engine behind the game
 	 * tick goes through every actor, gets their best offer
 	 * compares all offers to each other, finds offers
-	 * that match, carry out the offers, inform the actors, 
+	 * that match, carry out the offers, inform the actors,
 	 * and inform the commodities.
 	 */
 	@Override
