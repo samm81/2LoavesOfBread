@@ -14,21 +14,28 @@ import core.commodities.Commodity;
  * 
  * @author Patrick Shan
  */
-
-public abstract class Actor {
-
-	protected LinkedList<Commodity> commodities;
-	protected LinkedBlockingQueue<Transaction> transactions;
-
-	protected double[][] exchangematrix; //actor's own personal exchange rate
-	protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
-	protected ConcurrentHashMap<Commodity, Integer> volumes;
-	private final Integer startingVolumes = new Integer(3);
-
-	public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
+public enum Actor{
+	Actor();
+	
+	
+	LinkedList<Commodity> commodities;
+	LinkedBlockingQueue<Transaction> transactions;
+	double[][] exchangematrix;
+	double[] wantmatrix;
+	ConcurrentHashMap<Commodity, Integer> volumes;
+	Integer startingVolumes;
+	
+	/**
+	 * Constructor
+	 * @author Patrick Shan
+	 * @param commodities
+	 * @param transactions
+	 */
+	private Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions)
+	{
 		this.commodities = commodities;
-		this.transactions = transaction;
-
+		this.transactions = transactions;
+		
 		this.volumes = new ConcurrentHashMap<Commodity, Integer>(this.commodities.size());
 		this.exchangematrix = new double[commodities.size()][commodities.size()];
 
@@ -42,8 +49,14 @@ public abstract class Actor {
 			this.volumes.put(s, this.startingVolumes);
 		this.exchangematrix = new double[commodities.size()][commodities.size()];
 	}
-
-	public Transaction getBestOffer() {
+	
+	/**
+	 * Get Best Offer returns a transaction that the actor will submit based on
+	 * an actor's want matrix and exchange matrix.
+	 * @author Patrick Shan
+	 * @return Transaction that the actor will submit.
+	 */
+	public Transaction getBestOffer(){
 		int want = (int) (Math.random() * this.commodities.size()); //item wanted
 		int tradedaway = -1; //item to be traded for want
 		int[] inven = new int[this.commodities.size()];
@@ -62,14 +75,12 @@ public abstract class Actor {
 		double vol2 = (vol1 * exchangematrix[want][tradedaway]);
 		return new Transaction(vol1, this.commodities.get(tradedaway), vol2, this.commodities.get(want), this);
 	}
-
-	//For MVP: Selects a random thing and then picks an offer that they can actually make.
-	//If they cannot afford making any offers it picks another random offer.
-	// patrick:
-	// actor should look at their goods, their wants, and the market
-	// then reevaluate how much they are willing to trade for each object
-	//This method will simply average the exchange rate and the new ratio for MVP. Then add/subtract a random amount.
-
+	
+	/**
+	 * EvaluateMarket is how an actor will change the values in the market's exchange rates
+	 * for various goods. It represents the ability of people to recognize changing prices.
+	 * @author Patrick Shan
+	 */
 	public void evaluateMarket() {
 		System.out.println("EVALUATING MARKETS! :D");
 		Iterator<Commodity> i = this.commodities.iterator();
@@ -101,7 +112,11 @@ public abstract class Actor {
 			a = i.next();
 		}
 	}
-
+	
+	/**
+	 * AcceptTransaction changes actor inventories as they perform transaction t.
+	 * @param t the transaction to be performed
+	 */
 	public void acceptTransaction(Transaction t) {
 		if(this.volumes.get(t.commodity1) - t.volume1 > 0) {
 			this.volumes.put(t.getCommodity1(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));
@@ -110,7 +125,6 @@ public abstract class Actor {
 
 	}
 }
-
 /*
  * This is code that will pick an offer in the list that best matches the wants and needs.
  * It does not account for whether or not they can make that transaction though.
