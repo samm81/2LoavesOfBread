@@ -1,20 +1,19 @@
 package core;
 
-import core.actors.Actor;
-import core.actors.Player;
-import core.commodities.Commodity;
-import core.commodities.Ticker;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import core.actors.Actor;
+import core.actors.Player;
+import core.commodities.Commodity;
+import core.commodities.Ticker;
+
 /**
  * The main simulation running the game. Contains all the data objects, and
  * is given to the canvas in order to draw the graphs.
- * 
  * @author Sam "Fabulous Hands" Maynard
  */
 public class MarketSimulation extends Simulation {
@@ -26,9 +25,9 @@ public class MarketSimulation extends Simulation {
 	
 	public MarketSimulation(double dt) {
 		super(dt);
-		this.actors = new HashSet<>();
-		this.commodities = new LinkedList<>();
-		this.transactions = new LinkedBlockingQueue<>();
+		this.actors = new HashSet<Actor>();
+		this.commodities = new LinkedList<Commodity>();
+		this.transactions = new LinkedBlockingQueue<Transaction>();
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -44,7 +43,7 @@ public class MarketSimulation extends Simulation {
 	}
 	
 	/**
-	 * @param actor - Takes in an abstract Actor.
+	 * @param actor
 	 */
 	public void addActor(Actor actor) {
 		assert actor != null : "Null Actor.";
@@ -62,24 +61,6 @@ public class MarketSimulation extends Simulation {
 	public void createTickers(int tickerMagnitude) {
 		for(Commodity commodity : this.commodities) {
 			commodity.createTickersFromCommodities(this.commodities, tickerMagnitude);
-		}
-	}
-	
-	@Override
-	public void run() {
-		while(Thread.currentThread() == this.thread) {
-			System.err.println("About to Tick.");
-			tick();
-			System.err.println("After to Tick.");
-			try {
-				Thread.yield();
-			} finally {
-				try {
-					Thread.sleep((long) (this.dt * 1000));
-				} catch(InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 	
