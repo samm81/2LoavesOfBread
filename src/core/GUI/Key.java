@@ -1,59 +1,56 @@
 package core.GUI;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+import core.commodities.Commodity;
+
+import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
 
-import core.commodities.Commodity;
+import static java.awt.Color.*;
 
 /**
  * Class that holds the graphical representation of the key.
- * 
+ *
  * @author Sam Maynard
- * 
  */
 public class Key extends GraphicalObject {
 
-	LinkedList<Commodity> commodities;
+    LinkedList<Commodity> commodities;
 
-	public Key(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities) {
-		super(x, y, width, height, canvas);
-		this.commodities = commodities;
-	}
+    public Key(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities) {
+        super(x, y, width, height, canvas);
+        this.commodities = commodities;
+    }
 
-	@Override
-	protected Shape makeShape(int x, int y, int width, int height) {
-		return new RoundRectangle2D.Float(x, y, width, height, 10, 10);
-	}
+    @Override
+    protected Shape makeShape(int x, int y, int width, int height) {
+        return new RoundRectangle2D.Float(x, y, width, height, 10, 10);
+    }
 
-	@Override
-	public void drawSelf(Graphics2D g) {
-		drawOutline(g);
+    @Override
+    public void drawSelf(Graphics2D g) {
+        drawOutline(g);
 
-		g.setFont(new Font("Sans Serif", Font.PLAIN, 18));
-		FontMetrics metrics = g.getFontMetrics();
+        g.setFont(new Font("Sans Serif", Font.PLAIN, 18));
+        FontMetrics metrics = g.getFontMetrics();
 
-		int labelX = x + 10;
-		int labelY = y + 15;
+        int labelX = x + 10;
+        int labelY = y + 15;
 
-		g.setColor(Color.BLACK);
-		g.drawString("KEY:", labelX, labelY + 11);
+        g.setColor(BLACK);
+        g.drawString("KEY:", labelX, labelY + 11);
 
-		labelX += 50;
+        labelX += 50;
 
-		for(Commodity commodity : commodities) {
-			Color color = commodity.getColor();
-			g.setColor(color);
-			g.fillOval(labelX, labelY, 10, 10);
-			String name = commodity.name();
-			g.drawString(name, labelX + 15, labelY + 11);
+        for (Commodity commodity : this.commodities) {
+            Color color = commodity.getColor();
+            g.setColor(color);
+            g.fillOval(labelX, labelY, 10, 10);
+            String name = commodity.name();
+            g.drawString(name, labelX + 15, labelY + 11);
 
-			labelX += metrics.stringWidth(name) + 27;
-		}
-	}
+            labelX += metrics.stringWidth(name) + 27;
+        }
+    }
 
 }

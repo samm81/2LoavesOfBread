@@ -1,86 +1,80 @@
 package core.commodities;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Ticker {
 
-	LinkedBlockingQueue<Double> datum;
+    final int baseMaxData = 10;
+    final int radius = 4;
+    LinkedBlockingQueue<Double> datum;
+    double maxData;
+    int magnitude;
+    Color color;
 
-	double maxData;
-	int magnitude;
+    public Ticker(int magnitude, Color color) {
+        this.color = color;
+        this.magnitude = magnitude;
 
-	Color color;
+        this.datum = new LinkedBlockingQueue<>(magnitude);
+        while (this.datum.offer(1d)) ;
 
-	final int baseMaxData = 10;
-	final int radius = 4;
+        this.maxData = this.baseMaxData;
+        findMaxData();
+    }
 
-	public Ticker(int magnitude, Color color) {
-		this.color = color;
-		this.magnitude = magnitude;
+    private void findMaxData() {
+        for (double data : this.datum) {
+            if (data > this.maxData) {
+                this.maxData = data;
+            }
+        }
+    }
 
-		this.datum = new LinkedBlockingQueue<Double>(magnitude);
-		while(this.datum.offer(5d));
+    public void addDataPoint(double dataPoint) throws InterruptedException {
+        double first = this.datum.poll();
+        this.datum.offer(dataPoint);
+        if (first == this.maxData) {
+            this.maxData = this.baseMaxData;
+            findMaxData();
+        }
 
-		this.maxData = baseMaxData;
-		findMaxData();
-	}
+        if (dataPoint > this.maxData) {
+            this.maxData = dataPoint;
+        }
 
-	private void findMaxData() {
-		for(double data : this.datum) {
-			if(data > this.maxData) {
-				this.maxData = data;
-			}
-		}
-	}
+    }
 
-	public void addDataPoint(double dataPoint) throws InterruptedException {
-		double first = this.datum.poll();
-		this.datum.offer(dataPoint);
-		if(first == this.maxData) {
-			this.maxData = this.baseMaxData;
-			findMaxData();
-		}
+    public void drawSelf(int x, int y, int width, int height, Graphics2D g) {
+        g.setColor(this.color);
 
-		if(dataPoint > this.maxData) {
-			this.maxData = dataPoint;
-		}
+        double dx = (double) width / (double) (this.magnitude - 1);
+        double dataX = x;
 
-	}
+        for (double data : this.datum) {
+            if (data != 0) {
+                double dataY = y + height - ((double) height * ( data / this.maxData));
+                g.fillOval((int) (dataX - this.radius / 2d), (int) (dataY - this.radius / 2d), this.radius, this.radius);
+            }
 
-	public void drawSelf(int x, int y, int width, int height, Graphics2D g) {
-		g.setColor(this.color);
+            dataX += dx;
+        }
+    }
 
-		double dx = (double) width / (double) (this.magnitude - 1);
-		double datax = x;
-		double datay = y;
+    public void drawLabel(int x, int y, int height, int numLabels, Graphics2D g) {
+        g.setFont(new Font("Sans Serif", Font.PLAIN, 12));
+        g.setColor(this.color);
 
-		for(double data : this.datum) {
-			if(data != 0) {
-				datay = y + height - ((double) height * ((double) data / this.maxData));
-				g.fillOval((int) (datax - this.radius / 2d), (int) (datay - this.radius / 2d), this.radius, this.radius);
-			}
+        double dy = (double) height / (double) numLabels;
+        double label = this.maxData;
+        double dLabel = this.maxData / numLabels;
+        double labelY = y;
 
-			datax += dx;
-		}
-	}
+        for (int i = 0; i <= numLabels; i++) {
+            g.drawString(String.format("%.1f", Math.abs(label)), x, (int) labelY);
+            labelY += dy;
+            label -= dLabel;
+        }
 
-	public void drawLabel(int x, int y, int height, int numLables, Graphics2D g) {
-		g.setFont(new Font("Sans Serif", Font.PLAIN, 12));
-		g.setColor(this.color);
-
-		double dy = (double) height / (double) numLables;
-		double label = this.maxData;
-		double dlabel = this.maxData / numLables;
-		double labely = y;
-
-		for(int i = 0; i <= numLables; i++) {
-			g.drawString(String.format("%.1f", Math.abs(label)), x, (int) labely);
-			labely += dy;
-			label -= dlabel;
-		}
-
-	}
+    }
 }
