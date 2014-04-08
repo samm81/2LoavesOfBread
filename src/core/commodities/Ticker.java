@@ -1,33 +1,29 @@
 package core.commodities;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Ticker {
-
-	LinkedBlockingQueue<Double> datum;
-
-	double maxData;
-	int magnitude;
-
-	Color color;
-
+	
 	final int baseMaxData = 10;
 	final int radius = 4;
-
+	LinkedBlockingQueue<Double> datum;
+	double maxData;
+	int magnitude;
+	Color color;
+	
 	public Ticker(int magnitude, Color color) {
 		this.color = color;
 		this.magnitude = magnitude;
-
-		this.datum = new LinkedBlockingQueue<Double>(magnitude);
-		while(this.datum.offer(5d));
-
+		
+		this.datum = new LinkedBlockingQueue<>(magnitude);
+		while(this.datum.offer(1d))
+			;
+		
 		this.maxData = baseMaxData;
 		findMaxData();
 	}
-
+	
 	private void findMaxData() {
 		for(double data : this.datum) {
 			if(data > this.maxData) {
@@ -35,7 +31,7 @@ public class Ticker {
 			}
 		}
 	}
-
+	
 	public void addDataPoint(double dataPoint) throws InterruptedException {
 		double first = this.datum.poll();
 		this.datum.offer(dataPoint);
@@ -43,44 +39,44 @@ public class Ticker {
 			this.maxData = this.baseMaxData;
 			findMaxData();
 		}
-
+		
 		if(dataPoint > this.maxData) {
 			this.maxData = dataPoint;
 		}
-
+		
 	}
-
+	
 	public void drawSelf(int x, int y, int width, int height, Graphics2D g) {
 		g.setColor(this.color);
-
+		
 		double dx = (double) width / (double) (this.magnitude - 1);
 		double datax = x;
 		double datay = y;
-
+		
 		for(double data : this.datum) {
 			if(data != 0) {
-				datay = y + height - ((double) height * ((double) data / this.maxData));
+				datay = y + height - ((double) height * (data / this.maxData));
 				g.fillOval((int) (datax - this.radius / 2d), (int) (datay - this.radius / 2d), this.radius, this.radius);
 			}
-
+			
 			datax += dx;
 		}
 	}
-
+	
 	public void drawLabel(int x, int y, int height, int numLables, Graphics2D g) {
 		g.setFont(new Font("Sans Serif", Font.PLAIN, 12));
 		g.setColor(this.color);
-
+		
 		double dy = (double) height / (double) numLables;
 		double label = this.maxData;
 		double dlabel = this.maxData / numLables;
 		double labely = y;
-
+		
 		for(int i = 0; i <= numLables; i++) {
 			g.drawString(String.format("%.1f", Math.abs(label)), x, (int) labely);
 			labely += dy;
 			label -= dlabel;
 		}
-
+		
 	}
 }
