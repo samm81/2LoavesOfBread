@@ -68,9 +68,9 @@ public class MarketSimulation extends Simulation {
     @Override
     public void run() {
        while (Thread.currentThread() == this.thread) {
-           System.err.println("About to Tick.");
+
             tick();
-           System.err.println("After to Tick.");
+
             try {
                 Thread.yield();
             } finally{
