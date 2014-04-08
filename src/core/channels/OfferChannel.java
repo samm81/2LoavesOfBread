@@ -34,7 +34,7 @@ public class OfferChannel extends Thread {
                 Thread.yield();
             } finally {
                 try {
-                    Thread.sleep((long) (dt * 1000));
+                    Thread.sleep((long) (this.dt * 1000));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -56,7 +56,7 @@ public class OfferChannel extends Thread {
     }
 
     private void process() {
-        System.err.println(offers.size());
+        System.err.println(this.offers.size());
         for (Transaction t : this.offers)
             for (Transaction q : this.offers)
                 if (t.equals(q.getReversedTransaction()) && !t.getState() && !q.getState()) {
@@ -76,7 +76,7 @@ public class OfferChannel extends Thread {
                         e.printStackTrace();
                     }
                 }
-        System.err.printf("Now there are: %d%n", offers.size());
+        System.err.printf("Now there are: %d%n", this.offers.size());
     }
 
 }

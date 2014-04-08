@@ -12,8 +12,6 @@ import core.commodities.Commodity;
  */
 public class Transaction {
 
-    //These states act as a signal as to where each transaction is at in terms of processing.
-    //We may want to explore a Response Class for extra robustness
     public static final double tranSlippage = 1d;
     public final Actor sender;
     public Commodity commodity1;
@@ -55,10 +53,6 @@ public class Transaction {
         }
         // TODO: Sometimes we get divide by zero errors. Should probably figure out why sometime.
         return this.volume2 / this.volume1;
-    }
-
-    public double getTotalVolume() {
-        return this.volume1 + this.volume2;
     }
 
     public Actor getSender() {

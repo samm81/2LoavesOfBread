@@ -8,6 +8,7 @@ import core.commodities.Commodity;
 import javax.swing.*;
 import java.awt.*;
 
+import static java.awt.Color.*;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
@@ -26,17 +27,17 @@ public class Runner {
     static int height = 700;
 
     /**
-     * Sets up the MarketSimulation and JFrame
+     * Sets Up Market Simulation, Canvas, and OfferChannel
+     * @param args - Command Line Args
      */
     public static void main(String[] args) {
         MarketSimulation sim = new MarketSimulation(dt);
-        OfferChannel offers = new OfferChannel(sim.getTransactions(), sim.getActors(), offerDT);
-        //Creates the transaction thread that evaluates offers, every dt.
-        //Thread offerProcessor = new Thread(null, offers, "offerProcessor");
 
-        for (Commodity item : Commodity.values()) {
+        //Creates the transaction thread that evaluates offers, every offerDT.
+        OfferChannel offers = new OfferChannel(sim.getTransactions(), sim.getActors(), offerDT);
+
+        for (Commodity item : Commodity.values())
             sim.addCommodity(item);
-        }
 
         for (int i = 0; i < numActors; i++)
             sim.addActor(new Player(sim.getCommodities(), sim.getTransactions()));
@@ -47,29 +48,25 @@ public class Runner {
 //        SwingUtilities.invokeLater(new Runnable() {
 //            @Override
 //            public void run(){
-                JFrame f = new JFrame("Two Loaves of Bread");
-                f.setDefaultCloseOperation(EXIT_ON_CLOSE);
-                f.setResizable(false);
-                f.setLayout(null);
-                f.getContentPane().setBackground(Color.DARK_GRAY);
-
-                int screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-                int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-                f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, width, height);
-
-                canvas.setBackground(Color.DARK_GRAY);
-                // these two are the height and the width that the frame takes up with it's surrounding bar
-                // found by trial and error
-                final int frameWidthPadding = 6;
-                final int frameHeightPadding = 29;
-                canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
-
-                f.add(canvas);
-                f.setVisible(true);
+        JFrame f = new JFrame("Two Loaves of Bread");
+        f.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        f.setResizable(false);
+        f.setLayout(null);
+        f.getContentPane().setBackground(DARK_GRAY);
+        int screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+        int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+        f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, width, height);
+        canvas.setBackground(DARK_GRAY);
+        // these two are the height and the width that the frame takes up with it's surrounding bar
+        // found by trial and error
+        final int frameWidthPadding = 6;
+        final int frameHeightPadding = 29;
+        canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
+        f.add(canvas);
+        f.setVisible(true);
         canvas.start();
 //            }
 //        });
-
         offers.setDaemon(true);
         sim.start();
         offers.start();

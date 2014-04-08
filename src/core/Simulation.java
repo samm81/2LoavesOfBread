@@ -20,15 +20,15 @@ public abstract class Simulation implements Runnable {
 
     public void start() {
         initialize();
-        thread.start();
+        this.thread.start();
     }
 
     @Override
     public void run() {
-        while (Thread.currentThread() == thread) {
+        while (Thread.currentThread() == this.thread) {
             tick();
             try {
-                Thread.sleep((long) (dt * 1000));
+                Thread.sleep((long) (this.dt * 1000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

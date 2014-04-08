@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import static java.awt.Color.*;
+
 abstract class GraphicalObject implements Clickable {
 
     protected int x;
@@ -46,7 +48,7 @@ abstract class GraphicalObject implements Clickable {
     }
 
     protected void drawOutline(Color backgroundColor, int outlineOffset, Graphics2D g) {
-        g.setColor(Color.BLACK);
+        g.setColor(BLACK);
         g.fill(shape);
         g.setColor(backgroundColor);
         g.fill(makeShape(x + outlineOffset, y + outlineOffset, width - outlineOffset * 2, height - outlineOffset * 2));
@@ -70,7 +72,7 @@ abstract class GraphicalObject implements Clickable {
      * @param g Graphics2D object to do the drawing with
      */
     protected void drawOutline(Graphics2D g) {
-        drawOutline(Color.WHITE, g);
+        drawOutline(WHITE, g);
     }
 
     @Override

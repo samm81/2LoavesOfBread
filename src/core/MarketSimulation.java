@@ -32,7 +32,7 @@ public class MarketSimulation extends Simulation {
     }
 
     public LinkedBlockingQueue<Transaction> getTransactions() {
-        return transactions;
+        return this.transactions;
     }
 
     public HashSet<Actor> getActors() {

@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
 
+import static java.awt.Color.*;
+
 /**
  * Class that holds the graphical representation of the key.
  *
@@ -35,12 +37,12 @@ public class Key extends GraphicalObject {
         int labelX = x + 10;
         int labelY = y + 15;
 
-        g.setColor(Color.BLACK);
+        g.setColor(BLACK);
         g.drawString("KEY:", labelX, labelY + 11);
 
         labelX += 50;
 
-        for (Commodity commodity : commodities) {
+        for (Commodity commodity : this.commodities) {
             Color color = commodity.getColor();
             g.setColor(color);
             g.fillOval(labelX, labelY, 10, 10);

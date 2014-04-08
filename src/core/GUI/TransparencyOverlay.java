@@ -21,14 +21,14 @@ public class TransparencyOverlay extends GraphicalObject {
 
     @Override
     public void drawSelf(Graphics2D g) {
-        g.setColor(color);
-        g.fill(shape);
+        g.setColor(this.color);
+        g.fill(this.shape);
     }
 
     @Override
     public void clicked(MouseEvent e) {
         super.clicked(e);
-        canvas.message("CloseMakeOffer");
+        this.canvas.message("CloseMakeOffer");
     }
 
 }

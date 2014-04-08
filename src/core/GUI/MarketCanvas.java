@@ -10,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import static java.awt.Color.*;
+
 /**
  * The general container for all the games elements.
  *
@@ -33,27 +35,27 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 
     @Override
     void init() {
-        Key key = new Key(0, 0, this.getWidth(), 40, this, sim.getCommodities());
-        Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, sim.getCommodities(), sim.getPlayer());
+        Key key = new Key(0, 0, this.getWidth(), 40, this, this.sim.getCommodities());
+        Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, this.sim.getCommodities(), this.sim.getPlayer());
         MakeOfferButton makeOfferButton = new MakeOfferButton(this.getWidth() - 250, this.getHeight() - 100, 220, 50, this);
         addGraphicalObject(key);
         addGraphicalObject(inventory);
         addGraphicalObject(makeOfferButton);
 
-        LinkedList<Graph> graphs = createGraphs(sim.getCommodities(), 200);
+        LinkedList<Graph> graphs = createGraphs(this.sim.getCommodities(), 200);
         for (Graph graph : graphs)
             addGraphicalObject(graph);
 
         Color color = new Color(1f, 1f, 1f, .8f);
-        overlay = new TransparencyOverlay(this, color);
+        this.overlay = new TransparencyOverlay(this, color);
 
         int width = 800;
         int height = 100;
         int x = this.getWidth() / 2 - width / 2;
         int y = this.getHeight() / 2 - height / 2;
-        makeOfferPopup = new MakeOfferPopup(x, y, width, height, this, sim.getCommodities());
+        this.makeOfferPopup = new MakeOfferPopup(x, y, width, height, this, this.sim.getCommodities());
 
-        goButton = new GoButton(x + width - 95, y + 25, 75, 50, this);
+        this.goButton = new GoButton(x + width - 95, y + 25, 75, 50, this);
     }
 
     /**
@@ -99,9 +101,9 @@ public class MarketCanvas extends DoubleBufferedCanvas {
     @Override
     void draw(Graphics graphics) {
         Graphics2D g = (Graphics2D) graphics;
-        g.setColor(Color.BLACK);
+        g.setColor(BLACK);
 
-        for (GraphicalObject graphicalObject : graphicalObjects)
+        for (GraphicalObject graphicalObject : this.graphicalObjects)
             graphicalObject.drawSelf(g);
 
     }
@@ -117,7 +119,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
                 int x = click.getX();
                 int y = click.getY();
                 GraphicalObject topObjectClicked = null;
-                for (GraphicalObject graphicalObject : graphicalObjects) {
+                for (GraphicalObject graphicalObject : this.graphicalObjects) {
                     if (graphicalObject.pointInBounds(x, y))
                         topObjectClicked = graphicalObject;
                 }
@@ -129,7 +131,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
         if (this.keyPressesWaiting()) {
             LinkedList<KeyEvent> keyPresses = this.flushKeyPressQueue();
             for (KeyEvent keyPress : keyPresses) {
-                for (GraphicalObject graphicalObject : graphicalObjects) {
+                for (GraphicalObject graphicalObject : this.graphicalObjects) {
                     graphicalObject.keyPressed(keyPress);
                 }
             }
@@ -144,22 +146,22 @@ public class MarketCanvas extends DoubleBufferedCanvas {
     public void message(String message) {
         switch (message) {
             case "MakeOfferOverlay":
-                addGraphicalObject(overlay);
-                addGraphicalObject(makeOfferPopup);
-                addGraphicalObject(goButton);
+                addGraphicalObject(this.overlay);
+                addGraphicalObject(this.makeOfferPopup);
+                addGraphicalObject(this.goButton);
                 break;
             case "CloseMakeOffer":
-                removeGraphicalObject(makeOfferPopup);
-                removeGraphicalObject(overlay);
-                removeGraphicalObject(goButton);
+                removeGraphicalObject(this.makeOfferPopup);
+                removeGraphicalObject(this.overlay);
+                removeGraphicalObject(this.goButton);
                 break;
             case "OfferMade":
-                int volume1 = makeOfferPopup.getVolume1();
-                int volume2 = makeOfferPopup.getVolume2();
-                Commodity commodity1 = makeOfferPopup.getCommodity1();
-                Commodity commodity2 = makeOfferPopup.getCommodity2();
-                Transaction offer = new Transaction(volume1, commodity1, volume2, commodity2, sim.getPlayer());
-                sim.getPlayer().setBestOffer(offer);
+                int volume1 = this.makeOfferPopup.getVolume1();
+                int volume2 = this.makeOfferPopup.getVolume2();
+                Commodity commodity1 = this.makeOfferPopup.getCommodity1();
+                Commodity commodity2 = this.makeOfferPopup.getCommodity2();
+                Transaction offer = new Transaction(volume1, commodity1, volume2, commodity2, this.sim.getPlayer());
+                this.sim.getPlayer().setBestOffer(offer);
                 this.message("CloseMakeOffer");
                 break;
         }

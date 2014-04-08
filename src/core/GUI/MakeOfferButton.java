@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
+import static java.awt.Color.*;
+
 /**
  * Class that holds the graphical representation of the
  * "Make Offer" button.
@@ -27,19 +29,19 @@ public class MakeOfferButton extends GraphicalObject {
 
         g.setFont(new Font("Sans Serif", Font.BOLD, 26));
 
-        int textx = x + 20;
-        int texty = y + 35;
+        int textX = this.x + 20;
+        int textY = this.y + 35;
 
         //TODO: scale size of text based on button width/height
 
-        g.setColor(Color.BLACK);
-        g.drawString("MAKE OFFER", textx, texty);
+        g.setColor(BLACK);
+        g.drawString("MAKE OFFER", textX, textY);
     }
 
     @Override
     public void clicked(MouseEvent e) {
         super.clicked(e);
-        canvas.message("MakeOfferOverlay");
+        this.canvas.message("MakeOfferOverlay");
     }
 
 }

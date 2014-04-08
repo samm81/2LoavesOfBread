@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
 
+import static java.awt.Color.*;
+
 /**
  * Class to hold the graphical representation of the inventory:
  * player's amount of stuff, the examine trades button and the
@@ -34,24 +36,24 @@ public class Inventory extends GraphicalObject {
     public void drawSelf(Graphics2D g) {
         drawOutline(g);
 
-        int titlex = x + 30;
-        int titley = y + 30;
+        int titleX = x + 30;
+        int titleY = y + 30;
         g.setFont(new Font("Sans Serif", Font.BOLD, 22));
-        g.setColor(Color.BLACK);
-        g.drawString("Inventory:", titlex, titley);
+        g.setColor(BLACK);
+        g.drawString("Inventory:", titleX, titleY);
 
-        int commodityx = titlex + 10;
-        int commodityy = titley + 25;
-        for (Commodity commodity : commodities) {
+        int commodityX = titleX + 10;
+        int commodityY = titleY + 25;
+        for (Commodity commodity : this.commodities) {
             String name = commodity.name();
             g.setFont(new Font("Sans Serif", Font.BOLD, 16));
-            g.setColor(Color.BLACK);
-            g.drawString("10 " + name, commodityx, commodityy);
+            g.setColor(BLACK);
+            g.drawString("10 " + name, commodityX, commodityY);
 
-            commodityy += 25;
-            if (commodityy > (this.y + this.height - 20)) {
-                commodityy = titley + 25;
-                commodityx += 100;
+            commodityY += 25;
+            if (commodityY > (this.y + this.height - 20)) {
+                commodityY = titleY + 25;
+                commodityX += 100;
             }
         }
     }

@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
+import static java.awt.Color.*;
+
 /**
  * Class that holds the graphical representation of
  * the go button on the make trade popup.
@@ -23,14 +25,14 @@ public class GoButton extends GraphicalObject {
 
     @Override
     public void drawSelf(Graphics2D g) {
-        this.drawOutline(Color.GREEN, g);
+        this.drawOutline(GREEN, g);
 
-        int textx = x + 7;
-        int texty = y + 40;
+        int textX = x + 7;
+        int textY = y + 40;
 
         g.setFont(new Font("Sans Serif", Font.BOLD, 40));
-        g.setColor(Color.BLACK);
-        g.drawString("GO", textx, texty);
+        g.setColor(BLACK);
+        g.drawString("GO", textX, textY);
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 /**
  * Abstract class to deal with making a Double Buffered Canvas.
- *
+ * This class also contains the FPSCounter Class.
  * @author Sam Maynard
  */
 @SuppressWarnings ("serial")
@@ -94,13 +94,13 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
             public void mouseReleased(MouseEvent e) {
                 int x = e.getX();
                 int y = e.getY();
-                if (Math.abs(this.x - x) < tolerance && Math.abs(this.y - y) < tolerance)
+                if (Math.abs(this.x - x) < this.tolerance && Math.abs(this.y - y) < this.tolerance)
                     mouseClicks.add(this.e);
             }
 
         });
 
-        thread = new Thread(this);
+        this.thread = new Thread(this);
     }
 
     /**
@@ -201,7 +201,6 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
             buffer.flush();
             buffer = null;
         }
-        System.gc();
 
         buffer = createImage(bufferWidth, bufferHeight);
         bufferGraphics = buffer.getGraphics();

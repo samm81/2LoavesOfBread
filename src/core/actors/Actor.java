@@ -20,9 +20,9 @@ public abstract class Actor {
     final Integer startingVolumes;
     protected LinkedList<Commodity> commodities;
     protected LinkedBlockingQueue<Transaction> transactions;
-    protected double[][] exchangematrix; //actor's own personal exchange rate
+    protected double[][] exchangeMatrix; //actor's own personal exchange rate
     //TODO: Currently Unused?
-    protected double[] wantmatrix; //what the actor wants and what they are willing to trade for.
+    protected double[] wantMatrix; //what the actor wants and what they are willing to trade for.
     protected ConcurrentHashMap<Commodity, Integer> volumes;
 
     public Actor(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
@@ -30,38 +30,38 @@ public abstract class Actor {
         this.transactions = transaction;
 
         this.volumes = new ConcurrentHashMap<>(this.commodities.size());
-        this.exchangematrix = new double[commodities.size()][commodities.size()];
+        this.exchangeMatrix = new double[commodities.size()][commodities.size()];
 
         //random values to start with
-        for (int row = 0; row < exchangematrix.length; row++) {
-            for (int col = 0; col < exchangematrix[row].length; col++) {
-                exchangematrix[row][col] = Math.random();
+        for (int row = 0; row < this.exchangeMatrix.length; row++) {
+            for (int col = 0; col < this.exchangeMatrix[row].length; col++) {
+                this.exchangeMatrix[row][col] = Math.random();
             }
         }
         this.startingVolumes = 3;
         for (Commodity s : this.commodities)
             this.volumes.put(s, this.startingVolumes);
-        this.exchangematrix = new double[commodities.size()][commodities.size()];
+        this.exchangeMatrix = new double[commodities.size()][commodities.size()];
     }
 
     public Transaction getBestOffer() {
         int want = (int) (Math.random() * this.commodities.size()); //item wanted
-        int tradedaway = -1; //item to be traded for want
+        int tradedAway = -1; //item to be traded for want
         int[] inven = new int[this.commodities.size()];
         for (int i = 0; i < inven.length; i++) {
-            inven[i] = volumes.get(this.commodities.get(i));
+            inven[i] = this.volumes.get(this.commodities.get(i));
         }
-        for (int i = 0; i < exchangematrix[want].length; i++) {
-            if (tradedaway == -1)
-                tradedaway = i;
+        for (int i = 0; i < this.exchangeMatrix[want].length; i++) {
+            if (tradedAway == -1)
+                tradedAway = i;
             else {
-                if (inven[i] / exchangematrix[want][i] > inven[tradedaway] / exchangematrix[want][tradedaway])
-                    tradedaway = i;
+                if (inven[i] / this.exchangeMatrix[want][i] > inven[tradedAway] / this.exchangeMatrix[want][tradedAway])
+                    tradedAway = i;
             }
         }
-        int vol1 = (int) Math.ceil(inven[tradedaway] / 2);
-        int vol2 = (int) (vol1 * exchangematrix[want][tradedaway]);
-        return new Transaction(vol1, this.commodities.get(tradedaway), vol2, this.commodities.get(want), this);
+        int vol1 = (int) Math.ceil(inven[tradedAway] / 2);
+        int vol2 = (int) (vol1 * this.exchangeMatrix[want][tradedAway]);
+        return new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want), this);
     }
 
     /*
@@ -90,12 +90,12 @@ public abstract class Actor {
                     break;
                 }
             }
-            for (int row = 0; row < exchangematrix.length && col < exchangematrix[row].length; row++) {
+            for (int row = 0; row < this.exchangeMatrix.length && col < this.exchangeMatrix[row].length; row++) {
                 if (exchangeRate.get(a.name()) != null) {
                     if (row != col)
-                        exchangematrix[row][col] = Math.abs((exchangematrix[row][col] + exchangeRate.get(a.name()) / 2) + Math.random());
+                        this.exchangeMatrix[row][col] = Math.abs((this.exchangeMatrix[row][col] + exchangeRate.get(a.name()) / 2) + Math.random());
                     else
-                        exchangematrix[row][col] = 1;
+                        this.exchangeMatrix[row][col] = 1;
                 }
             }
             col++;

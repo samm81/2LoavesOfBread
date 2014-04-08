@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
  *
  * @author Sam Maynard
  */
-interface Clickable {
+public interface Clickable {
 
     boolean pointInBounds(int x, int y);
 

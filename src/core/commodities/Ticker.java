@@ -19,7 +19,7 @@ public class Ticker {
         this.datum = new LinkedBlockingQueue<>(magnitude);
         while (this.datum.offer(1d)) ;
 
-        this.maxData = baseMaxData;
+        this.maxData = this.baseMaxData;
         findMaxData();
     }
 
@@ -49,32 +49,31 @@ public class Ticker {
         g.setColor(this.color);
 
         double dx = (double) width / (double) (this.magnitude - 1);
-        double datax = x;
-        double datay = y;
+        double dataX = x;
 
         for (double data : this.datum) {
             if (data != 0) {
-                datay = y + height - ((double) height * ( data / this.maxData));
-                g.fillOval((int) (datax - this.radius / 2d), (int) (datay - this.radius / 2d), this.radius, this.radius);
+                double dataY = y + height - ((double) height * ( data / this.maxData));
+                g.fillOval((int) (dataX - this.radius / 2d), (int) (dataY - this.radius / 2d), this.radius, this.radius);
             }
 
-            datax += dx;
+            dataX += dx;
         }
     }
 
-    public void drawLabel(int x, int y, int height, int numLables, Graphics2D g) {
+    public void drawLabel(int x, int y, int height, int numLabels, Graphics2D g) {
         g.setFont(new Font("Sans Serif", Font.PLAIN, 12));
         g.setColor(this.color);
 
-        double dy = (double) height / (double) numLables;
+        double dy = (double) height / (double) numLabels;
         double label = this.maxData;
-        double dlabel = this.maxData / numLables;
-        double labely = y;
+        double dLabel = this.maxData / numLabels;
+        double labelY = y;
 
-        for (int i = 0; i <= numLables; i++) {
-            g.drawString(String.format("%.1f", Math.abs(label)), x, (int) labely);
-            labely += dy;
-            label -= dlabel;
+        for (int i = 0; i <= numLabels; i++) {
+            g.drawString(String.format("%.1f", Math.abs(label)), x, (int) labelY);
+            labelY += dy;
+            label -= dLabel;
         }
 
     }
