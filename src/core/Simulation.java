@@ -2,42 +2,41 @@ package core;
 
 /**
  * Abstract class to encapsulate any simulation.
- * 
+ *
  * @author Sam Maynard
- * 
  */
-abstract class Simulation implements Runnable {
+public abstract class Simulation implements Runnable {
 
-	double dt;
+    double dt;
 
-	Thread thread;
+    Thread thread;
 
-	public Simulation(double dt) {
-		super();
-		this.dt = dt;
+    public Simulation(double dt) {
+        super();
+        this.dt = dt;
 
-		this.thread = new Thread(this);
-	}
+        this.thread = new Thread(this);
+    }
 
-	public void start() {
-		initialize();
-		thread.start();
-	}
+    public void start() {
+        initialize();
+        thread.start();
+    }
 
-	@Override
-	public void run() {
-		while(Thread.currentThread() == thread) {
-			tick();
-			try {
-				Thread.sleep((long) (dt * 1000));
-			} catch(InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    @Override
+    public void run() {
+        while (Thread.currentThread() == thread) {
+            tick();
+            try {
+                Thread.sleep((long) (dt * 1000));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	protected abstract void initialize();
+    protected abstract void initialize();
 
-	protected abstract void tick();
+    protected abstract void tick();
 
 }
