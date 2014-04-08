@@ -225,7 +225,6 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
                     repaint();
                     lastTime = time;
                 }
-                System.out.println("About to Process");
                 processInputs();
                 Thread.yield();
         }

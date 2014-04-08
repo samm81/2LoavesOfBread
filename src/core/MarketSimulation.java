@@ -1,9 +1,9 @@
 package core;
 
+import core.GUI.Ticker;
 import core.actors.Actor;
 import core.actors.Player;
 import core.commodities.Commodity;
-import core.commodities.Ticker;
 
 import java.util.HashMap;
 import java.util.HashSet;

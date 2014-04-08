@@ -1,6 +1,7 @@
 package core.commodities;
 
 import core.Transaction;
+import core.GUI.Ticker;
 
 import java.awt.*;
 import java.util.Collection;
@@ -60,7 +61,7 @@ public enum Commodity {
     public void createTickersFromCommodities(LinkedList<Commodity> commodities, int tickerMagnitude) {
         for (Commodity commodity : commodities) {
             if (!commodity.name().equals(this.name())) {
-                this.tickers.put(commodity.name(), new Ticker(tickerMagnitude, commodity.getColor()));
+                this.tickers.put(commodity.name(), new Ticker(tickerMagnitude, 5, commodity.getColor()));
                 this.mostRecentRatios.put(commodity.name(), 01d);
             }
         }
