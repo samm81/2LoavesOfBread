@@ -49,6 +49,7 @@ public class MarketSimulation extends Simulation {
     public void addActor(Actor actor) {
         assert actor != null : "Null Actor.";
         this.actors.add(actor);
+        actor.initialize(this.commodities, this.transactions);
     }
 
     public Player getPlayer() {

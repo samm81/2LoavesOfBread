@@ -27,6 +27,10 @@ public class Transaction {
         this.volume2 = volume2;
         this.sender = sender;
     }
+    
+    
+    
+    
 
     public Commodity getCommodity1() {
         return this.commodity1;
