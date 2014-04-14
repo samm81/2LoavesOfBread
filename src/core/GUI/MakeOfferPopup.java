@@ -32,8 +32,8 @@ public class MakeOfferPopup extends GraphicalObject {
 	SelectionButton rightUp;
 	SelectionButton rightDown;
 	
-	TextInput input1;
-	TextInput input2;
+	NumericInput input1;
+	NumericInput input2;
 	
 	public MakeOfferPopup(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities) {
 		super(x, y, width, height, canvas);
@@ -42,10 +42,10 @@ public class MakeOfferPopup extends GraphicalObject {
 		
 		int inputX = x + 37;
 		int inputY = y + 30;
-		input1 = new TextInput(inputX, inputY, 37, 32, 2, canvas);
+		input1 = new NumericInput(inputX, inputY, 37, 32, 2, canvas);
 		input1.setFocused(true);
 		inputX += 55 + 200 + 50 + 70;
-		input2 = new TextInput(inputX, inputY, 37, 32, 2, canvas);
+		input2 = new NumericInput(inputX, inputY, 37, 32, 2, canvas);
 		
 		int buttonX = x + 30 + 55 + 200;
 		int buttonY = y + 60;
@@ -57,13 +57,11 @@ public class MakeOfferPopup extends GraphicalObject {
 	}
 	
 	public int getVolume1() {
-		//TODO
-		return 0;
+		return input1.getInput();
 	}
 	
 	public int getVolume2() {
-		//TODO
-		return 0;
+		return input2.getInput();
 	}
 	
 	public Commodity getCommodity1() {

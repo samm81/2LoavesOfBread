@@ -13,23 +13,21 @@ import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-public class TextInput extends GraphicalObject {
+public class NumericInput extends GraphicalObject {
 	
-	int inputChars;
-	String underscores = "";
+	private String underscores = "";
 	
-	int editingChar = 0;
-	char[] input;
+	private int editingChar = 0;
+	private char[] input;
 	
-	boolean focused = false;
+	private boolean focused = false;
 	
-	long time = 0;
-	long blink = 450;
-	boolean drawingCursor = true;
+	private long time = 0;
+	private long blink = 450;
+	private boolean drawingCursor = true;
 	
-	public TextInput(int x, int y, int width, int height, int inputChars, DoubleBufferedCanvas canvas) {
+	public NumericInput(int x, int y, int width, int height, int inputChars, DoubleBufferedCanvas canvas) {
 		super(x, y, width, height, canvas);
-		this.inputChars = inputChars;
 		input = new char[inputChars];
 		for(int i = 0; i < inputChars; i++) {
 			underscores += "_";
@@ -41,8 +39,8 @@ public class TextInput extends GraphicalObject {
 		this.focused = focused;
 	}
 	
-	public String getInput() {
-		return String.valueOf(input);
+	public int getInput() {
+		return Integer.parseInt(String.valueOf(input));
 	}
 	
 	@Override
