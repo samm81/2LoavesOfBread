@@ -1,6 +1,10 @@
 package core.GUI;
 
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -10,309 +14,304 @@ import java.util.LinkedList;
 
 /**
  * Abstract class to deal with making a Double Buffered Canvas.
- * This class also contains the FPSCounter Class.
  * @author Sam Maynard
+ * 
  */
-@SuppressWarnings ("serial")
+@SuppressWarnings("serial")
 abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 
-    protected Thread thread;
+	protected Thread thread;
 
-    protected int fps;
-    protected Image buffer;
-    protected int bufferWidth;
-    protected int bufferHeight;
-    protected Graphics bufferGraphics;
-    protected HashMap<Integer, Boolean> keys = new HashMap<>();
-    protected LinkedList<KeyEvent> keyPresses = new LinkedList<>();
-    protected LinkedList<MouseEvent> mouseClicks = new LinkedList<>();
-    private int pauseTime;
-    private long lastTime;
-    private FPSCounter fpsCounter;
+	protected int fps;
+	private int pauseTime;
+	private long lastTime;
 
-    private boolean initialized = false;
+	protected Image buffer;
+	protected int bufferWidth;
+	protected int bufferHeight;
+	protected Graphics bufferGraphics;
 
-    /**
-     * constructor
-     *
-     * @param fps the frames per second for which the canvas is to run at
-     */
-    public DoubleBufferedCanvas(int fps) {
-        this(fps, 6f);
-    }
+	protected HashMap<Integer, Boolean> keys = new HashMap<Integer, Boolean>();
+	protected LinkedList<KeyEvent> keyPresses = new LinkedList<KeyEvent>();
+	protected LinkedList<MouseEvent> mouseClicks = new LinkedList<MouseEvent>();
 
-    /**
-     * constructor
-     *
-     * @param fps                        frames per second to run the canvas at
-     * @param fpsCounterUpdatesPerSecond number of times per second to update the FPS counter
-     */
-    public DoubleBufferedCanvas(int fps, float fpsCounterUpdatesPerSecond) {
-        super();
+	private FPSCounter fpsCounter;
 
-        this.fps = fps;
-        if (fps == 0)
-            this.pauseTime = 0;
-        else
-            this.pauseTime = (int) (1000f / (float) fps);
+	private boolean initialized = false;
 
-        fpsCounter = new FPSCounter(fpsCounterUpdatesPerSecond);
+	/**
+	 * constructor
+	 * @param fps the frames per second for which the canvas is to run at
+	 */
+	public DoubleBufferedCanvas(int fps) {
+		this(fps, 6f);
+	}
 
-        addKeyListener(new KeyAdapter() {
+	/**
+	 * constructor
+	 * @param fps frames per second to run the canvas at
+	 * @param fpsCounterUpdatesPerSecond number of times per second to update the FPS counter
+	 */
+	public DoubleBufferedCanvas(int fps, float fpsCounterUpdatesPerSecond) {
+		super();
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-                int key = e.getKeyCode();
-                keys.put(key, true);
-            }
+		this.fps = fps;
+		if(fps == 0)
+			this.pauseTime = 0;
+		else
+			this.pauseTime = (int) (1000f / (float) fps);
 
-            @Override
-            public void keyReleased(KeyEvent e) {
-                int key = e.getKeyCode();
-                keys.put(key, false);
+		fpsCounter = new FPSCounter(fpsCounterUpdatesPerSecond);
 
-                keyPresses.add(e);
-            }
+		addKeyListener(new KeyAdapter() {
 
-        });
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				keys.put(key, true);
+			}
 
-        // now with a custom tolerance system
-        addMouseListener(new MouseAdapter() {
-            int x;
-            int y;
-            MouseEvent e;
-            int tolerance = 15;
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				keys.put(key, false);
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                x = e.getX();
-                y = e.getY();
-                this.e = e;
-            }
+				keyPresses.add(e);
+			}
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
-                if (Math.abs(this.x - x) < this.tolerance && Math.abs(this.y - y) < this.tolerance)
-                    mouseClicks.add(this.e);
-            }
+		});
 
-        });
+		// now with a custom tolerance system
+		addMouseListener(new MouseAdapter() {
+			int x;
+			int y;
+			MouseEvent e;
+			int tolerance = 15;
 
-        this.thread = new Thread(this);
-    }
+			@Override
+			public void mousePressed(MouseEvent e) {
+				x = e.getX();
+				y = e.getY();
+				this.e = e;
+			}
 
-    /**
-     * Checks if the given key is pressed.
-     *
-     * @param keyEvent key to check
-     * @return true if the key is being pressed, false otherwise
-     */
-    public boolean keyDown(int keyEvent) {
-        return keys.get(keyEvent) != null && keys.get(keyEvent);
-    }
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				int x = e.getX();
+				int y = e.getY();
+				if(Math.abs(this.x - x) < tolerance && Math.abs(this.y - y) < tolerance)
+					mouseClicks.add(this.e);
+			}
 
-    /**
-     * Checks if there are any key presses unprocessed
-     *
-     * @return true if there are key presses waiting, false otherwise
-     */
-    public boolean keyPressesWaiting() {
-        return keyPresses.size() != 0;
-    }
+		});
 
-    /**
-     * returns the key press queue and clears it
-     *
-     * @return key press queue with all KeyEvents that have occured
-     */
-    public LinkedList<KeyEvent> flushKeyPressQueue() {
-        LinkedList<KeyEvent> keyPresses = new LinkedList<>();
-        for (KeyEvent keyPress : this.keyPresses)
-            keyPresses.add(keyPress);
-        this.keyPresses.clear();
-        return keyPresses;
-    }
+		thread = new Thread(this);
+	}
 
-    /**
-     * Checks if there are mouse clicks unprocessed
-     *
-     * @return true if there are mouse clicks waiting, false otherwise
-     */
-    public boolean mouseClicksWaiting() {
-        return mouseClicks.size() != 0;
-    }
+	/**
+	 * Checks if the given key is pressed.
+	 * @param keyEvent key to check
+	 * @return true if the key is being pressed, false otherwise
+	 */
+	public boolean keyDown(int keyEvent) {
+		return keys.get(keyEvent) != null && keys.get(keyEvent) == true;
+	}
 
-    /**
-     * returns the mouse click queue and clears it
-     *
-     * @return mouse click queue with all MouseEvents that have occurred
-     */
-    public LinkedList<MouseEvent> flushMouseClickQueue() {
-        LinkedList<MouseEvent> mouseClicks = new LinkedList<>();
-        for (MouseEvent mouseClick : this.mouseClicks)
-            mouseClicks.add(mouseClick);
-        this.mouseClicks.clear();
-        return mouseClicks;
-    }
+	/**
+	 * Checks if there are any key presses unprocessed
+	 * @return true if there are key presses waiting, false otherwise
+	 */
+	public boolean keyPressesWaiting() {
+		return keyPresses.size() != 0;
+	}
 
-    @Override
-    public void update(Graphics g) {
-        paint(g);
-    }
+	/**
+	 * returns the key press queue and clears it
+	 * @return key press queue with all KeyEvents that have occured
+	 */
+	public LinkedList<KeyEvent> flushKeyPressQueue() {
+		LinkedList<KeyEvent> keyPresses = new LinkedList<KeyEvent>();
+		for(KeyEvent keyPress : this.keyPresses)
+			keyPresses.add(keyPress);
+		this.keyPresses.clear();
+		return keyPresses;
+	}
 
-    /**
-     * allows variables to be initialized
-     */
-    abstract void init();
+	/**
+	 * Checks if there are mouse clicks unprocessed
+	 * @return true if there are mouse clicks waiting, false otherwise
+	 */
+	public boolean mouseClicksWaiting() {
+		return mouseClicks.size() != 0;
+	}
 
-    @Override
-    public void paint(Graphics g) {
-        if (!initialized) {
-            init();
-            initialized = true;
-        }
+	/**
+	 * returns the mouse click queue and clears it
+	 * @return mouse click queue with all MouseEvents that have occurred
+	 */
+	public LinkedList<MouseEvent> flushMouseClickQueue() {
+		LinkedList<MouseEvent> mouseClicks = new LinkedList<MouseEvent>();
+		for(MouseEvent mouseClick : this.mouseClicks)
+			mouseClicks.add(mouseClick);
+		this.mouseClicks.clear();
+		return mouseClicks;
+	}
 
-        int width = this.getWidth();
-        int height = this.getHeight();
+	@Override
+	public void update(Graphics g) {
+		paint(g);
+	}
 
-        if (buffer == null || bufferGraphics == null || width != bufferWidth || height != bufferHeight)
-            resetBuffer();
+	/**
+	 * allows variables to be initialized
+	 */
+	abstract void init();
 
-        bufferGraphics.clearRect(0, 0, bufferWidth, bufferHeight);
-        draw(bufferGraphics);
-        fpsCounter.paintSelf(width - 40, 30, bufferGraphics);
-        g.drawImage(buffer, 0, 0, null);
-    }
+	@Override
+	public void paint(Graphics g) {
+		if(!initialized) {
+			init();
+			initialized = true;
+		}
 
-    /**
-     * resets the buffer
-     */
-    private void resetBuffer() {
-        bufferWidth = this.getWidth();
-        bufferHeight = this.getHeight();
+		int width = this.getWidth();
+		int height = this.getHeight();
 
-        if (bufferGraphics != null) {
-            bufferGraphics.dispose();
-            bufferGraphics = null;
-        }
-        if (buffer != null) {
-            buffer.flush();
-            buffer = null;
-        }
+		if(buffer == null || bufferGraphics == null || width != bufferWidth || height != bufferHeight)
+			resetBuffer();
 
-        buffer = createImage(bufferWidth, bufferHeight);
-        bufferGraphics = buffer.getGraphics();
-    }
+		bufferGraphics.clearRect(0, 0, bufferWidth, bufferHeight);
+		draw(bufferGraphics);
+		fpsCounter.paintSelf(width - 40, 30, bufferGraphics);
+		g.drawImage(buffer, 0, 0, null);
+	}
 
-    /**
-     * actually draws the image
-     *
-     * @param g graphics to draw with
-     */
-    abstract void draw(Graphics g);
+	/**
+	 * resets the buffer
+	 */
+	private void resetBuffer() {
+		bufferWidth = this.getWidth();
+		bufferHeight = this.getHeight();
 
-    @Override
-    public void run() {
-        while (Thread.currentThread() == thread)
-            if (initialized) {
-                long time = System.currentTimeMillis();
-                long diff = time - lastTime;
+		if(bufferGraphics != null) {
+			bufferGraphics.dispose();
+			bufferGraphics = null;
+		}
+		if(buffer != null) {
+			buffer.flush();
+			buffer = null;
+		}
+		System.gc();
 
-                if (diff > pauseTime) {
-                    updateVars();
-                    repaint();
-                    lastTime = time;
-                }
-                processInputs();
-                Thread.yield();
-        }
-    }
+		buffer = createImage(bufferWidth, bufferHeight);
+		bufferGraphics = buffer.getGraphics();
+	}
 
-    /**
-     * starts the canvas animation
-     */
-    public void start() {
-        thread.start();
-    }
+	/**
+	 * actually draws the image
+	 * @param g graphics to draw with
+	 */
+	abstract void draw(Graphics g);
 
-    /**
-     * for any global variable updating that may need to be done
-     */
-    abstract protected void updateVars();
+	@Override
+	public void run() {
+		while(Thread.currentThread() == thread) {
+			if(initialized) {
+				long time = System.currentTimeMillis();
+				long diff = time - lastTime;
 
-    /**
-     * allows for the processing of mouse clicks and key presses
-     */
-    abstract protected void processInputs();
+				if(diff > pauseTime){
+					updateVars();
+					repaint();
 
-    abstract public void message(String message);
+					lastTime = time;
+				}
+				processInputs();
+			}
+		}
+	}
 
-    /**
-     * Class for creating an FPS Counter
-     *
-     * @author Sam Maynard
-     */
-    private class FPSCounter {
+	/**
+	 * starts the canvas animation
+	 */
+	public void start() {
+		thread.start();
+	}
 
-        long lastTime;
+	/**
+	 * for any global variable updating that may need to be done
+	 */
+	abstract protected void updateVars();
 
-        int f = 0;
+	/**
+	 * allows for the processing of mouse clicks and key presses
+	 */
+	abstract protected void processInputs();
 
-        long lastUpdate;
-        float updateTime;
+	abstract public void message(String message);
 
-        /**
-         * default constructor
-         */
-        @SuppressWarnings ("unused")
-        public FPSCounter() {
-            this(6f);
-        }
+	/**
+	 * Class for creating an FPS Counter
+	 * @author Sam Maynard
+	 *
+	 */
+	private class FPSCounter {
 
-        /**
-         * constructor to set the number of times the counter updates per second
-         *
-         * @param updatesPerSecond number of times the counter updates per second
-         */
-        public FPSCounter(float updatesPerSecond) {
-            this.updateTime = 1000f / updatesPerSecond;
-            lastTime = System.currentTimeMillis();
-            lastUpdate = lastTime;
-        }
+		long lastTime;
 
-        /**
-         * paints the FPS counter at a given x and y with Graphics object g
-         *
-         * @param x x coordinate of the FPS counter
-         * @param y y coordinate of the FPS counter
-         * @param g Graphics object to draw the FPS counter with
-         */
-        public void paintSelf(int x, int y, Graphics g) {
-            tick();
+		int f = 0;
 
-            g.setFont(new Font("Courier New", Font.BOLD, 26));
-            g.setColor(Color.RED);
-            g.drawString("" + f, x, y);
-        }
+		long lastUpdate;
+		float updateTime;
 
-        /**
-         * used to track the frames per second
-         */
-        private void tick() {
-            long time = System.currentTimeMillis();
+		/**
+		 * default constructor
+		 */
+		@SuppressWarnings("unused")
+		public FPSCounter() {
+			this(6f);
+		}
 
-            long diff = time - lastUpdate;
-            if (diff > updateTime) {
-                diff = time - lastTime;
-                f = (int) (1000f / diff);
-                lastUpdate = time;
-            }
+		/**
+		 * constructor to set the number of times the counter updates per second
+		 * @param updatesPerSecond number of times the counter updates per second
+		 */
+		public FPSCounter(float updatesPerSecond) {
+			this.updateTime = 1000f / updatesPerSecond;
+			lastTime = System.currentTimeMillis();
+			lastUpdate = lastTime;
+		}
 
-            lastTime = time;
-        }
+		/**
+		 * paints the FPS counter at a given x and y with Graphics object g
+		 * @param x x coordinate of the FPS counter
+		 * @param y y coordinate of the FPS counter
+		 * @param g Graphics object to draw the FPS counter with
+		 */
+		public void paintSelf(int x, int y, Graphics g) {
+			tick();
 
-    }
+			g.setFont(new Font("Courier New", Font.BOLD, 26));
+			g.setColor(Color.RED);
+			g.drawString("" + f, x, y);
+		}
+
+		/**
+		 * used to track the frames per second
+		 */
+		private void tick() {
+			long time = System.currentTimeMillis();
+
+			long diff = time - lastUpdate;
+			if(diff > updateTime) {
+				diff = time - lastTime;
+				f = (int) (1000f / diff);
+				lastUpdate = time;
+			}
+
+			lastTime = time;
+		}
+
+	}
 
 }

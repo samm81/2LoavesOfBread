@@ -1,61 +1,63 @@
 package core.GUI;
 
-import core.actors.Player;
-import core.commodities.Commodity;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
 
-import static java.awt.Color.*;
+import core.actors.Player;
+import core.commodities.Commodity;
 
 /**
  * Class to hold the graphical representation of the inventory:
  * player's amount of stuff, the examine trades button and the
  * make trade button
- *
+ * 
  * @author Sam Maynard
+ *
  */
 public class Inventory extends GraphicalObject {
 
-    LinkedList<Commodity> commodities;
-    Player player;
+	LinkedList<Commodity> commodities;
+	Player player;
 
-    public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities, Player player) {
-        super(x, y, width, height, canvas);
-        this.commodities = commodities;
-        this.player = player;
-    }
+	public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities, Player player) {
+		super(x, y, width, height, canvas);
+		this.commodities = commodities;
+		this.player = player;
+	}
 
-    @Override
-    protected Shape makeShape(int x, int y, int width, int height) {
-        return new RoundRectangle2D.Float(x, y, width, height, 15, 15);
-    }
+	@Override
+	protected Shape makeShape(int x, int y, int width, int height) {
+		return new RoundRectangle2D.Float(x, y, width, height, 15, 15);
+	}
 
-    @Override
-    public void drawSelf(Graphics2D g) {
-        drawOutline(g);
+	@Override
+	public void drawSelf(Graphics2D g) {
+		drawOutline(g);
 
-        int titleX = x + 30;
-        int titleY = y + 30;
-        g.setFont(new Font("Sans Serif", Font.BOLD, 22));
-        g.setColor(BLACK);
-        g.drawString("Inventory:", titleX, titleY);
+		int titlex = x + 30;
+		int titley = y + 30;
+		g.setFont(new Font("Sans Serif", Font.BOLD, 22));
+		g.setColor(Color.BLACK);
+		g.drawString("Inventory:", titlex, titley);
 
-        int commodityX = titleX + 10;
-        int commodityY = titleY + 25;
-        for (Commodity commodity : this.commodities) {
-            String name = commodity.name();
-            g.setFont(new Font("Sans Serif", Font.BOLD, 16));
-            g.setColor(BLACK);
-            g.drawString("10 " + name, commodityX, commodityY);
+		int commodityx = titlex + 10;
+		int commodityy = titley + 25;
+		for(Commodity commodity : commodities){
+			String name = commodity.name();
+			g.setFont(new Font("Sans Serif", Font.BOLD, 16));
+			g.setColor(Color.BLACK);
+			g.drawString("10 " + name, commodityx, commodityy );
 
-            commodityY += 25;
-            if (commodityY > (this.y + this.height - 20)) {
-                commodityY = titleY + 25;
-                commodityX += 100;
-            }
-        }
-    }
+			commodityy += 25;
+			if(commodityy > (this.y + this.height - 20)){
+				commodityy = titley + 25;
+				commodityx += 100;
+			}
+		}
+	}
 
 }

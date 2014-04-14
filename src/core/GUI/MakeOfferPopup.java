@@ -1,8 +1,5 @@
 package core.GUI;
 
-import static java.awt.Color.BLACK;
-import static java.awt.Color.RED;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -20,207 +17,239 @@ import core.commodities.Commodity;
  * popup. Also handles input for it.
  * 
  * @author Sam Maynard
+ *
  */
 public class MakeOfferPopup extends GraphicalObject {
-	
+
 	LinkedList<Commodity> commodities;
 	int commodity1Index = 0;
 	int commodity2Index = 0;
-	
+
 	SelectionButton leftUp;
 	SelectionButton leftDown;
 	SelectionButton rightUp;
 	SelectionButton rightDown;
-	
-	TextInput input1;
-	TextInput input2;
-	
+
+	char[] volumes = { ' ', ' ', ' ', ' ' };
+	int editingChar = 0;
+
+	long time;
+	long blink = 450;
+	boolean drawingCursor = true;
+
 	public MakeOfferPopup(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities) {
 		super(x, y, width, height, canvas);
-		
+
 		this.commodities = commodities;
-		
-		int inputX = x + 37;
-		int inputY = y + 30;
-		input1 = new TextInput(inputX, inputY, 37, 32, 2, canvas);
-		input1.setFocused(true);
-		inputX += 55 + 200 + 50 + 70;
-		input2 = new TextInput(inputX, inputY, 37, 32, 2, canvas);
-		
-		int buttonX = x + 30 + 55 + 200;
-		int buttonY = y + 60;
-		this.leftUp = new SelectionButton(buttonX, buttonY - 27, 15, 15, true);
-		this.leftDown = new SelectionButton(buttonX, buttonY - 7, 15, 15, false);
-		buttonX += 50 + 70 + 55 + 200;
-		this.rightUp = new SelectionButton(buttonX, buttonY - 27, 15, 15, true);
-		this.rightDown = new SelectionButton(buttonX, buttonY - 7, 15, 15, false);
+
+		int buttonx = x + 30 + 55 + 200;
+		int buttony = y + 60;
+		leftUp = new SelectionButton(buttonx, buttony - 27, 15, 15, true);
+		leftDown = new SelectionButton(buttonx, buttony - 7, 15, 15, false);
+		buttonx += 50 + 70 + 55 + 200;
+		rightUp = new SelectionButton(buttonx, buttony - 27, 15, 15, true);
+		rightDown = new SelectionButton(buttonx, buttony - 7, 15, 15, false);
 	}
-	
+
 	public int getVolume1() {
-		//TODO
-		return 0;
+		String volume1String = String.valueOf(volumes[0]) + String.valueOf(volumes[1]);
+		return Integer.parseInt(volume1String);
 	}
-	
+
 	public int getVolume2() {
-		//TODO
-		return 0;
+		String volume2String = String.valueOf(volumes[2]) + String.valueOf(volumes[3]);
+		return Integer.parseInt(volume2String);
 	}
-	
+
 	public Commodity getCommodity1() {
-		return this.commodities.get(this.commodity1Index);
+		return commodities.get(commodity1Index);
 	}
-	
+
 	public Commodity getCommodity2() {
-		return this.commodities.get(this.commodity2Index);
+		return commodities.get(commodity2Index);
 	}
-	
+
 	@Override
 	protected Shape makeShape(int x, int y, int width, int height) {
 		return new RoundRectangle2D.Float(x, y, width, height, 25, 25);
 	}
-	
+
 	private boolean commodity1IndexBottomed() {
-		return this.commodity1Index == 0;
+		return commodity1Index == 0;
 	}
-	
+
 	private boolean commodity1IndexTopped() {
-		return this.commodity1Index == this.commodities.size() - 1;
+		return commodity1Index == commodities.size() - 1;
 	}
-	
+
 	private boolean commodity2IndexBottomed() {
-		return this.commodity2Index == 0;
+		return commodity2Index == 0;
 	}
-	
+
 	private boolean commodity2IndexTopped() {
-		return this.commodity2Index == this.commodities.size() - 1;
+		return commodity2Index == commodities.size() - 1;
 	}
-	
+
 	@Override
 	public void drawSelf(Graphics2D g) {
 		this.drawOutline(g);
-		
-		Commodity commodity1 = this.commodities.get(this.commodity1Index);
-		Commodity commodity2 = this.commodities.get(this.commodity2Index);
+
+		Commodity commodity1 = commodities.get(commodity1Index);
+		Commodity commodity2 = commodities.get(commodity2Index);
 		String commodity1Name = commodity1.name();
 		String commodity2Name = commodity2.name();
 		Color commodity1Color = commodity1.getColor();
 		Color commodity2Color = commodity2.getColor();
-		
-		int textX = this.x + 30;
-		input1.drawSelf(g);
-		
-		int textY = this.y + 60;
-		
+
+		String volume1 = String.valueOf(volumes[0]) + String.valueOf(volumes[1]);
+		String volume2 = String.valueOf(volumes[2]) + String.valueOf(volumes[3]);
+
+		int textx = x + 30;
+		int texty = y + 60;
+
 		g.setFont(new Font("Sans Serif", Font.BOLD, 32));
-		
-		textX += 55;
+
+		g.setColor(Color.BLACK);
+		g.drawString("__", textx, texty);
+		g.drawString(volume1, textx, texty);
+
+		textx += 55;
 		g.setColor(commodity1Color);
-		g.drawString(commodity1Name, textX, textY);
-		
-		textX += 200;
+		g.drawString(commodity1Name, textx, texty);
+
+		textx += 200;
 		if(!commodity1IndexBottomed())
-			this.leftUp.drawSelf(g);
+			leftUp.drawSelf(g);
 		if(!commodity1IndexTopped())
-			this.leftDown.drawSelf(g);
-		
-		textX += 50;
-		g.setColor(BLACK);
-		g.drawString("for", textX, textY);
-		
-		textX += 70;
-		input2.drawSelf(g);
-		
-		textX += 55;
+			leftDown.drawSelf(g);
+
+		textx += 50;
+		g.setColor(Color.BLACK);
+		g.drawString("for", textx, texty);
+
+		textx += 70;
+		g.setColor(Color.BLACK);
+		g.drawString("__", textx, texty);
+		g.drawString(volume2 + "", textx, texty);
+
+		textx += 55;
 		g.setColor(commodity2Color);
-		g.drawString(commodity2Name, textX, textY);
-		
-		textX += 200;
+		g.drawString(commodity2Name, textx, texty);
+
+		textx += 200;
 		if(!commodity2IndexBottomed())
-			this.rightUp.drawSelf(g);
+			rightUp.drawSelf(g);
 		if(!commodity2IndexTopped())
-			this.rightDown.drawSelf(g);
+			rightDown.drawSelf(g);
+
+		//cursor
+		long now = System.currentTimeMillis();
+		long diff = now - time;
+		if(diff > blink) {
+			drawingCursor = !drawingCursor;
+			time = now;
+		}
+		if(drawingCursor) {
+			g.setColor(Color.BLACK);
+			int cursorx = 0;
+			switch(editingChar) {
+			case 0:
+				cursorx = x + 30;
+				break;
+			case 1:
+				cursorx = x + 48;
+				break;
+			case 2:
+				cursorx = x + 405;
+				break;
+			case 3:
+				cursorx = x + 424;
+				break;
+			case 4:
+				cursorx = x + 442;
+				break;
+			}
+			g.fillRect(cursorx, texty - 30, 3, 30);
+		}
 	}
-	
+
 	@Override
-	public void clicked(MouseEvent click) {
-		super.clicked(click);
-		int x = click.getX();
-		int y = click.getY();
-		
-		if(input1.pointInBounds(x, y)) {
-			input1.clicked(click);
-		} else {
-			input1.setFocused(false);
-		}
-		
-		if(input2.pointInBounds(x, y)) {
-			input2.clicked(click);
-		} else {
-			input2.setFocused(false);
-		}
-		
-		if(this.leftUp.contains(x, y)) {
+	public void clicked(MouseEvent e) {
+		super.clicked(e);
+		int x = e.getX();
+		int y = e.getY();
+
+		if(leftUp.contains(x, y)) {
 			if(!commodity1IndexBottomed())
-				this.commodity1Index--;
-		} else if(this.leftDown.contains(x, y)) {
+				commodity1Index--;
+		} else if(leftDown.contains(x, y)) {
 			if(!commodity1IndexTopped())
-				this.commodity1Index++;
-		} else if(this.rightUp.contains(x, y)) {
+				commodity1Index++;
+		} else if(rightUp.contains(x, y)) {
 			if(!commodity2IndexBottomed())
-				this.commodity2Index--;
-		} else if(this.rightDown.contains(x, y)) {
+				commodity2Index--;
+		} else if(rightDown.contains(x, y)) {
 			if(!commodity2IndexTopped())
-				this.commodity2Index++;
+				commodity2Index++;
 		}
-		
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent keyPress) {
-		if(keyPress.getKeyCode() == KeyEvent.VK_TAB) {
-			//TODO: transfer focus
+		if(keyPress.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			int indexToClear = editingChar - 1;
+			if(indexToClear >= 0) {
+				volumes[indexToClear] = ' ';
+				editingChar--;
+			}
 		}
-		
-		if(keyPress.getKeyCode() == KeyEvent.VK_ENTER) {
-			//TODO: go
+
+		char key = keyPress.getKeyChar();
+		try {
+			Integer.parseInt(String.valueOf(key));
+		} catch(NumberFormatException e) {
+			return;
 		}
-		input1.keyPressed(keyPress);
-		input2.keyPressed(keyPress);
-		
+
+		if(editingChar < 4) {
+			volumes[editingChar] = key;
+			editingChar++;
+		}
 	}
-	
+
 	/**
 	 * Class that holds the graphical representation of the
 	 * up/down arrows that select the commodity.
 	 * 
 	 * @author Sam Maynard
+	 *
 	 */
 	private class SelectionButton {
-		
+
 		private Polygon triangle;
-		
+
+		public boolean contains(int x, int y) {
+			return triangle.contains(x, y);
+		}
+
 		public SelectionButton(int x, int y, int width, int height, boolean up) {
-			this.triangle = new Polygon();
+			triangle = new Polygon();
 			if(up) {
-				this.triangle.addPoint(x, y + height);
-				this.triangle.addPoint(x + width / 2, y);
-				this.triangle.addPoint(x + width, y + height);
+				triangle.addPoint(x, y + height);
+				triangle.addPoint(x + width / 2, y);
+				triangle.addPoint(x + width, y + height);
 			} else {
-				this.triangle.addPoint(x, y);
-				this.triangle.addPoint(x + width / 2, y + height);
-				this.triangle.addPoint(x + width, y);
+				triangle.addPoint(x, y);
+				triangle.addPoint(x + width / 2, y + height);
+				triangle.addPoint(x + width, y);
 			}
 		}
-		
-		public boolean contains(int x, int y) {
-			return this.triangle.contains(x, y);
-		}
-		
+
 		public void drawSelf(Graphics2D g) {
-			g.setColor(RED);
-			g.fillPolygon(this.triangle);
+			g.setColor(Color.RED);
+			g.fillPolygon(triangle);
 		}
-		
+
 	}
-	
+
 }
