@@ -23,7 +23,7 @@ public class Runner {
 
     static final double dt = .1d;
     static final double offerDT = dt * 10;
-    static final int numActors = 6;
+    static final int numActors = 100;
     static int tickerMagnitude = 150;
     static int width = 900;
     static int height = 700;
