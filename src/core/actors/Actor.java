@@ -140,7 +140,7 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 	 * @param t the transaction to be performed
 	 */
 	public void acceptTransaction(Transaction t) {
-		if(this.volumes.get(t.commodity1) - t.volume1 > 0) {
+		if(this.volumes.get(t.commodity1) - t.volume1 > 0 && t.commodity1 != t.commodity2 && t.volume1 != 0 && t.volume2 != 0) {
 			this.volumes.put(t.getCommodity1(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));
 			this.volumes.put(t.getCommodity2(), new Integer((int) (this.volumes.get(t.getCommodity2()).intValue() + t.getVolume2())));
 			System.out.println("Trade made " + t.volume1 + " " + t.commodity1.name() + " for " + t.volume2 + " " + t.commodity2.name());
