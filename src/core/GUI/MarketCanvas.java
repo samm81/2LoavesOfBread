@@ -37,7 +37,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
     void init() {
         Key key = new Key(0, 0, this.getWidth(), 40, this, this.sim.getCommodities());
         Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, this.sim.getCommodities(), this.sim.getPlayer());
-        MakeOfferButton makeOfferButton = new MakeOfferButton(this.getWidth() - 250, this.getHeight() - 100, 220, 50, this);
+        Button makeOfferButton = new Button(this.getWidth() - 250, this.getHeight() - 100, 220, 50, new Color(.31f, .84f, .92f), "MAKE OFFER", "MakeOfferOverlay", this);
         addGraphicalObject(key);
         addGraphicalObject(inventory);
         addGraphicalObject(makeOfferButton);
