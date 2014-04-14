@@ -1,10 +1,9 @@
 package core.actors;
 
+import core.Offer;
 import core.Transaction;
 import core.commodities.Commodity;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,12 +20,12 @@ public enum Actor{
 	
 	LinkedList<Commodity> commodities;
 	LinkedBlockingQueue<Transaction> transactions;
-	double[][] exchangematrix;
-	double[] wantmatrix;
+	double[][] exchangeMatrix;
+	double[] wantMatrix;
 	ConcurrentHashMap<Commodity, Integer> volumes;
 	
-	int[] initialvals;
-	Transaction bestOffer;
+	int[] initialValues;
+	Offer bestOffer;
 	
 	//these variables determine how the actor's exchange matrix changes.
 	//market savviness determines how quickly the actor's exchange matrix reaches the real price
@@ -38,16 +37,15 @@ public enum Actor{
 	
 	/**
 	 * Constructor
-	 * @author Patrick Shan
 	 * @param startingVolumes
 	 * @param priorities
 	 */
 	private Actor(int[] startingVolumes, double[] priorities, double marketSavvy, double risk)
 	{
 		this.volumes = new ConcurrentHashMap<Commodity, Integer>(startingVolumes.length);
-		this.exchangematrix = new double[startingVolumes.length][startingVolumes.length];
-		this.initialvals = startingVolumes;
-		this.wantmatrix = priorities;
+		this.exchangeMatrix = new double[startingVolumes.length][startingVolumes.length];
+		this.initialValues = startingVolumes;
+		this.wantMatrix = priorities;
 		this.risk = risk;
 		this.marketSavvy = marketSavvy;
 		
@@ -57,9 +55,9 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 		this.commodities = commodities;
 		this.transactions = transactions;
 		//exchange matrix setup.
-		for(int row = 0; row < exchangematrix.length; row++) {
-			for(int col = 0; col < exchangematrix[row].length; col++) {
-				exchangematrix[row][col] = Math.random();
+		for(int row = 0; row < exchangeMatrix.length; row++) {
+			for(int col = 0; col < exchangeMatrix[row].length; col++) {
+				exchangeMatrix[row][col] = Math.random();
 			}
 			}
 				int i = 0;
@@ -67,7 +65,7 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 		//sets up the starting inventory
 		for(Commodity s : this.commodities)
 		{
-			this.volumes.put(s, initialvals[i]);
+			this.volumes.put(s, initialValues[i]);
 			i++;
 		}
 				
@@ -75,41 +73,39 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 	/**
 	 * Get Best Offer returns a transaction that the actor will submit based on
 	 * an actor's want matrix and exchange matrix.
-	 * @author Patrick Shan
 	 * @return Transaction that the actor will submit.
 	 */
-	public Transaction getBestOffer(){
+	public Offer getBestOffer(){
 		int want = (int) (Math.random() * this.commodities.size()); //item wanted
-		int tradedaway = -1; //item to be traded for want
-		int[] inven = new int[this.commodities.size()];
-		for(int i = 0; i < inven.length; i++) {
-			inven[i] = volumes.get(this.commodities.get(i));
+		int tradedAway = -1; //item to be traded for want
+		int[] inventory = new int[this.commodities.size()];
+		for(int i = 0; i < inventory.length; i++) {
+			inventory[i] = volumes.get(this.commodities.get(i));
 		}
-		for(int i = 0; i < exchangematrix[want].length; i++) {
-			if(tradedaway == -1)
-				tradedaway = i;
+		for(int i = 0; i < exchangeMatrix[want].length; i++) {
+			if(tradedAway == -1)
+				tradedAway = i;
 			else {
-				if(inven[i] / exchangematrix[want][i] > inven[tradedaway] / exchangematrix[want][tradedaway])
-					tradedaway = i;
+				if(inventory[i] / exchangeMatrix[want][i] > inventory[tradedAway] / exchangeMatrix[want][tradedAway])
+					tradedAway = i;
 			}
 		}
-		int vol1 = (int) Math.ceil(inven[tradedaway] / 2);
-		int vol2 = (int) (vol1 * exchangematrix[want][tradedaway]);
-		bestOffer = new Transaction(vol1, this.commodities.get(tradedaway), vol2, this.commodities.get(want), this);
+		int vol1 = (int) Math.ceil(inventory[tradedAway] / 2);
+		int vol2 = (int) (vol1 * exchangeMatrix[want][tradedAway]);
+		bestOffer = new Offer(new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want), this),vol1);
 		return bestOffer;
 	}
 	
 	/**
 	 * EvaluateMarket is how an actor will change the values in the market's exchange rates
 	 * for various goods. It represents the ability of people to recognize changing prices.
-	 * @author Patrick Shan
 	 */
 	public void evaluateMarket() {
 		int col;
 		int row = 0;
 		//change the exchange matrix.
 		//Exchange Matrix is set up so
-		//row and column 0 is one commmodity, row, column 1 is one commodity ... etc.
+		//row and column 0 is one commodity, row, column 1 is one commodity ... etc.
 		//this for loop shows the movement of markets
 			for(Commodity x : Commodity.values())
 			{
@@ -117,17 +113,17 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 				for(Commodity y : Commodity.values())
 				{
 					if(y == x)
-						exchangematrix[row][col] = 1;
-					else if(x.getMostRecentRatios().get(y) != null)
+						exchangeMatrix[row][col] = 1;
+					else if(x.getMostRecentRatios().get(y.name()) != null)
 					{
 						System.out.println(x.name() + " " + y.name() +"\n");
 						System.out.println(row + " " + col);
-						System.out.println(x.getMostRecentRatios().get(y));
-						exchangematrix[row][col] = exchangematrix[row][col] +  (exchangematrix[row][col] - x.getMostRecentRatios().get(y)) * marketSavvy + (Math.random() * risk);
+						System.out.println(x.getMostRecentRatios().get(y.name()));
+						exchangeMatrix[row][col] = exchangeMatrix[row][col] +  (exchangeMatrix[row][col] - x.getMostRecentRatios().get(y.name())) * marketSavvy + (Math.random() * risk);
 					}
 					else
 					{
-						exchangematrix[row][col] = exchangematrix[row][col] + ((Math.random() - 0.5) * 2 * risk);
+						exchangeMatrix[row][col] = exchangeMatrix[row][col] + ((Math.random() - 0.5) * 2 * risk);
 					}
 					col++;
 				}
@@ -141,8 +137,8 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 	 */
 	public void acceptTransaction(Transaction t) {
 		if(this.volumes.get(t.commodity1) - t.volume1 > 0 && t.commodity1 != t.commodity2 && t.volume1 != 0 && t.volume2 != 0) {
-			this.volumes.put(t.getCommodity1(), new Integer((int) (this.volumes.get(t.getCommodity1()).intValue() + t.getVolume1())));
-			this.volumes.put(t.getCommodity2(), new Integer((int) (this.volumes.get(t.getCommodity2()).intValue() + t.getVolume2())));
+			this.volumes.put(t.getCommodity1(), this.volumes.get(t.getCommodity1()) + t.getVolume1());
+			this.volumes.put(t.getCommodity2(), this.volumes.get(t.getCommodity2()) + t.getVolume2());
 			System.out.println("Trade made " + t.volume1 + " " + t.commodity1.name() + " for " + t.volume2 + " " + t.commodity2.name());
 		}
 	}

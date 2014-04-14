@@ -215,7 +215,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 
     @Override
     public void run() {
-        while (Thread.currentThread() == thread)
+        while (!Thread.currentThread().isInterrupted())
             if (initialized) {
                 long time = System.currentTimeMillis();
                 long diff = time - lastTime;

@@ -68,10 +68,8 @@ public class MarketSimulation extends Simulation {
 
     @Override
     public void run() {
-       while (Thread.currentThread() == this.thread) {
-
+       while (!Thread.currentThread().isInterrupted()) {
             tick();
-
             try {
                 Thread.yield();
             } finally{
