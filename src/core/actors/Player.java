@@ -1,25 +1,25 @@
 package core.actors;
 
-import java.util.LinkedList;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import core.Transaction;
 import core.commodities.Commodity;
 
+import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
+
 public class Player extends Actor {
 
-	public Player(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
-		super(commodities, transaction);
-	}
+    Transaction bestOffer = null;
 
-	Transaction bestOffer = null;
+    public Player(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
+        super(commodities, transaction);
+    }
 
-/*	public Transaction getBestOffer() {
-		return bestOffer;
-	}
-*/
-	public void setBestOffer(Transaction bestOffer) {
-		this.bestOffer = bestOffer;
-	}
+    /*	public Transaction getBestOffer() {
+            return bestOffer;
+        }
+    */
+    public void setBestOffer(Transaction bestOffer) {
+        this.bestOffer = bestOffer;
+    }
 
 }
