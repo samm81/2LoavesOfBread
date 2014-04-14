@@ -3,16 +3,15 @@ package core.GUI;
 import java.awt.event.MouseEvent;
 
 
-
 /**
  * interface for clickable objects
- * @author Sam Maynard
  *
+ * @author Sam Maynard
  */
-interface Clickable {
+public interface Clickable {
 
-	boolean pointInBounds(int x, int y);
+    boolean pointInBounds(int x, int y);
 
-	void clicked(MouseEvent e);
+    void clicked(MouseEvent e);
 
 }
