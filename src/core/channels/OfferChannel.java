@@ -101,19 +101,25 @@ public class OfferChannel extends Thread {
                 && first.getCommodity2().name().equals(second.getCommodity1().name()))
             if (first.getMinReceive() <= (second.getMaxTradeVolume())
                     && second.getMinReceive() <= (first.getMaxTradeVolume())) {
+            	int i = 1;
                 while (true) {
-                    int a = (int) Math.max(Math.floor(first.getMinReceive() * first.getRate()), 1);
+                    int a = (int) Math.max(Math.floor(first.getMinReceive() * first.getRate() * i), 1);
                     if (a <= second.getMaxTradeVolume())
                         first.setMinReceive(a);
                     else
                         break;
+                    
+                    i++;
                 }
+                i = 1;
                 while (true) {
-                    int a = (int) Math.max(Math.floor(second.getMinReceive() * second.getRate()), 1);
+                    int a = (int) Math.max(Math.floor(second.getMinReceive() * second.getRate() * i), 1);
                     if (a <= first.getMaxTradeVolume())
                         second.setMinReceive(a);
                     else
                         break;
+                    
+                    i++;
                 }
                 return true;
             }
