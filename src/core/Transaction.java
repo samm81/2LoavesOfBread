@@ -18,7 +18,6 @@ public class Transaction {
     public Commodity commodity2;
     public int volume1;
     public int volume2;
-    public boolean processed = false;
 
     public Transaction(int volume1, Commodity commodity1, int volume2, Commodity commodity2, Actor sender) {
         this.commodity1 = commodity1;
@@ -27,10 +26,6 @@ public class Transaction {
         this.volume2 = volume2;
         this.sender = sender;
     }
-    
-    
-    
-    
 
     public Commodity getCommodity1() {
         return this.commodity1;
@@ -40,41 +35,33 @@ public class Transaction {
         return this.commodity2;
     }
 
-    public double getVolume1() {
+    public int getVolume1() {
         return this.volume1;
     }
 
-    public double getVolume2() {
+    public int getVolume2() {
         return this.volume2;
     }
 
     //TODO: Do we need to handle possible overflow?
     public double getRatio() {
-//        assert this.volume1 > 0 : "Volume 1 was less than or equal to 0!";
         assert this.volume2 > 0 : "Volume 2 was less than or equal to 0!";
         if (this.volume1 == 0) {
-            return this.volume2 / (Math.random() * 10);
+            System.err.println("Volume 1 was less than or equal to 0!");
+            return  (this.volume2 / (Math.random() * 10));
         }
         // TODO: Sometimes we get divide by zero errors. Should probably figure out why sometime.
-        return this.volume2 / this.volume1;
+        return ((double)this.volume2 / (double)this.volume1);
     }
 
     public Actor getSender() {
         return this.sender;
     }
 
-    public boolean getState() {
-        return this.processed;
-    }
-
-    public void setState(boolean bool) {
-        this.processed = bool;
-    }
-
     public Transaction getReversedTransaction() {
         return new Transaction(this.volume2, this.commodity2, this.volume1, this.commodity1, this.sender);
     }
-
+@Deprecated
     public boolean equals(Transaction e) {
         return (this.commodity1.name().equals(e.getCommodity1().name())
                 && this.commodity2.name().equals(e.getCommodity2().name())
