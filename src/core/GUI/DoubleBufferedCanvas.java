@@ -59,7 +59,6 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
         fpsCounter = new FPSCounter(fpsCounterUpdatesPerSecond);
 
         addKeyListener(new KeyAdapter() {
-
             @Override
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
@@ -73,8 +72,8 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
 
                 keyPresses.add(e);
             }
-
         });
+        this.setFocusTraversalKeysEnabled(false);
 
         // now with a custom tolerance system
         addMouseListener(new MouseAdapter() {
