@@ -35,6 +35,10 @@ public class NumericInput extends GraphicalObject {
 		}
 	}
 	
+	public boolean focused() {
+		return this.focused;
+	}
+	
 	public void setFocused(boolean focused) {
 		this.focused = focused;
 	}

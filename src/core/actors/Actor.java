@@ -116,9 +116,9 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 						exchangeMatrix[row][col] = 1;
 					else if(x.getMostRecentRatios().get(y.name()) != null)
 					{
-						System.out.println(x.name() + " " + y.name() +"\n");
-						System.out.println(row + " " + col);
-						System.out.println(x.getMostRecentRatios().get(y.name()));
+						//System.out.println(x.name() + " " + y.name() +"\n");
+						//System.out.println(row + " " + col);
+						//System.out.println(x.getMostRecentRatios().get(y.name()));
 						exchangeMatrix[row][col] = exchangeMatrix[row][col] +  (exchangeMatrix[row][col] - x.getMostRecentRatios().get(y.name())) * marketSavvy + (Math.random() * risk);
 					}
 					else
