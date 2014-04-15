@@ -28,7 +28,7 @@ public class TransparencyOverlay extends GraphicalObject {
     @Override
     public void clicked(MouseEvent e) {
         super.clicked(e);
-        this.canvas.message("CloseMakeOffer");
+        this.canvas.message("ClearOverlays");
     }
 
 }

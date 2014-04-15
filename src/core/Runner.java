@@ -1,17 +1,15 @@
 package core;
 
+import static java.awt.Color.DARK_GRAY;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+
+import java.awt.Toolkit;
+
+import javax.swing.JFrame;
+
 import core.GUI.MarketCanvas;
 import core.actors.Actor;
-import core.actors.Player;
-import core.channels.OfferChannel;
 import core.commodities.Commodity;
-
-import javax.swing.*;
-
-import java.awt.*;
-
-import static java.awt.Color.*;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
  * The runner for the game. Gets the frame, the canvas, and the
@@ -24,7 +22,7 @@ public class Runner {
     static final double dt = .1d;
     static final double offerDT = dt * 10;
     static final int numActors = 100;
-    static int tickerMagnitude = 150;
+    static int tickerMagnitude = 30;
     static int width = 900;
     static int height = 700;
 
@@ -33,10 +31,7 @@ public class Runner {
      * @param args - Command Line Args
      */
     public static void main(String[] args) {
-        MarketSimulation sim = new MarketSimulation(dt);
-
-        //Creates the transaction thread that evaluates offers, every offerDT.
-        OfferChannel offers = new OfferChannel(sim.getTransactions(), sim.getActors(), offerDT);
+        MarketSimulation sim = new MarketSimulation(dt, offerDT);
 
         for (Commodity item : Commodity.values())
             sim.addCommodity(item);
@@ -69,8 +64,7 @@ public class Runner {
         canvas.start();
 //            }
 //        });
-        offers.setDaemon(true);
+        
         sim.start();
-        offers.start();
     }
 }
