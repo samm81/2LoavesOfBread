@@ -6,12 +6,12 @@ import core.commodities.Commodity;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Player extends Actor {
+public class Player {
 
     Transaction bestOffer = null;
 
     public Player(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
-        super(commodities, transaction);
+
     }
 
     /*	public Transaction getBestOffer() {

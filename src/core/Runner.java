@@ -1,11 +1,13 @@
 package core;
 
 import core.GUI.MarketCanvas;
+import core.actors.Actor;
 import core.actors.Player;
 import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
 import javax.swing.*;
+
 import java.awt.*;
 
 import static java.awt.Color.*;
@@ -21,7 +23,7 @@ public class Runner {
 
     static final double dt = .1d;
     static final double offerDT = dt * 10;
-    static final int numActors = 6;
+    static final int numActors = 100;
     static int tickerMagnitude = 150;
     static int width = 900;
     static int height = 700;
@@ -40,7 +42,7 @@ public class Runner {
             sim.addCommodity(item);
 
         for (int i = 0; i < numActors; i++)
-            sim.addActor(new Player(sim.getCommodities(), sim.getTransactions()));
+            sim.addActor(Actor.FARMER);
 
         sim.createTickers(tickerMagnitude); // required
         MarketCanvas canvas = new MarketCanvas(60, sim);
