@@ -17,21 +17,20 @@ public enum Actor{
 	FARMER(new int[]{1,1,1,5}, new double[]{0,1,2,3}, .5, .10),
 	MERCHANT(new int[]{4,4,4,4}, new double[]{4,4,4,4}, .85, .35);
 	
+	protected LinkedList<Commodity> commodities;
+	protected LinkedBlockingQueue<Transaction> transactions;
+	private double[][] exchangeMatrix;
+	private double[] wantMatrix;
+	private ConcurrentHashMap<Commodity, Integer> volumes;
 	
-	LinkedList<Commodity> commodities;
-	LinkedBlockingQueue<Transaction> transactions;
-	double[][] exchangeMatrix;
-	double[] wantMatrix;
-	ConcurrentHashMap<Commodity, Integer> volumes;
-	
-	int[] initialValues;
-	Offer bestOffer;
+	private int[] initialValues;
+	protected Offer bestOffer;
 	
 	//these variables determine how the actor's exchange matrix changes.
 	//market savviness determines how quickly the actor's exchange matrix reaches the real price
 	//risk determines how much the actor is willing to increase their sales. (If someone bought it for $5, let me try to sell if for $6)
-	double risk;
-	double marketSavvy;
+	private double risk;
+	private double marketSavvy;
 	
 	
 	
@@ -92,6 +91,8 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 		}
 		int vol1 = (int) Math.ceil(inventory[tradedAway] / 2);
 		int vol2 = (int) (vol1 * exchangeMatrix[want][tradedAway]);
+        if(vol1 <= 0 || vol2 <= 0)
+            return null;
 		bestOffer = new Offer(new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want), this),vol1);
 		return bestOffer;
 	}
@@ -135,12 +136,14 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 	 * AcceptTransaction changes actor inventories as they perform transaction t.
 	 * @param t the transaction to be performed
 	 */
-	public void acceptTransaction(Transaction t) {
+	public boolean acceptTransaction(Transaction t) {
 		if(this.volumes.get(t.commodity1) - t.volume1 > 0 && t.commodity1 != t.commodity2 && t.volume1 != 0 && t.volume2 != 0) {
 			this.volumes.put(t.getCommodity1(), this.volumes.get(t.getCommodity1()) + t.getVolume1());
 			this.volumes.put(t.getCommodity2(), this.volumes.get(t.getCommodity2()) + t.getVolume2());
 			System.out.println("Trade made " + t.volume1 + " " + t.commodity1.name() + " for " + t.volume2 + " " + t.commodity2.name());
+            return true;
 		}
+        return false;
 	}
 }
 
