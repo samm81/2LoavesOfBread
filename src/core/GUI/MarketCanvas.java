@@ -162,7 +162,8 @@ public class MarketCanvas extends DoubleBufferedCanvas {
                 Commodity commodity2 = this.makeOfferPopup.getCommodity2();
                 //FIXME: Can't leave this as null when there is an actual player.
                 Transaction offer = new Transaction(volume1, commodity1, volume2, commodity2, null);
-                this.sim.getPlayer().setBestOffer(offer);
+                System.out.println(offer);
+                //this.sim.getPlayer().setBestOffer(offer);
                 this.message("CloseMakeOffer");
                 break;
         }
