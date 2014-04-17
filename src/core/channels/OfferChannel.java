@@ -9,8 +9,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 
- * {@link #OfferChannel(java.util.concurrent.LinkedBlockingQueue, java.util.HashSet, double)} - Basic Constructor for the thread. {@link #run()} - Calls tick, then yields to main thread {@link #tick()} - Every dt it gets all the new offers from the actors, and then tries to match them. {@link #isViable(core.Offer, core.Offer)} - Method That ensures that two offers are viable with one another.
- * 
+ * {@link #OfferChannel(java.util.concurrent.LinkedBlockingQueue, java.util.HashSet, double)} - Basic Constructor for the thread.
+ * {@link #run()} - Calls tick, then yields to main thread
+ * {@link #tick()} - Every dt it gets all the new offers from the actors, and then tries to match them.
+ * {@link #isViable(core.Offer, core.Offer)} - Method That ensures that two offers are viable with one another.
  * @author Brian Oluwo
  */
 public class OfferChannel extends Thread {
@@ -53,6 +55,9 @@ public class OfferChannel extends Thread {
 			} catch(InterruptedException e) {
 				e.printStackTrace();
 			}
+            catch(NullPointerException e){
+                System.err.println("Null Offer, moving on.");
+            }
 		}
 		processOffers();
 	}
@@ -65,19 +70,29 @@ public class OfferChannel extends Thread {
 				if(isViable(first, second)) {
 					Transaction t = new Transaction(first.getMinReceive(), first.getCommodity1(), second.getMinReceive(), first.getCommodity2(), first.getSender());
 					Transaction q = new Transaction(second.getMinReceive(), second.getCommodity1(), first.getMinReceive(), second.getCommodity2(), second.getSender());
-					t.getSender().acceptTransaction(t);
-					q.getSender().acceptTransaction(q);
-					t.getCommodity1().addTransaction(t);
-					t.getCommodity2().addTransaction(q);
-					this.offers.remove(first);
-					this.offers.remove(second);
-					try {
-						this.globalTransactions.put(t);
-						this.globalTransactions.put(q);
-					} catch(InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
+					if(t.getSender().acceptTransaction(t)) {
+                        if(q.getSender().acceptTransaction(q)) {
+                            t.getCommodity1().addTransaction(t);
+                            t.getCommodity2().addTransaction(q);
+                            try {
+                                this.globalTransactions.put(t);
+                                this.globalTransactions.put(q);
+                            } catch(InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            this.offers.remove(first);
+                            this.offers.remove(second);
+                        }
+                        else {
+                            t.getSender().acceptTransaction(q);//Reverse their transaction
+                            this.offers.remove(second);
+                        }
+                    }
+                    else {
+                        this.offers.remove(first);
+                    }
+                }
+
 			}
 		}
 	}
@@ -93,12 +108,8 @@ public class OfferChannel extends Thread {
 	 */
 	public boolean isViable(Offer first, Offer second) {
 		// No longer is there a reverse transaction so one needs to check reverses.
-		// A wants 2 fish for x(2*1.5)bread @ a rate of 1.5, B wants 3 bread for x(3*.6667) fish
 		if(!first.getCommodity1().name().equals(second.getCommodity2().name()) || !first.getCommodity2().name().equals(second.getCommodity1().name()))
 			return false;
-		if(first.getMinReceive() > second.getMaxTradeVolume() || second.getMinReceive() > first.getMaxTradeVolume())
-			return false;
-		
-		return true;
+		return (first.getMinReceive() > second.getMaxTradeVolume() || second.getMinReceive() > first.getMaxTradeVolume());
 	}
 }

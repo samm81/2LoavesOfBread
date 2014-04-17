@@ -45,11 +45,12 @@ public class Transaction {
 
     //TODO: Do we need to handle possible overflow?
     public double getRatio() {
+        assert this.volume1 > 0 : "Volume 1 was less than or equal to 0!";
         assert this.volume2 > 0 : "Volume 2 was less than or equal to 0!";
-        if (this.volume1 == 0) {
-            System.err.println("Volume 1 was less than or equal to 0!");
-            return  (this.volume2 / (Math.random() * 10));
-        }
+//        if (this.volume1 == 0) {
+//            System.err.println("Volume 1 was less than or equal to 0!");
+//            return  this.volume2;
+//        }
         // TODO: Sometimes we get divide by zero errors. Should probably figure out why sometime.
         return ((double)this.volume2 / (double)this.volume1);
     }
