@@ -1,17 +1,14 @@
 package core.GUI;
 
-import static java.awt.Color.BLACK;
+import core.commodities.Commodity;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
 
-import core.commodities.Commodity;
+import static java.awt.Color.BLACK;
 
 /**
  * Contains all the bits and pieces for the make offer

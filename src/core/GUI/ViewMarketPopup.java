@@ -1,7 +1,6 @@
 package core.GUI;
 
-import java.awt.Graphics2D;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 

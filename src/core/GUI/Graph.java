@@ -1,11 +1,9 @@
 package core.GUI;
 
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.RoundRectangle2D;
-
 import core.commodities.Commodity;
+
+import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 
 /**
  * Class that holds the graphical representation of a commodity and

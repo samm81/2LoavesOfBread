@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
 
-import static java.awt.Color.*;
+import static java.awt.Color.BLACK;
 
 /**
  * Class to hold the graphical representation of the inventory:

@@ -4,7 +4,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import static java.awt.Color.*;
+import static java.awt.Color.BLACK;
+import static java.awt.Color.WHITE;
 
 abstract class GraphicalObject implements Clickable {
 
