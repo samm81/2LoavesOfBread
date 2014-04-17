@@ -26,13 +26,16 @@ public class OfferChannel extends Thread {
     protected LinkedBlockingQueue<Offer>[] offerArrays;
 	private double dt;
 
-    @SuppressWarnings ("unchecked")
+
     public OfferChannel(LinkedBlockingQueue<Transaction> globalTransactions, HashSet<Actor> actors, double dt) {
         this.globalTransactions = globalTransactions;
 		this.actors = actors;
 		this.dt = dt;
 		this.thread = new Thread(this);
         this.offerArrays = new LinkedBlockingQueue[values().length];
+        for(int i =0; i < values().length; i++){
+            this.offerArrays[i] = new LinkedBlockingQueue<Offer>();
+        }
     }
 
     /**
@@ -59,17 +62,16 @@ public class OfferChannel extends Thread {
      */
     private void tick() {
         for(Actor actor : this.actors) {
-			try {
+            try {
                 Offer o = actor.getBestOffer();
                 if (o == null) {
                     System.err.println("No Offer Given, Moving On.");
                     continue;
                 }
                 this.offerArrays[o.getCommodity1().ordinal()].put(o);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | NullPointerException e) {
                 e.printStackTrace();
-			}
-
+            }
         }
         processOffers();
     }

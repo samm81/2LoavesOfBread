@@ -1,15 +1,14 @@
 package core;
 
+import core.GUI.MarketCanvas;
+import core.actors.Farmer;
+import core.commodities.Commodity;
+
+import javax.swing.*;
+import java.awt.*;
+
 import static java.awt.Color.DARK_GRAY;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-
-import java.awt.Toolkit;
-
-import javax.swing.JFrame;
-
-import core.GUI.MarketCanvas;
-import core.actors.Actor;
-import core.commodities.Commodity;
 
 /**
  * The runner for the game. Gets the frame, the canvas, and the
@@ -37,7 +36,7 @@ public class Runner {
             sim.addCommodity(item);
 
         for (int i = 0; i < numActors; i++)
-            sim.addActor(Actor.FARMER);
+            sim.addActor(new Farmer());
 
         sim.createTickers(tickerMagnitude); // required
         MarketCanvas canvas = new MarketCanvas(60, sim);

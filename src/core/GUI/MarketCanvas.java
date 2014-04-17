@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static java.awt.Color.*;
+import static java.awt.Color.BLACK;
 
 /**
  * The general container for all the games elements.

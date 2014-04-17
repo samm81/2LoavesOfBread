@@ -1,7 +1,7 @@
 package core.commodities;
 
-import core.Transaction;
 import core.GUI.Ticker;
+import core.Transaction;
 
 import java.awt.*;
 import java.util.Collection;
