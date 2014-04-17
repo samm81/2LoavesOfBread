@@ -37,7 +37,7 @@ public class Runner {
             sim.addCommodity(item);
 
         for (int i = 0; i < numActors; i++)
-            sim.addActor(Actor.FARMER);
+           
 
         sim.createTickers(tickerMagnitude); // required
         MarketCanvas canvas = new MarketCanvas(60, sim);

@@ -13,25 +13,17 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author Patrick Shan
  */
-public enum Actor{
-	FARMER(new int[]{1,1,1,5}, new double[]{0,1,2,3}, .5, .10),
-	MERCHANT(new int[]{4,4,4,4}, new double[]{4,4,4,4}, .85, .35);
+public class Actor{
 	
 	protected LinkedList<Commodity> commodities;
 	protected LinkedBlockingQueue<Transaction> transactions;
 	private double[][] exchangeMatrix;
 	private double[] wantMatrix;
+	private double[] priorityMatrix;
 	private ConcurrentHashMap<Commodity, Integer> volumes;
 	
 	private int[] initialValues;
 	protected Offer bestOffer;
-	
-	//these variables determine how the actor's exchange matrix changes.
-	//market savviness determines how quickly the actor's exchange matrix reaches the real price
-	//risk determines how much the actor is willing to increase their sales. (If someone bought it for $5, let me try to sell if for $6)
-	private double risk;
-	private double marketSavvy;
-	
 	
 	
 	/**
@@ -39,14 +31,29 @@ public enum Actor{
 	 * @param startingVolumes
 	 * @param priorities
 	 */
-	private Actor(int[] startingVolumes, double[] priorities, double marketSavvy, double risk)
+	private Actor(LinkedList <Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, int[] startingVolumes, double[] priorities)
 	{
 		this.volumes = new ConcurrentHashMap<Commodity, Integer>(startingVolumes.length);
 		this.exchangeMatrix = new double[startingVolumes.length][startingVolumes.length];
 		this.initialValues = startingVolumes;
-		this.wantMatrix = priorities;
-		this.risk = risk;
-		this.marketSavvy = marketSavvy;
+		this.priorityMatrix = priorities;
+		this.commodities = commodities;
+		this.transactions = transactions;
+		
+		//exchange matrix setup.
+				for(int row = 0; row < exchangeMatrix.length; row++) {
+					for(int col = 0; col < exchangeMatrix[row].length; col++) {
+						exchangeMatrix[row][col] = Math.random();
+					}
+					}
+						int i = 0;
+				//this.commodities has the same order as Commodity.values();
+				//sets up the starting inventory
+				for(Commodity s : this.commodities)
+				{
+					this.volumes.put(s, initialValues[i]);
+					i++;
+				}
 		
 	}
 	
@@ -120,11 +127,11 @@ public void initialize(LinkedList<Commodity> commodities, LinkedBlockingQueue<Tr
 //						System.out.println(x.name() + " " + y.name() +"\n");
 //						System.out.println(row + " " + col);
 //						System.out.println(x.getMostRecentRatios().get(y.name()));
-						exchangeMatrix[row][col] = exchangeMatrix[row][col] +  (exchangeMatrix[row][col] - x.getMostRecentRatios().get(y.name())) * marketSavvy + (Math.random() * risk);
+						exchangeMatrix[row][col] = exchangeMatrix[row][col];
 					}
 					else
 					{
-						exchangeMatrix[row][col] = exchangeMatrix[row][col] + ((Math.random() - 0.5) * 2 * risk);
+						exchangeMatrix[row][col] = exchangeMatrix[row][col];
 					}
 					col++;
 				}
