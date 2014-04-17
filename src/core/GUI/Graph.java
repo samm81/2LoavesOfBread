@@ -1,11 +1,11 @@
 package core.GUI;
 
-import core.commodities.Commodity;
-
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 
-import static java.awt.Color.*;
+import core.commodities.Commodity;
 
 /**
  * Class that holds the graphical representation of a commodity and
@@ -35,7 +35,7 @@ public class Graph extends GraphicalObject {
         int titleY = y + 30;
         String name = commodity.name();
         g.setFont(new Font("Sans Serif", Font.BOLD, 22));
-        g.setColor(BLACK);
+        g.setColor(commodity.getColor());
         g.drawString(name, titleX, titleY);
 
         int tickerX = x + 30;
@@ -45,7 +45,7 @@ public class Graph extends GraphicalObject {
 
         int i = 0;
         for (Ticker ticker : commodity.getTickerCollection()) {
-            ticker.drawSelf(tickerX, tickerY, tickerWidth, tickerHeight, g);
+            ticker.drawSelf(tickerX + i*4, tickerY, tickerWidth, tickerHeight, g);
             ticker.drawLabel(tickerX + i * 25, tickerY - 1, tickerHeight, g);
             i++;
         }
