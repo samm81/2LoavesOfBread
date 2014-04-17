@@ -1,16 +1,14 @@
 package core;
 
 import core.GUI.MarketCanvas;
-import core.actors.Actor;
-import core.actors.Player;
+import core.actors.Farmer;
 import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
 import javax.swing.*;
-
 import java.awt.*;
 
-import static java.awt.Color.*;
+import static java.awt.Color.DARK_GRAY;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
@@ -42,14 +40,11 @@ public class Runner {
             sim.addCommodity(item);
 
         for (int i = 0; i < numActors; i++)
-            sim.addActor(Actor.FARMER);
+            sim.addActor(new Farmer());
 
         sim.createTickers(tickerMagnitude); // required
         MarketCanvas canvas = new MarketCanvas(60, sim);
 
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run(){
         JFrame f = new JFrame("Two Loaves of Bread");
         f.setDefaultCloseOperation(EXIT_ON_CLOSE);
         f.setResizable(false);
@@ -67,8 +62,7 @@ public class Runner {
         f.add(canvas);
         f.setVisible(true);
         canvas.start();
-//            }
-//        });
+
         offers.setDaemon(true);
         sim.start();
         offers.start();
