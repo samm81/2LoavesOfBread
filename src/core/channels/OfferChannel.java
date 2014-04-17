@@ -26,7 +26,7 @@ public class OfferChannel extends Thread {
     protected LinkedBlockingQueue<Offer>[] offerArrays;
 	private double dt;
 
-
+@SuppressWarnings("unchecked")
     public OfferChannel(LinkedBlockingQueue<Transaction> globalTransactions, HashSet<Actor> actors, double dt) {
         this.globalTransactions = globalTransactions;
 		this.actors = actors;
