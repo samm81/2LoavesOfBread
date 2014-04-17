@@ -25,8 +25,11 @@ public class MarketCanvas extends DoubleBufferedCanvas {
     protected LinkedBlockingQueue<GraphicalObject> graphicalObjects;
 
     protected TransparencyOverlay overlay;
+    
     protected MakeOfferPopup makeOfferPopup;
     protected GoButton goButton;
+    
+    protected ViewMarketPopup viewMarketPopup;
 
     public MarketCanvas(int fps, MarketSimulation sim) {
         super(fps);
@@ -37,10 +40,12 @@ public class MarketCanvas extends DoubleBufferedCanvas {
     void init() {
         Key key = new Key(0, 0, this.getWidth(), 40, this, this.sim.getCommodities());
         Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, this.sim.getCommodities(), this.sim.getPlayer());
-        Button makeOfferButton = new Button(this.getWidth() - 250, this.getHeight() - 100, 220, 50, new Color(.31f, .84f, .92f), "MAKE OFFER", "MakeOfferOverlay", this);
+        Button makeOfferButton = new Button(this.getWidth() - 250, this.getHeight() - 125, 220, 50, new Color(.31f, .84f, .92f), "MAKE OFFER", "MakeOfferOverlay", this);
+        Button viewMarketButton = new Button(this.getWidth() - 250, this.getHeight() - 70, 220, 50, new Color(.31f, .84f, .92f), "VIEW MARKET", "ViewMarketOverlay", this);
         addGraphicalObject(key);
         addGraphicalObject(inventory);
         addGraphicalObject(makeOfferButton);
+        addGraphicalObject(viewMarketButton);
 
         LinkedList<Graph> graphs = createGraphs(this.sim.getCommodities(), 200);
         for (Graph graph : graphs)
@@ -56,6 +61,12 @@ public class MarketCanvas extends DoubleBufferedCanvas {
         this.makeOfferPopup = new MakeOfferPopup(x, y, width, height, this, this.sim.getCommodities());
 
         this.goButton = new GoButton(x + width - 95, y + 25, 75, 50, this);
+        
+        width = 800;
+        height = 600;
+        x = this.getWidth() / 2 - width / 2;
+        y = this.getHeight() / 2 - height / 2;
+        this.viewMarketPopup = new ViewMarketPopup(x, y, width, height, this);
     }
 
     /**
@@ -150,11 +161,6 @@ public class MarketCanvas extends DoubleBufferedCanvas {
                 addGraphicalObject(this.makeOfferPopup);
                 addGraphicalObject(this.goButton);
                 break;
-            case "CloseMakeOffer":
-                removeGraphicalObject(this.makeOfferPopup);
-                removeGraphicalObject(this.overlay);
-                removeGraphicalObject(this.goButton);
-                break;
             case "OfferMade":
                 int volume1 = this.makeOfferPopup.getVolume1();
                 int volume2 = this.makeOfferPopup.getVolume2();
@@ -166,6 +172,16 @@ public class MarketCanvas extends DoubleBufferedCanvas {
                 //this.sim.getPlayer().setBestOffer(offer);
                 this.message("CloseMakeOffer");
                 break;
+            case "ClearOverlays":
+            	removeGraphicalObject(this.overlay);
+                removeGraphicalObject(this.makeOfferPopup);
+                removeGraphicalObject(this.goButton);
+                removeGraphicalObject(this.viewMarketPopup);
+                break;
+            case "ViewMarketOverlay":
+            	addGraphicalObject(this.overlay);
+            	addGraphicalObject(this.viewMarketPopup);
+            	break;
         }
     }
 
