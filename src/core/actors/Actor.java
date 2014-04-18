@@ -4,7 +4,6 @@ import core.Offer;
 import core.Transaction;
 import core.commodities.Commodity;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,7 +43,7 @@ public class Actor {
         this.needMatrix = new HashMap<Commodity, Integer>();
         this.initialValues = startingVolumes;
         this.priorityMatrix = priorities;
-        this.commodities = Collections.synchronizedList(commodities);
+        this.commodities = commodities;
         this.transactions = transactions;
         this.risk = risk;
 
