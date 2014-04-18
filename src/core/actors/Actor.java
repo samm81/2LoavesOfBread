@@ -110,7 +110,7 @@ public class Actor {
         }
         
         int vol1 = 1;
-        while(Math.floor(vol1 * exchangeMatrix[tradedAway][want]) < needMatrix.get(wantComm) && vol1 < volumes.get(commodities.get(tradedAway)))
+        while(Math.floor(vol1 * exchangeMatrix[tradedAway][want]) < needMatrix.get(wantComm) && vol1 < this.volumes.get(commodities.get(tradedAway)))
         	vol1++;
         int vol2 = (int) Math.ceil(vol1 * exchangeMatrix[tradedAway][want]);
         bestOffer = new Offer(new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want), this), vol1);
@@ -157,18 +157,18 @@ public class Actor {
         		else if(x.getMostRecentRatios().get(y.name()) != null && totalComm!=0)
         		{
         			if(marketshare[row] > marketshare[col])
-        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-((marketshare[row]-marketshare[col]))/.65);
+        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-((marketshare[row]-marketshare[col]))/1.5) + (Math.random()*2 - 1);
         			else
-        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-((marketshare[col]-marketshare[row]))/.65);
+        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-((marketshare[col]-marketshare[row]))/.5 + (Math.random()*2 - 1));
         		}
         		else
         		{
         			exchangeMatrix[row][col] = Math.abs(exchangeMatrix[row][col] + (((Math.random() * 8) - 4)));
         		}
         		if(exchangeMatrix[row][col] > 12)
-        			exchangeMatrix[row][col] = 12;
+        			exchangeMatrix[row][col] = Math.random()*12;
         		if(exchangeMatrix[row][col] < 0.084)
-        			exchangeMatrix[row][col] = 0.084;
+        			exchangeMatrix[row][col] = Math.random();
         		col++;
         	}
         	row++;
@@ -182,7 +182,7 @@ public class Actor {
 	public boolean acceptTransaction(Transaction t) {
 		if(this.volumes.get(t.commodity1) - t.volume1 > 0 && t.commodity1 != t.commodity2 && t.volume1 != 0 && t.volume2 != 0) {
 			this.volumes.put(t.getCommodity1(), this.volumes.get(t.getCommodity1()) + t.getVolume1());
-			this.volumes.put(t.getCommodity2(), this.volumes.get(t.getCommodity2()) + t.getVolume2());
+			this.volumes.put(t.getCommodity2(), this.volumes.get(t.getCommodity2()) - t.getVolume2());
 			System.out.println("Trade made " + t.volume1 + " " + t.commodity1.name() + " for " + t.volume2 + " " + t.commodity2.name());
             return true;
         }
