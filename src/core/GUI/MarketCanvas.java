@@ -51,7 +51,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
         for (Graph graph : graphs)
             addGraphicalObject(graph);
 
-        Color color = new Color(1f, 1f, 1f, .8f);
+        Color color = new Color(1f, 1f, 1f, .6f);
         this.overlay = new TransparencyOverlay(this, color);
 
         int width = 800;
@@ -95,7 +95,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
      * @param graphHeight      the height of the graphs
      * @return LinkedList<Graph> of the graphs created
      */
-    private LinkedList<Graph> createGraphs(LinkedList<Commodity> commodities, int graphHeight) {
+    private LinkedList<Graph> createGraphs(java.util.List<Commodity> commodities, int graphHeight) {
         LinkedList<Graph> graphs = new LinkedList<>();
 
         int graphWidth = this.getWidth() / 2 - 5;

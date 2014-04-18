@@ -18,9 +18,9 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
  */
 public class Runner {
 
-    static final double dt = .1d;
+    static final double dt = .07d;
     static final double offerDT = dt * 10;
-    static final int numActors = 100;
+    static final int numActors = 10;
     static int tickerMagnitude = 30;
     static int width = 900;
     static int height = 700;

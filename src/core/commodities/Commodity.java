@@ -54,11 +54,10 @@ public enum Commodity {
     /**
      * Fills this commodities tickers with new tickers,
      * one for every commodity given (besides itself)
-     *
-     * @param commodities     the commodities to create tickers from
+     *  @param commodities     the commodities to create tickers from
      * @param tickerMagnitude the number of offers the ticker shows
      */
-    public void createTickersFromCommodities(LinkedList<Commodity> commodities, int tickerMagnitude) {
+    public void createTickersFromCommodities(java.util.List<Commodity> commodities, int tickerMagnitude) {
         for (Commodity commodity : commodities) {
             if (!commodity.name().equals(this.name())) {
                 this.tickers.put(commodity.name(), new Ticker(tickerMagnitude, 5, commodity.getColor()));

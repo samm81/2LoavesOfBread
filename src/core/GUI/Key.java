@@ -4,7 +4,7 @@ import core.commodities.Commodity;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
-import java.util.LinkedList;
+import java.util.List;
 
 import static java.awt.Color.BLACK;
 
@@ -15,9 +15,9 @@ import static java.awt.Color.BLACK;
  */
 public class Key extends GraphicalObject {
 
-    LinkedList<Commodity> commodities;
+    List<Commodity> commodities;
 
-    public Key(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities) {
+    public Key(int x, int y, int width, int height, DoubleBufferedCanvas canvas, java.util.List<Commodity> commodities) {
         super(x, y, width, height, canvas);
         this.commodities = commodities;
     }

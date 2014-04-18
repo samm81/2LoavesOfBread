@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
+import java.util.List;
 
 import static java.awt.Color.BLACK;
 
@@ -18,7 +19,7 @@ import static java.awt.Color.BLACK;
  */
 public class MakeOfferPopup extends GraphicalObject {
 	
-	LinkedList<Commodity> commodities;
+	List<Commodity> commodities;
 	
 	SelectInput select1;
 	SelectInput select2;
@@ -26,7 +27,7 @@ public class MakeOfferPopup extends GraphicalObject {
 	NumericInput input1;
 	NumericInput input2;
 	
-	public MakeOfferPopup(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities) {
+	public MakeOfferPopup(int x, int y, int width, int height, DoubleBufferedCanvas canvas, java.util.List<Commodity> commodities) {
 		super(x, y, width, height, canvas);
 		
 		this.commodities = commodities;

@@ -6,9 +6,7 @@ import core.actors.Player;
 import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -22,7 +20,7 @@ public class MarketSimulation extends Simulation {
 	
 	protected Player player;
 	protected HashSet<Actor> actors;
-	protected LinkedList<Commodity> commodities;
+	protected List<Commodity> commodities;
 	protected LinkedBlockingQueue<Transaction> transactions;
 	
 	protected OfferChannel offerChannel;
@@ -30,7 +28,7 @@ public class MarketSimulation extends Simulation {
 	public MarketSimulation(double dt, double offerDT) {
 		super(dt);
 		this.actors = new HashSet<>();
-		this.commodities = new LinkedList<>();
+		this.commodities = Collections.synchronizedList(new LinkedList<Commodity>());
 		this.transactions = new LinkedBlockingQueue<>();
 		
 		//Creates the transaction thread that evaluates offers, every offerDT.
@@ -46,7 +44,7 @@ public class MarketSimulation extends Simulation {
 		return this.actors;
 	}
 	
-	public LinkedList<Commodity> getCommodities() {
+	public List<Commodity> getCommodities() {
 		return this.commodities;
 	}
 	

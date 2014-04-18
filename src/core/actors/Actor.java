@@ -4,8 +4,9 @@ import core.Offer;
 import core.Transaction;
 import core.commodities.Commodity;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -16,11 +17,11 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class Actor {
 
-    protected LinkedList<Commodity> commodities;
+    protected List<Commodity> commodities;
     protected LinkedBlockingQueue<Transaction> transactions;
     private HashMap<Commodity, Integer> needMatrix;
     private double[][] exchangeMatrix;
-    private double[] invenVal;
+    private double[] inventoryVal;
     private int[] priorityMatrix;
     private ConcurrentHashMap<Commodity, Integer> volumes;
 
@@ -35,15 +36,15 @@ public class Actor {
      * @param startingVolumes
      * @param priorities
      */
-    public Actor(LinkedList <Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, int[] startingVolumes, int[] priorities, double risk)
+    public Actor(List <Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, int[] startingVolumes, int[] priorities, double risk)
     {
         this.volumes = new ConcurrentHashMap<Commodity, Integer>(startingVolumes.length);
         this.exchangeMatrix = new double[startingVolumes.length][startingVolumes.length];
-        this.invenVal = new double[startingVolumes.length];
+        this.inventoryVal = new double[startingVolumes.length];
         this.needMatrix = new HashMap<Commodity, Integer>();
         this.initialValues = startingVolumes;
         this.priorityMatrix = priorities;
-        this.commodities = commodities;
+        this.commodities = Collections.synchronizedList(commodities);
         this.transactions = transactions;
         this.risk = risk;
 
@@ -74,14 +75,14 @@ public class Actor {
         //set up the need matrix and find the actors total net worth in each commodity
     	for(int i = 0; i < commodities.size(); i++)
     	{
-    		needMatrix.put(commodities.get(i), (int) (priorityMatrix[i] - volumes.get(commodities.get(i))));
+    		needMatrix.put(commodities.get(i), priorityMatrix[i] - volumes.get(commodities.get(i)));
     		for(int j = 0; j < commodities.size(); j++)
     		{
-    			invenVal[i]+=(exchangeMatrix[j][i]*volumes.get(commodities.get(j)));
-    		}
-    	}
-        
-        //find highest invenVal/needed
+                inventoryVal[i] += (exchangeMatrix[j][i] * volumes.get(commodities.get(j)));
+            }
+        }
+
+        //find highest inventoryVal/needed
         Commodity wantComm = null;
         int want = 0;
         for(int i = 0; i < commodities.size(); i++)
@@ -91,11 +92,10 @@ public class Actor {
         		wantComm = commodities.get(i);
         		want = i;
         	}
-        	else if(wantComm != null)
+        	else
         	{
-        		if(invenVal[i]/needMatrix.get(commodities.get(i)) > invenVal[want]/needMatrix.get(wantComm))
-        		{
-        			wantComm = commodities.get(i);
+                if (inventoryVal[i] / needMatrix.get(commodities.get(i)) > inventoryVal[want] / needMatrix.get(wantComm)) {
+                    wantComm = commodities.get(i);
         			want = i;
         		}
         	}
@@ -114,7 +114,7 @@ public class Actor {
         	vol1++;
         int vol2 = (int) Math.ceil(vol1 * exchangeMatrix[tradedAway][want]);
         bestOffer = new Offer(new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want), this), vol1);
-       System.out.println("Best Offer: " + vol1 + " " + commodities.get(tradedAway).name() + " for " + vol2 + " " + commodities.get(want).name());
+//       System.out.println("Best Offer: " + vol1 + " " + commodities.get(tradedAway).name() + " for " + vol2 + " " + commodities.get(want).name());
         return bestOffer;
     }
 
@@ -133,9 +133,8 @@ public class Actor {
         double totalComm = 0;
         for(int i = 0; i < marketshare.length; i++)
         {
-        	for(Transaction t : commodities.get(i).getTransactions())
-        	{
-        	marketshare[i]+=t.getVolume1();
+            for (Transaction t : this.commodities.get(i).getTransactions()) {
+                marketshare[i]+=t.getVolume1();
         	totalComm+=t.getVolume1();
         	}
         }
@@ -183,7 +182,7 @@ public class Actor {
 		if(this.volumes.get(t.commodity1) - t.volume1 > 0 && t.commodity1 != t.commodity2 && t.volume1 != 0 && t.volume2 != 0) {
 			this.volumes.put(t.getCommodity1(), this.volumes.get(t.getCommodity1()) + t.getVolume1());
 			this.volumes.put(t.getCommodity2(), this.volumes.get(t.getCommodity2()) - t.getVolume2());
-			System.out.println("Trade made " + t.volume1 + " " + t.commodity1.name() + " for " + t.volume2 + " " + t.commodity2.name());
+//			System.out.println("Trade made " + t.volume1 + " " + t.commodity1.name() + " for " + t.volume2 + " " + t.commodity2.name());
             return true;
         }
         return false;
