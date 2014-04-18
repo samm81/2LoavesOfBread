@@ -11,6 +11,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class Farmer extends Actor {
     public Farmer(LinkedList<Commodity> commodities,LinkedBlockingQueue<Transaction> transactions) {
-        super(commodities,transactions,new int[]{1, 2, 3, 5}, new int[]{10,100,210,120}, 1);
+        super(commodities,transactions,new int[]{25,25,25,25}, new int[]{100,100,100,100}, 1);
     }
 }

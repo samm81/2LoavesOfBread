@@ -50,7 +50,7 @@ public class Actor {
         //exchange matrix setup.
         for(int row = 0; row < exchangeMatrix.length; row++) {
             for(int col = 0; col < exchangeMatrix[row].length; col++) {
-                exchangeMatrix[row][col] = Math.random() * 5;
+                exchangeMatrix[row][col] = Math.random() * 3;
             }
         }
         int i = 0;
@@ -86,14 +86,18 @@ public class Actor {
         int want = 0;
         for(int i = 0; i < commodities.size(); i++)
         {
-        	if(wantComm == null && i == 0)
+        	if(wantComm == null)
         	{
         		wantComm = commodities.get(i);
+        		want = i;
         	}
         	else if(wantComm != null)
         	{
-        		if(needMatrix.get(wantComm) == 0 ||(needMatrix.get(commodities.get(i)) != null && invenVal[i]/needMatrix.get(commodities.get(i)) > invenVal[want]/needMatrix.get(wantComm)));
+        		if(invenVal[i]/needMatrix.get(commodities.get(i)) > invenVal[want]/needMatrix.get(wantComm))
+        		{
         			wantComm = commodities.get(i);
+        			want = i;
+        		}
         	}
         }
         
@@ -149,21 +153,23 @@ public class Actor {
         		if(y==x)
         		{
         			exchangeMatrix[row][col] = 1;
-        			col++;
         		}
         		else if(x.getMostRecentRatios().get(y.name()) != null && totalComm!=0)
         		{
         			if(marketshare[row] > marketshare[col])
-        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-(marketshare[row]-marketshare[col]));
+        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-((marketshare[row]-marketshare[col]))/.65);
         			else
-        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-((marketshare[col]-marketshare[row])/.2));
-        			col++;
+        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-((marketshare[col]-marketshare[row]))/.65);
         		}
         		else
         		{
-        			exchangeMatrix[row][col] = Math.abs(exchangeMatrix[row][col] + (((Math.random() * 2) - 1)));
-        			col++;
+        			exchangeMatrix[row][col] = Math.abs(exchangeMatrix[row][col] + (((Math.random() * 8) - 4)));
         		}
+        		if(exchangeMatrix[row][col] > 12)
+        			exchangeMatrix[row][col] = 12;
+        		if(exchangeMatrix[row][col] < 0.084)
+        			exchangeMatrix[row][col] = 0.084;
+        		col++;
         	}
         	row++;
         }	
