@@ -4,6 +4,7 @@ import core.Offer;
 import core.Transaction;
 import core.commodities.Commodity;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -17,12 +18,14 @@ public class Actor {
 
     protected LinkedList<Commodity> commodities;
     protected LinkedBlockingQueue<Transaction> transactions;
+    private HashMap<Commodity, Integer> needMatrix;
     private double[][] exchangeMatrix;
-    private double[] wantMatrix;
-    private double[] priorityMatrix;
+    private double[] invenVal;
+    private int[] priorityMatrix;
     private ConcurrentHashMap<Commodity, Integer> volumes;
 
     private int[] initialValues;
+    private double risk;
     protected Offer bestOffer;
 
 
@@ -32,19 +35,22 @@ public class Actor {
      * @param startingVolumes
      * @param priorities
      */
-    public Actor(LinkedList <Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, int[] startingVolumes, double[] priorities)
+    public Actor(LinkedList <Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, int[] startingVolumes, int[] priorities, double risk)
     {
         this.volumes = new ConcurrentHashMap<Commodity, Integer>(startingVolumes.length);
         this.exchangeMatrix = new double[startingVolumes.length][startingVolumes.length];
+        this.invenVal = new double[startingVolumes.length];
+        this.needMatrix = new HashMap<Commodity, Integer>();
         this.initialValues = startingVolumes;
         this.priorityMatrix = priorities;
         this.commodities = commodities;
         this.transactions = transactions;
+        this.risk = risk;
 
         //exchange matrix setup.
         for(int row = 0; row < exchangeMatrix.length; row++) {
             for(int col = 0; col < exchangeMatrix[row].length; col++) {
-                exchangeMatrix[row][col] = Math.random();
+                exchangeMatrix[row][col] = Math.random() * 5;
             }
         }
         int i = 0;
@@ -65,25 +71,46 @@ public class Actor {
      * @return Transaction that the actor will submit.
      */
     public Offer getBestOffer(){
-        int want = (int) (Math.random() * this.commodities.size()); //item wanted
-        int tradedAway = -1; //item to be traded for want
-        int[] inventory = new int[this.commodities.size()];
-        for(int i = 0; i < inventory.length; i++) {
-            inventory[i] = volumes.get(this.commodities.get(i));
+        //set up the need matrix and find the actors total net worth in each commodity
+    	for(int i = 0; i < commodities.size(); i++)
+    	{
+    		needMatrix.put(commodities.get(i), (int) (priorityMatrix[i] - volumes.get(commodities.get(i))));
+    		for(int j = 0; j < commodities.size(); j++)
+    		{
+    			invenVal[i]+=(exchangeMatrix[j][i]*volumes.get(commodities.get(j)));
+    		}
+    	}
+        
+        //find highest invenVal/needed
+        Commodity wantComm = null;
+        int want = 0;
+        for(int i = 0; i < commodities.size(); i++)
+        {
+        	if(wantComm == null && i == 0)
+        	{
+        		wantComm = commodities.get(i);
+        	}
+        	else if(wantComm != null)
+        	{
+        		if(needMatrix.get(wantComm) == 0 ||(needMatrix.get(commodities.get(i)) != null && invenVal[i]/needMatrix.get(commodities.get(i)) > invenVal[want]/needMatrix.get(wantComm)));
+        			wantComm = commodities.get(i);
+        	}
         }
-        for(int i = 0; i < exchangeMatrix[want].length; i++) {
-            if(tradedAway == -1)
-                tradedAway = i;
-            else {
-                if(inventory[i] / exchangeMatrix[want][i] > inventory[tradedAway] / exchangeMatrix[want][tradedAway])
-                    tradedAway = i;
-            }
+        
+        //select highest exchange item
+        int tradedAway = 0;
+        for(int i = 1; i < commodities.size(); i++)
+        {
+        	if(exchangeMatrix[want][i] < exchangeMatrix[want][tradedAway] || tradedAway == want)
+        		tradedAway = i;
         }
-        int vol1 = (int) Math.ceil(inventory[tradedAway] / 2);
-        int vol2 = (int) (vol1 * exchangeMatrix[want][tradedAway]);
-        if (vol1 <= 0 || vol2 <= 0 || tradedAway == want)
-            return null;
+        
+        int vol1 = 1;
+        while(Math.floor(vol1 * exchangeMatrix[tradedAway][want]) < needMatrix.get(wantComm) && vol1 < volumes.get(commodities.get(tradedAway)))
+        	vol1++;
+        int vol2 = (int) Math.ceil(vol1 * exchangeMatrix[tradedAway][want]);
         bestOffer = new Offer(new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want), this), vol1);
+       System.out.println("Best Offer: " + vol1 + " " + commodities.get(tradedAway).name() + " for " + vol2 + " " + commodities.get(want).name());
         return bestOffer;
     }
 
@@ -98,25 +125,48 @@ public class Actor {
         //Exchange Matrix is set up so
         //row and column 0 is one commodity, row, column 1 is one commodity ... etc.
         //this for loop shows the movement of markets
-        for (Commodity x : Commodity.values()) {
-            col = 0;
-            for (Commodity y : Commodity.values()) {
-                if (y == x)
-                    exchangeMatrix[row][col] = 1;
-                else if (x.getMostRecentRatios().get(y.name()) != null) {
-//						System.out.println(x.name() + " " + y.name() +"\n");
-//						System.out.println(row + " " + col);
-//						System.out.println(x.getMostRecentRatios().get(y.name()));
-						exchangeMatrix[row][col] = exchangeMatrix[row][col];
-					}
-					else
-					{
-						exchangeMatrix[row][col] = exchangeMatrix[row][col];
-					}
-					col++;
-				}
-				row++;
-			}
+        double[] marketshare = new double[commodities.size()];
+        double totalComm = 0;
+        for(int i = 0; i < marketshare.length; i++)
+        {
+        	for(Transaction t : commodities.get(i).getTransactions())
+        	{
+        	marketshare[i]+=t.getVolume1();
+        	totalComm+=t.getVolume1();
+        	}
+        }
+        for(int i = 0; i < marketshare.length; i++)
+        {
+        	
+        	marketshare[i] = marketshare[i]/totalComm;
+        }
+        
+        for(Commodity x : Commodity.values())
+        {
+        	col = 0;
+        	for(Commodity y : Commodity.values())
+        	{
+        		if(y==x)
+        		{
+        			exchangeMatrix[row][col] = 1;
+        			col++;
+        		}
+        		else if(x.getMostRecentRatios().get(y.name()) != null && totalComm!=0)
+        		{
+        			if(marketshare[row] > marketshare[col])
+        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-(marketshare[row]-marketshare[col]));
+        			else
+        				exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1-((marketshare[col]-marketshare[row])/.2));
+        			col++;
+        		}
+        		else
+        		{
+        			exchangeMatrix[row][col] = Math.abs(exchangeMatrix[row][col] + (((Math.random() * 2) - 1)));
+        			col++;
+        		}
+        	}
+        	row++;
+        }	
 	}
 	
 	/**
