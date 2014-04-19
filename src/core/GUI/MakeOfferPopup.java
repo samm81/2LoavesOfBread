@@ -54,11 +54,11 @@ public class MakeOfferPopup extends GraphicalObject {
 		select2 = new SelectInput(selectX, selectY, 215, 32, canvas, options, colors);
 	}
 	
-	public int getVolume1() {
+	public Integer getVolume1() {
 		return input1.getInput();
 	}
 	
-	public int getVolume2() {
+	public Integer getVolume2() {
 		return input2.getInput();
 	}
 	
