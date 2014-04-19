@@ -39,7 +39,10 @@ public class Player extends Actor {
 	
 	@Override
 	public boolean acceptTransaction(Transaction t) {
-		this.bestOffer = null;
+		if(this.volumes.get(t.commodity1) - t.volume1 > 0 && t.commodity1 != t.commodity2 && t.volume1 != 0 && t.volume2 != 0) {
+			System.out.println("Player accepting transaction " + t);
+			this.bestOffer = null;
+		}
 		return super.acceptTransaction(t);
 	}
 	
