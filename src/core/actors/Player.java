@@ -1,25 +1,32 @@
 package core.actors;
 
-import core.Transaction;
+import java.util.concurrent.ConcurrentHashMap;
+
+import core.Offer;
 import core.commodities.Commodity;
 
-import java.util.LinkedList;
-import java.util.concurrent.LinkedBlockingQueue;
+public class Player extends Actor {
 
-public class Player {
-
-    Transaction bestOffer = null;
-
-    public Player(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transaction) {
-
-    }
-
-    /*	public Transaction getBestOffer() {
-            return bestOffer;
-        }
-    */
-    public void setBestOffer(Transaction bestOffer) {
-        this.bestOffer = bestOffer;
-    }
-
+	Offer bestOffer;
+	
+	public Player(int[] startingVolumes) {
+		this.volumes = new ConcurrentHashMap<Commodity, Integer>(startingVolumes.length);
+	}
+	
+	public ConcurrentHashMap<Commodity, Integer> getVolumes() {
+		return this.volumes;
+	}
+	
+	public void setBestOffer(Offer bestOffer) {
+		this.bestOffer = bestOffer;
+	}
+	
+	@Override
+	public Offer getBestOffer() {
+		return this.bestOffer;
+	}
+	
+	@Override
+	public void evaluateMarket() {}
+	
 }
