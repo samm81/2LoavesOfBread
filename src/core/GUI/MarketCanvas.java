@@ -173,7 +173,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
                     System.out.println(offer);
                     this.sim.getPlayer().setBestOffer(offer);
     			}
-    			this.message("CloseMakeOffer");
+    			this.message("ClearOverlays");
     			break;
             case "ClearOverlays":
             	removeGraphicalObject(this.overlay);

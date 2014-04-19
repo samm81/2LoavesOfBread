@@ -117,7 +117,8 @@ public class OfferChannel extends Thread {
 									offerArrays[second.getCommodity1().ordinal()].remove(second);
 									//this.offers.remove(first);
 									//this.offers.remove(second);
-									System.out.println("Processed");
+									
+									//System.out.println("Processed");
 								} else {
 									t.getSender().acceptTransaction(q);//Reverse their transaction
 									//secondOfferArray.remove(second);
