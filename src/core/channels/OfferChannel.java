@@ -158,7 +158,6 @@ public class OfferChannel extends Thread {
      * @param commodity - The commodity to be inquired about.
      * @return - # of Offers that offer commodity as their trading away commodity
      */
-    @SuppressWarnings ("unused")
     public int getNumberOfOffers(Commodity commodity) {
         return this.offerArrays[commodity.ordinal()].size();
     }
@@ -170,7 +169,6 @@ public class OfferChannel extends Thread {
      * @param tradeFor  - Trading For Commodity
      * @return - Number of Trades trading away tradeAway, for tradeFor
      */
-    @SuppressWarnings ("unused")
     public int getNumberOfOffers(Commodity tradeAway, Commodity tradeFor) {
         int count = 0;
         for (Offer offer : this.offerArrays[tradeAway.ordinal()]) {

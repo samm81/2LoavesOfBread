@@ -51,4 +51,9 @@ public class Offer {
 	public int getMinReceive() {
 		return minReceive;
 	}
+	
+	@Override
+	public String toString() {
+		return this.sender + "wanting to trade at most " + this.maxTradeVolume + " " + this.commodity1 + " for at least " + this.minReceive + " " + this.commodity2;
+	}
 }

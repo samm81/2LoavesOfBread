@@ -1,16 +1,24 @@
 package core.actors;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import core.Offer;
+import core.Transaction;
 import core.commodities.Commodity;
 
 public class Player extends Actor {
-
+	
 	Offer bestOffer;
 	
-	public Player(int[] startingVolumes) {
+	public Player(List<Commodity> commodities, int[] startingVolumes) {
 		this.volumes = new ConcurrentHashMap<Commodity, Integer>(startingVolumes.length);
+		int i = 0;
+		for(Commodity commodity : commodities) {
+			this.volumes.put(commodity, startingVolumes[i]);
+			i++;
+		}
+		bestOffer = null;
 	}
 	
 	public ConcurrentHashMap<Commodity, Integer> getVolumes() {
@@ -28,5 +36,11 @@ public class Player extends Actor {
 	
 	@Override
 	public void evaluateMarket() {}
+	
+	@Override
+	public boolean acceptTransaction(Transaction t) {
+		this.bestOffer = null;
+		return super.acceptTransaction(t);
+	}
 	
 }

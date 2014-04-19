@@ -1,6 +1,7 @@
 package core.GUI;
 
 import core.MarketSimulation;
+import core.Offer;
 import core.Transaction;
 import core.commodities.Commodity;
 
@@ -166,10 +167,9 @@ public class MarketCanvas extends DoubleBufferedCanvas {
                 int volume2 = this.makeOfferPopup.getVolume2();
                 Commodity commodity1 = this.makeOfferPopup.getCommodity1();
                 Commodity commodity2 = this.makeOfferPopup.getCommodity2();
-                //FIXME: Can't leave this as null when there is an actual player.
-                Transaction offer = new Transaction(volume1, commodity1, volume2, commodity2, null);
+                Offer offer = new Offer(commodity1, commodity2, volume1, volume2, sim.getPlayer());
                 System.out.println(offer);
-                //this.sim.getPlayer().setBestOffer(offer);
+                this.sim.getPlayer().setBestOffer(offer);
                 this.message("CloseMakeOffer");
                 break;
             case "ClearOverlays":

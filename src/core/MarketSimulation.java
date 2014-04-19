@@ -33,7 +33,7 @@ public class MarketSimulation extends Simulation {
 		
 		//Creates the transaction thread that evaluates offers, every offerDT.
 		offerChannel = new OfferChannel(getTransactions(), getActors(), offerDT);
-        offerChannel.setDaemon(true);
+		offerChannel.setDaemon(true);
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -92,6 +92,13 @@ public class MarketSimulation extends Simulation {
 	
 	@Override
 	protected void initialize() {
+		int[] playerStartingVolumes = new int[this.commodities.size()];
+		for(int i=0;i<playerStartingVolumes.length;i++)
+			playerStartingVolumes[i] = 10;
+		this.player = new Player(this.commodities, playerStartingVolumes);
+		
+		actors.add(player);
+		
 		offerChannel.start();
 	}
 	

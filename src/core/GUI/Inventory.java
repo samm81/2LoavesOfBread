@@ -46,9 +46,10 @@ public class Inventory extends GraphicalObject {
         int commodityY = titleY + 25;
         for (Commodity commodity : this.commodities) {
             String name = commodity.name();
+            Integer volume = player.getVolumes().get(commodity);
             g.setFont(new Font("Sans Serif", Font.BOLD, 16));
             g.setColor(BLACK);
-            g.drawString("10 " + name, commodityX, commodityY);
+            g.drawString(volume + " " + name, commodityX, commodityY);
 
             commodityY += 25;
             if (commodityY > (this.y + this.height - 20)) {

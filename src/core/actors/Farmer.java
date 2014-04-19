@@ -1,10 +1,10 @@
 package core.actors;
 
-import core.Transaction;
-import core.commodities.Commodity;
-
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import core.Transaction;
+import core.commodities.Commodity;
 
 /**
  * @author Brian Oluwo
