@@ -5,9 +5,9 @@ import core.commodities.Commodity;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
-import java.util.LinkedList;
+import java.util.List;
 
-import static java.awt.Color.*;
+import static java.awt.Color.BLACK;
 
 /**
  * Class to hold the graphical representation of the inventory:
@@ -18,10 +18,10 @@ import static java.awt.Color.*;
  */
 public class Inventory extends GraphicalObject {
 
-    LinkedList<Commodity> commodities;
+    List<Commodity> commodities;
     Player player;
 
-    public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities, Player player) {
+    public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, java.util.List<Commodity> commodities, Player player) {
         super(x, y, width, height, canvas);
         this.commodities = commodities;
         this.player = player;
@@ -46,9 +46,10 @@ public class Inventory extends GraphicalObject {
         int commodityY = titleY + 25;
         for (Commodity commodity : this.commodities) {
             String name = commodity.name();
+            Integer volume = player.getVolumes().get(commodity);
             g.setFont(new Font("Sans Serif", Font.BOLD, 16));
             g.setColor(BLACK);
-            g.drawString("10 " + name, commodityX, commodityY);
+            g.drawString(volume + " " + name, commodityX, commodityY);
 
             commodityY += 25;
             if (commodityY > (this.y + this.height - 20)) {

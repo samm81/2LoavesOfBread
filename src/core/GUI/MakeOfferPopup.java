@@ -1,17 +1,15 @@
 package core.GUI;
 
-import static java.awt.Color.BLACK;
+import core.commodities.Commodity;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.LinkedList;
+import java.util.List;
 
-import core.commodities.Commodity;
+import static java.awt.Color.BLACK;
 
 /**
  * Contains all the bits and pieces for the make offer
@@ -21,7 +19,7 @@ import core.commodities.Commodity;
  */
 public class MakeOfferPopup extends GraphicalObject {
 	
-	LinkedList<Commodity> commodities;
+	List<Commodity> commodities;
 	
 	SelectInput select1;
 	SelectInput select2;
@@ -29,7 +27,7 @@ public class MakeOfferPopup extends GraphicalObject {
 	NumericInput input1;
 	NumericInput input2;
 	
-	public MakeOfferPopup(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities) {
+	public MakeOfferPopup(int x, int y, int width, int height, DoubleBufferedCanvas canvas, java.util.List<Commodity> commodities) {
 		super(x, y, width, height, canvas);
 		
 		this.commodities = commodities;

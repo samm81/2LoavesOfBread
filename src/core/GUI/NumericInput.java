@@ -1,17 +1,11 @@
-/**
- * 
- */
 package core.GUI;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import static java.awt.Color.BLACK;
 import static java.awt.event.KeyEvent.VK_BACK_SPACE;
-
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
 public class NumericInput extends GraphicalObject {
 	

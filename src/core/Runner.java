@@ -1,15 +1,14 @@
 package core;
 
+import core.GUI.MarketCanvas;
+import core.actors.Farmer;
+import core.commodities.Commodity;
+
+import javax.swing.*;
+import java.awt.*;
+
 import static java.awt.Color.DARK_GRAY;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-
-import java.awt.Toolkit;
-
-import javax.swing.JFrame;
-
-import core.GUI.MarketCanvas;
-import core.actors.Actor;
-import core.commodities.Commodity;
 
 /**
  * The runner for the game. Gets the frame, the canvas, and the
@@ -19,8 +18,8 @@ import core.commodities.Commodity;
  */
 public class Runner {
 
-    static final double dt = .1d;
-    static final double offerDT = dt * 10;
+    static final double dt = 1d;
+    static final double offerDT = dt * 3;
     static final int numActors = 100;
     static int tickerMagnitude = 30;
     static int width = 900;
@@ -37,14 +36,11 @@ public class Runner {
             sim.addCommodity(item);
 
         for (int i = 0; i < numActors; i++)
-            sim.addActor(Actor.FARMER);
+            sim.addActor(new Farmer(sim.getCommodities(),sim.getTransactions()));
 
         sim.createTickers(tickerMagnitude); // required
         MarketCanvas canvas = new MarketCanvas(60, sim);
 
-//        SwingUtilities.invokeLater(new Runnable() {
-//            @Override
-//            public void run(){
         JFrame f = new JFrame("Two Loaves of Bread");
         f.setDefaultCloseOperation(EXIT_ON_CLOSE);
         f.setResizable(false);
@@ -62,9 +58,7 @@ public class Runner {
         f.add(canvas);
         f.setVisible(true);
         canvas.start();
-//            }
-//        });
-        
+
         sim.start();
     }
 }
