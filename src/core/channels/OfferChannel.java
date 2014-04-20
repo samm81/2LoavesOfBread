@@ -1,14 +1,17 @@
 package core.channels;
 
-import core.Offer;
-import core.Transaction;
-import core.actors.Actor;
-import core.commodities.Commodity;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static core.commodities.Commodity.values;
+import core.Offer;
+import core.Transaction;
+import core.actors.Actor;
+import core.actors.Player;
+import core.commodities.Commodity;
 
 /**
  * 
@@ -21,19 +24,15 @@ public class OfferChannel extends Thread {
 	public Thread thread;
 	protected HashSet<Actor> actors;
 	protected LinkedBlockingQueue<Transaction> globalTransactions;
-	protected LinkedBlockingQueue<Offer>[] offerArrays;
+	protected HashMap<Actor, Offer> offersMap;
 	private double dt;
 	
-	@SuppressWarnings("unchecked")
 	public OfferChannel(LinkedBlockingQueue<Transaction> globalTransactions, HashSet<Actor> actors, double dt) {
 		this.globalTransactions = globalTransactions;
 		this.actors = actors;
 		this.dt = dt;
 		this.thread = new Thread(this);
-		this.offerArrays = new LinkedBlockingQueue[values().length];
-		for(int i = 0; i < values().length; i++) {
-			this.offerArrays[i] = new LinkedBlockingQueue<Offer>();
-		}
+		this.offersMap = new HashMap<Actor, Offer>();
 	}
 	
 	/**
@@ -60,16 +59,14 @@ public class OfferChannel extends Thread {
 	 */
 	private void tick() {
 		for(Actor actor : this.actors) {
-			try {
-				Offer o = actor.getBestOffer();
-				if(o == null) {
-					System.err.println("No Offer Given, Moving On.");
-					continue;
-				}
-				this.offerArrays[o.getCommodity1().ordinal()].put(o);
-			} catch(InterruptedException | NullPointerException e) {
-				e.printStackTrace();
+			Offer offer = actor.getBestOffer();
+			/*
+			if(offer == null) {
+				System.err.println("No Offer Given, Moving On.");
+				continue;
 			}
+			*/
+			offersMap.put(actor, offer);
 		}
 		processOffers();
 	}
@@ -78,60 +75,38 @@ public class OfferChannel extends Thread {
 	 * Processes the offers in the queue
 	 */
 	private void processOffers() {
-		//Only need to go through values()-1 because last one will have been checked against everything already
-		//Only need to check the ones that are greater than you
-		for(int i = 0, offerArraysLength = this.offerArrays.length - 1; i < offerArraysLength; i++) {
-			LinkedBlockingQueue<Offer> offerArray = this.offerArrays[i];
-			if(offerArray == null) {
-				continue;
-			}
-			for(Offer first : offerArray) {
-				for(int j = i + 1; j < offerArraysLength + 1; j++) {
-					LinkedBlockingQueue<Offer> secondOfferArray = this.offerArrays[j];
-					if(secondOfferArray == null) {
-						continue;
+		ArrayList<Offer> offers = Collections.list(Collections.enumeration(offersMap.values()));
+		Collections.shuffle(offers);
+		
+		System.out.println(offers.size());
+		
+		for(int i = 0; i < offers.size(); i++) {
+			Offer first = offers.get(i);
+			//if(offers.get(i).getSender().getClass().equals(Player.class))
+			//	System.out.println(i);
+			for(int j = i + 1; j < offers.size(); j++) {
+				Offer second = offers.get(j);
+				if(isViable(first, second)) {
+					Transaction t = new Transaction(first.getMinReceive(), first.getCommodity2(), second.getMinReceive(), first.getCommodity1(), first.getSender());
+					Transaction q = new Transaction(second.getMinReceive(), second.getCommodity2(), first.getMinReceive(), second.getCommodity1(), second.getSender());
+					
+					t.getSender().acceptTransaction(t);
+					q.getSender().acceptTransaction(q);
+					
+					t.getCommodity1().addTransaction(t);
+					t.getCommodity2().addTransaction(q);
+					try {
+						this.globalTransactions.put(t);
+						this.globalTransactions.put(q);
+					} catch(InterruptedException e) {
+						e.printStackTrace();
 					}
-					for(Offer second : secondOfferArray) {
-						assert second != null : "Null Transaction offered.";
-						if(isViable(first, second)) {
-							Transaction t = new Transaction(first.getMinReceive(), first.getCommodity2(), second.getMinReceive(), first.getCommodity1(), first.getSender());
-							Transaction q = new Transaction(second.getMinReceive(), second.getCommodity2(), first.getMinReceive(), second.getCommodity1(), second.getSender());
-							if(t.getSender().acceptTransaction(t)) {
-								if(q.getSender().acceptTransaction(q)) {
-									t.getCommodity1().addTransaction(t);
-									t.getCommodity2().addTransaction(q);
-									try {
-										this.globalTransactions.put(t);
-										this.globalTransactions.put(q);
-									} catch(InterruptedException e) {
-										e.printStackTrace();
-									}
-									
-									//Probably could use offerArray to avoid all the calls
-									//but i don't remember the rules for this removal in
-									//whether it is simply removing the pointer or removing
-									//the object, But just to be safe
-									//offerArray.remove(first);
-									//secondOfferArray.remove(second);
-									offerArrays[first.getCommodity1().ordinal()].remove(first);
-									offerArrays[second.getCommodity1().ordinal()].remove(second);
-									//this.offers.remove(first);
-									//this.offers.remove(second);
-									
-									//System.out.println("Processed");
-								} else {
-									t.getSender().acceptTransaction(q);//Reverse their transaction
-									//secondOfferArray.remove(second);
-									offerArrays[second.getCommodity1().ordinal()].remove(second);
-									//this.offers.remove(second);
-								}
-							} else {
-								//offerArray.remove(first);
-								offerArrays[first.getCommodity1().ordinal()].remove(first);
-								//this.offers.remove(first);
-							}
-						}
-					}
+					
+					offers.remove(j);
+					j--;
+					
+					System.out.println("Matched offer " + first + " with " + second);
+					break;
 				}
 			}
 		}
@@ -148,6 +123,8 @@ public class OfferChannel extends Thread {
 	 */
 	public boolean isViable(Offer first, Offer second) {
 		// No longer is there a reverse transaction so one needs to check reverses.
+		if(first == null || second == null)
+			return false;
 		if(!first.getCommodity1().name().equals(second.getCommodity2().name()) || !first.getCommodity2().name().equals(second.getCommodity1().name()))
 			return false;
 		if(first.getMinReceive() > second.getMaxTradeVolume() || second.getMinReceive() > first.getMaxTradeVolume())
@@ -161,7 +138,13 @@ public class OfferChannel extends Thread {
 	 * @return - # of Offers that offer commodity as their trading away commodity
 	 */
 	public int getNumberOfOffers(Commodity commodity) {
-		return this.offerArrays[commodity.ordinal()].size();
+		Collection<Offer> offers = offersMap.values();
+		int count = 0;
+		for(Offer offer : offers) {
+			if(offer.getCommodity1().equals(commodity))
+				count++;
+		}
+		return count;
 	}
 	
 	/**
@@ -172,9 +155,10 @@ public class OfferChannel extends Thread {
 	 * @return - Number of Trades trading away tradeAway, for tradeFor
 	 */
 	public int getNumberOfOffers(Commodity tradeAway, Commodity tradeFor) {
+		Collection<Offer> offers = offersMap.values();
 		int count = 0;
-		for(Offer offer : this.offerArrays[tradeAway.ordinal()]) {
-			if(offer.getCommodity2().name().equals(tradeFor.name()))
+		for(Offer offer : offers) {
+			if(offer.getCommodity1().equals(tradeAway) && offer.getCommodity2().equals(tradeFor))
 				count++;
 		}
 		return count;

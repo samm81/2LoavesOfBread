@@ -25,6 +25,7 @@ public abstract class Actor {
 	protected ConcurrentHashMap<Commodity, Integer> volumes;
 	
 	private int[] initialValues;
+	@SuppressWarnings("unused")
 	private double risk;
 	protected Offer bestOffer;
 	
