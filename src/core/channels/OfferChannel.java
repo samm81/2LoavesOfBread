@@ -10,7 +10,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import core.Offer;
 import core.Transaction;
 import core.actors.Actor;
-import core.actors.Player;
 import core.commodities.Commodity;
 
 /**
@@ -60,12 +59,6 @@ public class OfferChannel extends Thread {
 	private void tick() {
 		for(Actor actor : this.actors) {
 			Offer offer = actor.getBestOffer();
-			/*
-			if(offer == null) {
-				System.err.println("No Offer Given, Moving On.");
-				continue;
-			}
-			*/
 			offersMap.put(actor, offer);
 		}
 		processOffers();
@@ -78,12 +71,8 @@ public class OfferChannel extends Thread {
 		ArrayList<Offer> offers = Collections.list(Collections.enumeration(offersMap.values()));
 		Collections.shuffle(offers);
 		
-		System.out.println(offers.size());
-		
 		for(int i = 0; i < offers.size(); i++) {
 			Offer first = offers.get(i);
-			//if(offers.get(i).getSender().getClass().equals(Player.class))
-			//	System.out.println(i);
 			for(int j = i + 1; j < offers.size(); j++) {
 				Offer second = offers.get(j);
 				if(isViable(first, second)) {
@@ -105,7 +94,7 @@ public class OfferChannel extends Thread {
 					offers.remove(j);
 					j--;
 					
-					System.out.println("Matched offer " + first + " with " + second);
+					//System.out.println("Matched offer " + first + " with " + second);
 					break;
 				}
 			}
