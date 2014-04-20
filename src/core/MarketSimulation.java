@@ -24,6 +24,7 @@ public class MarketSimulation extends Simulation {
 	protected LinkedBlockingQueue<Transaction> transactions;
 	
 	protected OfferChannel offerChannel;
+	private int playerStartVolumes = 50;
 	
 	public MarketSimulation(double dt, double offerDT) {
 		super(dt);
@@ -46,10 +47,6 @@ public class MarketSimulation extends Simulation {
 	
 	public List<Commodity> getCommodities() {
 		return this.commodities;
-	}
-	
-	public OfferChannel getOfferChannel() {
-		return this.offerChannel;
 	}
 	
 	/**
@@ -94,7 +91,7 @@ public class MarketSimulation extends Simulation {
 	protected void initialize() {
 		int[] playerStartingVolumes = new int[this.commodities.size()];
 		for(int i=0;i<playerStartingVolumes.length;i++)
-			playerStartingVolumes[i] = 10;
+			playerStartingVolumes[i] = playerStartVolumes ;
 		this.player = new Player(this.commodities, playerStartingVolumes);
 		
 		actors.add(player);
