@@ -49,10 +49,6 @@ public class MarketSimulation extends Simulation {
 		return this.commodities;
 	}
 	
-	public OfferChannel getOfferChannel() {
-		return this.offerChannel;
-	}
-	
 	/**
 	 * @param actor - Takes in an abstract Actor.
 	 */
