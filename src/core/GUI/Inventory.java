@@ -1,13 +1,17 @@
 package core.GUI;
 
+import static java.awt.Color.BLACK;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.RoundRectangle2D;
+import java.util.List;
+
+import core.Offer;
 import core.actors.Player;
 import core.commodities.Commodity;
-
-import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
-import java.util.LinkedList;
-
-import static java.awt.Color.*;
 
 /**
  * Class to hold the graphical representation of the inventory:
@@ -18,10 +22,10 @@ import static java.awt.Color.*;
  */
 public class Inventory extends GraphicalObject {
 
-    LinkedList<Commodity> commodities;
+    List<Commodity> commodities;
     Player player;
 
-    public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<Commodity> commodities, Player player) {
+    public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, java.util.List<Commodity> commodities, Player player) {
         super(x, y, width, height, canvas);
         this.commodities = commodities;
         this.player = player;
@@ -46,9 +50,10 @@ public class Inventory extends GraphicalObject {
         int commodityY = titleY + 25;
         for (Commodity commodity : this.commodities) {
             String name = commodity.name();
+            Integer volume = player.getVolumes().get(commodity);
             g.setFont(new Font("Sans Serif", Font.BOLD, 16));
-            g.setColor(BLACK);
-            g.drawString("10 " + name, commodityX, commodityY);
+            g.setColor(commodity.getColor());
+            g.drawString(volume + " " + name, commodityX, commodityY);
 
             commodityY += 25;
             if (commodityY > (this.y + this.height - 20)) {
@@ -56,6 +61,27 @@ public class Inventory extends GraphicalObject {
                 commodityX += 100;
             }
         }
+        
+        int offerX = x + 480;
+        int offerY = y + 55;
+        
+        Offer offer = player.getBestOffer();
+        if(offer == null){
+        	g.setColor(Color.RED);
+        	g.drawString("no pending offer", offerX, offerY);
+        }else{
+        	g.setColor(Color.GREEN);
+        	offerX -= 40;
+        	offerY -= 20;
+        	g.drawString("      pending offer", offerX, offerY);
+        	offerY += 20;
+        	g.setColor(offer.getCommodity1().getColor());
+        	g.drawString("trade at most " + offer.getMaxTradeVolume() + " " + offer.getCommodity1(), offerX, offerY);
+        	offerY += 20;
+        	g.setColor(offer.getCommodity2().getColor());
+        	g.drawString("get at least  " + offer.getMinReceive() + " " + offer.getCommodity2(), offerX, offerY);
+        }
+        
     }
 
 }

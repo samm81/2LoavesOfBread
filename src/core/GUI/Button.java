@@ -1,14 +1,10 @@
 package core.GUI;
 
-import static java.awt.Color.BLACK;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Shape;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+
+import static java.awt.Color.BLACK;
 
 
 public class Button extends GraphicalObject {

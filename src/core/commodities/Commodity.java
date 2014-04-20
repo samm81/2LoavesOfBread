@@ -1,12 +1,12 @@
 package core.commodities;
 
-import core.Transaction;
-import core.GUI.Ticker;
-
-import java.awt.*;
+import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import core.Transaction;
+import core.GUI.Ticker;
 
 /**
  * Abstract class representing every object that can be traded.
@@ -19,19 +19,19 @@ public enum Commodity {
     Oxen(Color.RED),
     Watermelon(Color.GREEN);
 
-    LinkedList<Transaction> transactions; // every transaction that has occurred involving this commodity
+    LinkedBlockingQueue<Transaction> transactions; // every transaction that has occurred involving this commodity
     HashMap<String, Ticker> tickers; // the tickers for the objects it trades for
     HashMap<String, Double> mostRecentRatios; // the most recent trade ratio for each other commodity
     Color color; // the commodity's color
 
     private Commodity(Color color) {
-        this.transactions = new LinkedList<>();
+        this.transactions = new LinkedBlockingQueue<>();
         this.tickers = new HashMap<>();
         this.mostRecentRatios = new HashMap<>();
         this.color = color;
     }
 
-    public LinkedList<Transaction> getTransactions() {
+    public LinkedBlockingQueue<Transaction> getTransactions() {
         return this.transactions;
     }
 
@@ -54,11 +54,10 @@ public enum Commodity {
     /**
      * Fills this commodities tickers with new tickers,
      * one for every commodity given (besides itself)
-     *
-     * @param commodities     the commodities to create tickers from
+     *  @param commodities     the commodities to create tickers from
      * @param tickerMagnitude the number of offers the ticker shows
      */
-    public void createTickersFromCommodities(LinkedList<Commodity> commodities, int tickerMagnitude) {
+    public void createTickersFromCommodities(java.util.List<Commodity> commodities, int tickerMagnitude) {
         for (Commodity commodity : commodities) {
             if (!commodity.name().equals(this.name())) {
                 this.tickers.put(commodity.name(), new Ticker(tickerMagnitude, 5, commodity.getColor()));

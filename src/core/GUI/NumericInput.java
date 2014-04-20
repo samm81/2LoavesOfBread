@@ -1,35 +1,27 @@
-/**
- * 
- */
 package core.GUI;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import static java.awt.Color.BLACK;
 import static java.awt.event.KeyEvent.VK_BACK_SPACE;
 
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
-public class TextInput extends GraphicalObject {
+public class NumericInput extends GraphicalObject {
 	
-	int inputChars;
-	String underscores = "";
+	private String underscores = "";
 	
-	int editingChar = 0;
-	char[] input;
+	private int editingChar = 0;
+	private char[] input;
 	
-	boolean focused = false;
+	private boolean focused = false;
 	
-	long time = 0;
-	long blink = 450;
-	boolean drawingCursor = true;
+	private long time = 0;
+	private long blink = 450;
+	private boolean drawingCursor = true;
 	
-	public TextInput(int x, int y, int width, int height, int inputChars, DoubleBufferedCanvas canvas) {
+	public NumericInput(int x, int y, int width, int height, int inputChars, DoubleBufferedCanvas canvas) {
 		super(x, y, width, height, canvas);
-		this.inputChars = inputChars;
 		input = new char[inputChars];
 		for(int i = 0; i < inputChars; i++) {
 			underscores += "_";
@@ -37,12 +29,27 @@ public class TextInput extends GraphicalObject {
 		}
 	}
 	
+	public boolean focused() {
+		return this.focused;
+	}
+	
 	public void setFocused(boolean focused) {
 		this.focused = focused;
 	}
 	
-	public String getInput() {
-		return String.valueOf(input);
+	public Integer getInput() {
+		Integer num = null;
+		try {
+			num = Integer.parseInt(String.valueOf(input[0]));
+		} catch(NumberFormatException e) {}
+		try {
+			num = Integer.parseInt(String.valueOf(input[1]));
+		} catch(NumberFormatException e) {}
+		try {
+			num = Integer.parseInt(String.valueOf(input));
+		} catch(NumberFormatException e) {}
+		
+		return num;
 	}
 	
 	@Override

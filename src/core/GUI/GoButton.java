@@ -4,7 +4,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
-import static java.awt.Color.*;
+import static java.awt.Color.BLACK;
+import static java.awt.Color.GREEN;
 
 /**
  * Class that holds the graphical representation of
