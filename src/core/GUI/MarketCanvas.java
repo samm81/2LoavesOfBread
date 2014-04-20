@@ -68,7 +68,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
         height = 600;
         x = this.getWidth() / 2 - width / 2;
         y = this.getHeight() / 2 - height / 2;
-        this.viewMarketPopup = new ViewMarketPopup(x, y, width, height, this);
+        this.viewMarketPopup = new ViewMarketPopup(x, y, width, height, sim.getOfferChannel(), this);
     }
 
     /**
