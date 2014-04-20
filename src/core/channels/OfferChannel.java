@@ -14,7 +14,10 @@ import core.commodities.Commodity;
 
 /**
  * 
- * {@link #OfferChannel(java.util.concurrent.LinkedBlockingQueue, java.util.HashSet, double)} - Basic Constructor for the thread. {@link #run()} - Calls tick, then yields to main thread {@link #tick()} - Every dt it gets all the new offers from the actors, and then tries to match them. {@link #isViable(core.Offer, core.Offer)} - Method That ensures that two offers are viable with one another.
+ * {@link #OfferChannel(java.util.concurrent.LinkedBlockingQueue, java.util.HashSet, double)} - Basic Constructor for the thread.
+ * {@link #run()} - Calls tick, then yields to main thread
+ * {@link #tick()} - Every dt it gets all the new offers from the actors, and then tries to match them.
+ * {@link #isViable(core.Offer, core.Offer)} - Method That ensures that two offers are viable with one another.
  * 
  * @author Brian Oluwo
  */
@@ -35,8 +38,8 @@ public class OfferChannel extends Thread {
 	}
 	
 	/**
-     *
-     */
+	 *
+	 */
 	@Override
 	public void run() {
 		while(!Thread.currentThread().isInterrupted()) {
@@ -92,7 +95,6 @@ public class OfferChannel extends Thread {
 					}
 					
 					offers.remove(j);
-					j--;
 					
 					//System.out.println("Matched offer " + first + " with " + second);
 					break;
