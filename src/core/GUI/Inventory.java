@@ -1,13 +1,17 @@
 package core.GUI;
 
-import core.actors.Player;
-import core.commodities.Commodity;
+import static java.awt.Color.BLACK;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 import java.util.List;
 
-import static java.awt.Color.BLACK;
+import core.Offer;
+import core.actors.Player;
+import core.commodities.Commodity;
 
 /**
  * Class to hold the graphical representation of the inventory:
@@ -48,7 +52,7 @@ public class Inventory extends GraphicalObject {
             String name = commodity.name();
             Integer volume = player.getVolumes().get(commodity);
             g.setFont(new Font("Sans Serif", Font.BOLD, 16));
-            g.setColor(BLACK);
+            g.setColor(commodity.getColor());
             g.drawString(volume + " " + name, commodityX, commodityY);
 
             commodityY += 25;
@@ -57,6 +61,27 @@ public class Inventory extends GraphicalObject {
                 commodityX += 100;
             }
         }
+        
+        int offerX = x + 480;
+        int offerY = y + 55;
+        
+        Offer offer = player.getBestOffer();
+        if(offer == null){
+        	g.setColor(Color.RED);
+        	g.drawString("no pending offer", offerX, offerY);
+        }else{
+        	g.setColor(Color.GREEN);
+        	offerX -= 40;
+        	offerY -= 20;
+        	g.drawString("      pending offer", offerX, offerY);
+        	offerY += 20;
+        	g.setColor(offer.getCommodity1().getColor());
+        	g.drawString("trade at most " + offer.getMaxTradeVolume() + " " + offer.getCommodity1(), offerX, offerY);
+        	offerY += 20;
+        	g.setColor(offer.getCommodity2().getColor());
+        	g.drawString("get at least  " + offer.getMinReceive() + " " + offer.getCommodity2(), offerX, offerY);
+        }
+        
     }
 
 }

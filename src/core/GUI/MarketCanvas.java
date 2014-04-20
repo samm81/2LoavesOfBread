@@ -170,7 +170,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
     			Commodity commodity2 = this.makeOfferPopup.getCommodity2();
     			if(volume1 != null && volume2 != null) {
     				Offer offer = new Offer(commodity1, commodity2, volume1, volume2, sim.getPlayer());
-                    System.out.println(offer);
+                    //System.out.println(offer);
                     this.sim.getPlayer().setBestOffer(offer);
     			}
     			this.message("ClearOverlays");
