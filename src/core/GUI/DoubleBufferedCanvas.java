@@ -14,7 +14,7 @@ import java.util.LinkedList;
  * @author Sam Maynard
  */
 @SuppressWarnings ("serial")
-abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
+abstract class DoubleBufferedCanvas extends Canvas implements Runnable, Listener {
 
     protected Thread thread;
 
@@ -245,8 +245,6 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
      * allows for the processing of mouse clicks and key presses
      */
     abstract protected void processInputs();
-
-    abstract public void message(String message);
 
     /**
      * Class for creating an FPS Counter

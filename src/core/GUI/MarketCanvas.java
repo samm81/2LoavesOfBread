@@ -40,10 +40,10 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 
     @Override
     void init() {
-        Key key = new Key(0, 0, this.getWidth(), 40, this, this.sim.getCommodities());
-        Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this, this.sim.getCommodities(), this.sim.getPlayer());
-        Button makeOfferButton = new Button(this.getWidth() - 250, this.getHeight() - 125, 220, 50, new Color(.31f, .84f, .92f), "MAKE OFFER", "MakeOfferOverlay", this);
-        Button viewMarketButton = new Button(this.getWidth() - 250, this.getHeight() - 70, 220, 50, new Color(.31f, .84f, .92f), "VIEW MARKET", "ViewMarketOverlay", this);
+        Key key = new Key(0, 0, this.getWidth(), 40, this.sim.getCommodities());
+        Inventory inventory = new Inventory(0, this.getHeight() - 150, this.getWidth(), 150, this.sim.getCommodities(), this.sim.getPlayer());
+        GenericButton makeOfferButton = new GenericButton(this.getWidth() - 250, this.getHeight() - 125, 220, 50, new Color(.31f, .84f, .92f), "MAKE OFFER", "MakeOfferOverlay", this);
+        GenericButton viewMarketButton = new GenericButton(this.getWidth() - 250, this.getHeight() - 70, 220, 50, new Color(.31f, .84f, .92f), "VIEW MARKET", "ViewMarketOverlay", this);
         addGraphicalObject(key);
         addGraphicalObject(inventory);
         addGraphicalObject(makeOfferButton);
@@ -68,7 +68,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
         height = 600;
         x = this.getWidth() / 2 - width / 2;
         y = this.getHeight() / 2 - height / 2;
-        this.viewMarketPopup = new ViewMarketPopup(x, y, width, height, sim.getOfferChannel(), this);
+        this.viewMarketPopup = new ViewMarketPopup(x, y, width, height, sim.getOfferChannel());
     }
 
     /**
@@ -105,7 +105,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
         for (Commodity commodity : commodities) {
             int x = (i % 2) * (this.getWidth() / 2 + 5);
             int y = 45 + (i / 2) * 203;
-            graphs.add(new Graph(x, y, graphWidth, graphHeight, this, commodity));
+            graphs.add(new Graph(x, y, graphWidth, graphHeight, commodity));
             i++;
         }
         return graphs;
@@ -151,41 +151,37 @@ public class MarketCanvas extends DoubleBufferedCanvas {
         }
     }
 
-    /**
-     * Receives messages from the GraphicalObjects
-     *
-     * @param message message from a GraphicalObject
-     */
-    public void message(String message) {
-        switch (message) {
-            case "MakeOfferOverlay":
-                addGraphicalObject(this.overlay);
-                addGraphicalObject(this.makeOfferPopup);
-                addGraphicalObject(this.goButton);
-                break;
-            case "OfferMade":
-            	Integer volume1 = this.makeOfferPopup.getVolume1();
-    			Integer volume2 = this.makeOfferPopup.getVolume2();
-    			Commodity commodity1 = this.makeOfferPopup.getCommodity1();
-    			Commodity commodity2 = this.makeOfferPopup.getCommodity2();
-    			if(volume1 != null && volume2 != null) {
-    				Offer offer = new Offer(commodity1, commodity2, volume1, volume2, sim.getPlayer());
-                    //System.out.println(offer);
-                    this.sim.getPlayer().setBestOffer(offer);
-    			}
-    			this.message("ClearOverlays");
-    			break;
-            case "ClearOverlays":
-            	removeGraphicalObject(this.overlay);
-                removeGraphicalObject(this.makeOfferPopup);
-                removeGraphicalObject(this.goButton);
-                removeGraphicalObject(this.viewMarketPopup);
-                break;
-            case "ViewMarketOverlay":
-            	addGraphicalObject(this.overlay);
-            	addGraphicalObject(this.viewMarketPopup);
-            	break;
-        }
-    }
+	@Override
+	public void hear(String message) {
+		 switch (message) {
+         case "MakeOfferOverlay":
+             addGraphicalObject(this.overlay);
+             addGraphicalObject(this.makeOfferPopup);
+             addGraphicalObject(this.goButton);
+             break;
+         case "OfferMade":
+         	Integer volume1 = this.makeOfferPopup.getVolume1();
+ 			Integer volume2 = this.makeOfferPopup.getVolume2();
+ 			Commodity commodity1 = this.makeOfferPopup.getCommodity1();
+ 			Commodity commodity2 = this.makeOfferPopup.getCommodity2();
+ 			if(volume1 != null && volume2 != null) {
+ 				Offer offer = new Offer(commodity1, commodity2, volume1, volume2, sim.getPlayer());
+                 //System.out.println(offer);
+                 this.sim.getPlayer().setBestOffer(offer);
+ 			}
+ 			this.hear("ClearOverlays");
+ 			break;
+         case "ClearOverlays":
+         	removeGraphicalObject(this.overlay);
+             removeGraphicalObject(this.makeOfferPopup);
+             removeGraphicalObject(this.goButton);
+             removeGraphicalObject(this.viewMarketPopup);
+             break;
+         case "ViewMarketOverlay":
+         	addGraphicalObject(this.overlay);
+         	addGraphicalObject(this.viewMarketPopup);
+         	break;
+     }
+	}
 
 }

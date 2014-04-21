@@ -8,10 +8,12 @@ import java.awt.geom.Rectangle2D;
 public class TransparencyOverlay extends GraphicalObject {
 
     Color color;
+    Listener listener;
 
     public TransparencyOverlay(DoubleBufferedCanvas canvas, Color color) {
-        super(0, 0, canvas.getWidth(), canvas.getHeight(), canvas);
+        super(0, 0, canvas.getWidth(), canvas.getHeight());
         this.color = color;
+        this.listener = canvas;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class TransparencyOverlay extends GraphicalObject {
     @Override
     public void clicked(MouseEvent e) {
         super.clicked(e);
-        this.canvas.message("ClearOverlays");
+        listener.hear("ClearOverlays");
     }
 
 }

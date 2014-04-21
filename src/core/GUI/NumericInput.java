@@ -20,8 +20,8 @@ public class NumericInput extends GraphicalObject {
 	private long blink = 450;
 	private boolean drawingCursor = true;
 	
-	public NumericInput(int x, int y, int width, int height, int inputChars, DoubleBufferedCanvas canvas) {
-		super(x, y, width, height, canvas);
+	public NumericInput(int x, int y, int width, int height, int inputChars) {
+		super(x, y, width, height);
 		input = new char[inputChars];
 		for(int i = 0; i < inputChars; i++) {
 			underscores += "_";
