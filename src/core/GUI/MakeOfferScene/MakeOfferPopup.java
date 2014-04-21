@@ -1,5 +1,7 @@
-package core.GUI;
+package core.GUI.MakeOfferScene;
 
+import core.GUI.GraphicalObject;
+import core.GUI.Listener;
 import core.commodities.Commodity;
 
 import java.awt.*;

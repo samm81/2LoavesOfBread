@@ -1,7 +1,7 @@
 package core.GUI;
 
 
-interface Listener {
+public interface Listener {
 	
 	/**
 	 * Method to allow graphical objects to communicate with each other

@@ -10,10 +10,10 @@ public class TransparencyOverlay extends GraphicalObject {
     Color color;
     Listener listener;
 
-    public TransparencyOverlay(DoubleBufferedCanvas canvas, Color color) {
-        super(0, 0, canvas.getWidth(), canvas.getHeight());
+    public TransparencyOverlay(int width, int height, Color color, Listener listener) {
+        super(0, 0, width, height);
         this.color = color;
-        this.listener = canvas;
+        this.listener = listener;
     }
 
     @Override

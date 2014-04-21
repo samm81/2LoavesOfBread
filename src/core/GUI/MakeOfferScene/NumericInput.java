@@ -1,9 +1,10 @@
-package core.GUI;
+package core.GUI.MakeOfferScene;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import core.GUI.GraphicalObject;
 import static java.awt.Color.BLACK;
 import static java.awt.event.KeyEvent.VK_BACK_SPACE;
 

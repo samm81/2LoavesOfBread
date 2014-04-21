@@ -1,5 +1,6 @@
-package core.GUI;
+package core.GUI.TickerScene;
 
+import core.GUI.GraphicalObject;
 import core.commodities.Commodity;
 
 import java.awt.*;

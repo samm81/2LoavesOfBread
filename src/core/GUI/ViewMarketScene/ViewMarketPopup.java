@@ -1,4 +1,4 @@
-package core.GUI;
+package core.GUI.ViewMarketScene;
 
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -6,6 +6,8 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.Collection;
 
 import core.Offer;
+import core.GUI.GraphicalObject;
+import core.GUI.OfferEntry;
 import core.channels.OfferChannel;
 
 public class ViewMarketPopup extends GraphicalObject {

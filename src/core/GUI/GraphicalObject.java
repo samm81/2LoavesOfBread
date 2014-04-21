@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 
 import static java.awt.Color.BLACK;
 
-abstract class GraphicalObject implements Clickable {
+public abstract class GraphicalObject implements Clickable {
 
     protected int x;
     protected int y;
@@ -74,15 +74,15 @@ abstract class GraphicalObject implements Clickable {
     }
 
     @Override
-    public void clicked(MouseEvent e) {
+    public void clicked(MouseEvent click) {
     }
 
     /**
      * Allows the GraphicalObject to manipulate keyboard input
      *
-     * @param e the KeyEvent of a key press
+     * @param keystroke the KeyEvent of a key press
      */
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent keystroke) {
     }
 
 }

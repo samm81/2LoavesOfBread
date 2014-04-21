@@ -6,12 +6,12 @@ import java.awt.Shape;
 import java.awt.event.MouseEvent;
 
 
-abstract class Button extends GraphicalObject {
+public abstract class Button extends GraphicalObject {
 	
-	Color backgroundColor;
-	String text;
-	String message;
-	Listener listener;
+	protected Color backgroundColor;
+	protected String text;
+	protected String message;
+	protected Listener listener;
 	
 	public Button(int x, int y, int width, int height, Color backgroundColor, String text, String message, Listener listener) {
 		super(x, y, width, height);

@@ -1,4 +1,4 @@
-package core.GUI;
+package core.GUI.TickerScene;
 
 import static java.awt.Color.BLACK;
 
@@ -8,6 +8,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
+
+import core.GUI.Button;
+import core.GUI.Listener;
 
 public class GenericButton extends Button {
 	
