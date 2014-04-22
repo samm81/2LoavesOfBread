@@ -72,7 +72,7 @@ public class OfferChannel extends Thread {
 			offersMap.put(actor, offer);
 		}
 		processOffers();
-        System.out.println("Tick Took: " + (System.currentTimeMillis() - startTime) + " ms");
+//        System.out.println("Tick Took: " + (System.currentTimeMillis() - startTime) + " ms");
 	}
 	
 	/**
