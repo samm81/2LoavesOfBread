@@ -155,6 +155,25 @@ public abstract class Actor {
 			}
 			row++;
 		}
+		thought();
+	}
+	
+	public void thought()
+	{
+		System.out.println(this);
+		System.out.println("Valuation:...");
+		for(int i = 0; i < inventoryVal.length; i++)
+		{
+			System.out.println("I own" + inventoryVal[i] + " of the" + commodities.get(i).name() + " commodity. ");
+		}
+		for(int i = 0; i < exchangeMatrix.length; i++)
+		{
+			System.out.print("\n\n I think that " + commodities.get(i).name() + " is worth ");
+			for(int j = 0; j < exchangeMatrix[i].length; j++)
+			{
+				System.out.print(exchangeMatrix[i][j] + " " + commodities.get(j).name() + " ");
+			}
+		}
 	}
 	
 	/**
