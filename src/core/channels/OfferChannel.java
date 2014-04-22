@@ -5,10 +5,7 @@ import core.Transaction;
 import core.actors.Actor;
 import core.commodities.Commodity;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -134,6 +131,30 @@ public class OfferChannel extends Thread {
 			return false;
         return !(first.getMinReceive() > second.getMaxTradeVolume() || (second.getMinReceive() > first.getMaxTradeVolume()));
 
+    }
+
+    public ArrayList<Offer> getPendingOffers(){
+        return Collections.list(Collections.enumeration(offersMap.values()));
+    }
+
+    public ArrayList<Offer> getPendingOffers(Commodity commodity){
+        ArrayList<Offer> offerArrayList = new ArrayList<>();
+        for (Map.Entry<Actor,Offer> entry : offersMap.entrySet()) {
+            Offer offer = entry.getValue();
+            if(offer.getCommodity1().equals(commodity))
+                offerArrayList.add(offer);
+        }
+        return offerArrayList;
+    }
+
+    public ArrayList<Offer> getPendingOffers(Commodity tradeAway, Commodity tradeFor){
+        ArrayList<Offer> offerArrayList = new ArrayList<>();
+        for (Map.Entry<Actor,Offer> entry : offersMap.entrySet()) {
+            Offer offer = entry.getValue();
+            if(offer.getCommodity1().equals(tradeAway) && offer.getCommodity2().equals(tradeFor))
+                offerArrayList.add(offer);
+        }
+        return offerArrayList;
     }
 	
 	/**
