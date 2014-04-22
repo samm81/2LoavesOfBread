@@ -15,8 +15,8 @@ public class Graph extends GraphicalObject {
 
     private Commodity commodity;
 
-    public Graph(int x, int y, int width, int height, DoubleBufferedCanvas canvas, Commodity commodity) {
-        super(x, y, width, height, canvas);
+    public Graph(int x, int y, int width, int height, Commodity commodity) {
+        super(x, y, width, height);
         this.commodity = commodity;
     }
 

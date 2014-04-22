@@ -1,5 +1,7 @@
-package core.GUI;
+package core.GUI.MakeOfferScene;
 
+import core.GUI.GraphicalObject;
+import core.GUI.Listener;
 import core.commodities.Commodity;
 
 import java.awt.*;
@@ -27,17 +29,19 @@ public class MakeOfferPopup extends GraphicalObject {
 	NumericInput input1;
 	NumericInput input2;
 	
-	public MakeOfferPopup(int x, int y, int width, int height, DoubleBufferedCanvas canvas, java.util.List<Commodity> commodities) {
-		super(x, y, width, height, canvas);
-		
+	Listener listener;
+	
+	public MakeOfferPopup(int x, int y, int width, int height, Listener listener, List<Commodity> commodities) {
+		super(x, y, width, height);
 		this.commodities = commodities;
+		this.listener = listener;
 		
 		int inputX = x + 37;
 		int inputY = y + 30;
-		input1 = new NumericInput(inputX, inputY, 37, 32, 2, canvas);
+		input1 = new NumericInput(inputX, inputY, 37, 32, 2);
 		input1.setFocused(true);
 		inputX += 55 + 200 + 50 + 70;
-		input2 = new NumericInput(inputX, inputY, 37, 32, 2, canvas);
+		input2 = new NumericInput(inputX, inputY, 37, 32, 2);
 		
 		int selectX = x + 85;
 		int selectY = y + 30;
@@ -47,9 +51,9 @@ public class MakeOfferPopup extends GraphicalObject {
 			options.add(commodity.name());
 			colors.add(commodity.getColor());
 		}
-		select1 = new SelectInput(selectX, selectY, 215, 32, canvas, options, colors);
+		select1 = new SelectInput(selectX, selectY, 215, 32, options, colors);
 		selectX += 200 + 50 + 70 + 55;
-		select2 = new SelectInput(selectX, selectY, 215, 32, canvas, options, colors);
+		select2 = new SelectInput(selectX, selectY, 215, 32, options, colors);
 	}
 	
 	public Integer getVolume1() {
@@ -128,7 +132,7 @@ public class MakeOfferPopup extends GraphicalObject {
 		}
 		
 		if(keyPress.getKeyCode() == KeyEvent.VK_ENTER) {
-			canvas.message("OfferMade");
+			listener.hear("OfferMade");
 		}
 		input1.keyPressed(keyPress);
 		input2.keyPressed(keyPress);

@@ -1,4 +1,4 @@
-package core.GUI;
+package core.GUI.TickerScene;
 
 import static java.awt.Color.BLACK;
 
@@ -10,6 +10,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.List;
 
 import core.Offer;
+import core.GUI.GraphicalObject;
 import core.actors.Player;
 import core.commodities.Commodity;
 
@@ -25,8 +26,8 @@ public class Inventory extends GraphicalObject {
     List<Commodity> commodities;
     Player player;
 
-    public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, java.util.List<Commodity> commodities, Player player) {
-        super(x, y, width, height, canvas);
+    public Inventory(int x, int y, int width, int height, List<Commodity> commodities, Player player) {
+        super(x, y, width, height);
         this.commodities = commodities;
         this.player = player;
     }

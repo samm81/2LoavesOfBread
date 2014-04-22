@@ -33,6 +33,10 @@ public class OfferChannel extends Thread {
 		this.offersMap = new HashMap<Actor, Offer>();
 	}
 	
+	public HashMap<Actor, Offer> getOffersMap() {
+		return this.offersMap;
+	}
+	
 	/**
 	 *
 	 */
@@ -75,20 +79,7 @@ public class OfferChannel extends Thread {
 			for(int j = i + 1; j < offers.size(); j++) {
 				Offer second = offers.get(j);
 				if(isViable(first, second)) {
-					Transaction t = new Transaction(first.getMinReceive(), first.getCommodity2(), second.getMinReceive(), first.getCommodity1(), first.getSender());
-					Transaction q = new Transaction(second.getMinReceive(), second.getCommodity2(), first.getMinReceive(), second.getCommodity1(), second.getSender());
-					
-					t.getSender().acceptTransaction(t);
-					q.getSender().acceptTransaction(q);
-					
-					t.getCommodity1().addTransaction(t);
-					t.getCommodity2().addTransaction(q);
-					try {
-						this.globalTransactions.put(t);
-						this.globalTransactions.put(q);
-					} catch(InterruptedException e) {
-						e.printStackTrace();
-					}
+					acceptOffers(first, second);
 					
 					offers.remove(j);
 					
@@ -96,6 +87,23 @@ public class OfferChannel extends Thread {
 					break;
 				}
 			}
+		}
+	}
+	
+	public void acceptOffers(Offer first, Offer second) {
+		Transaction t = new Transaction(first.getMinReceive(), first.getCommodity2(), second.getMinReceive(), first.getCommodity1());
+		Transaction q = new Transaction(second.getMinReceive(), second.getCommodity2(), first.getMinReceive(), second.getCommodity1());
+		
+		first.getSender().acceptTransaction(t);
+		second.getSender().acceptTransaction(q);
+		
+		t.getCommodity1().addTransaction(t);
+		t.getCommodity2().addTransaction(q);
+		try {
+			this.globalTransactions.put(t);
+			this.globalTransactions.put(q);
+		} catch(InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 	
