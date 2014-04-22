@@ -1,16 +1,12 @@
 package core.channels;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import core.Offer;
 import core.Transaction;
 import core.actors.Actor;
 import core.commodities.Commodity;
+
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 
@@ -118,7 +114,7 @@ public class OfferChannel extends Thread {
 			return false;
 		if(!first.getCommodity1().name().equals(second.getCommodity2().name()) || !first.getCommodity2().name().equals(second.getCommodity1().name()))
 			return false;
-		if(first.getMinReceive() > second.getMaxTradeVolume() || second.getMinReceive() > first.getMaxTradeVolume())
+		if(first.getMinReceive() > second.getMaxTradeVolume() || (second.getMinReceive() > first.getMaxTradeVolume()))
 			return false;
 		
 		return true;
