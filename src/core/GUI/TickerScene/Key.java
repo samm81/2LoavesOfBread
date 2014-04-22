@@ -1,5 +1,6 @@
-package core.GUI;
+package core.GUI.TickerScene;
 
+import core.GUI.GraphicalObject;
 import core.commodities.Commodity;
 
 import java.awt.*;
@@ -17,8 +18,8 @@ public class Key extends GraphicalObject {
 
     List<Commodity> commodities;
 
-    public Key(int x, int y, int width, int height, DoubleBufferedCanvas canvas, java.util.List<Commodity> commodities) {
-        super(x, y, width, height, canvas);
+    public Key(int x, int y, int width, int height, List<Commodity> commodities) {
+        super(x, y, width, height);
         this.commodities = commodities;
     }
 

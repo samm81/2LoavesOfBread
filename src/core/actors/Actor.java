@@ -1,13 +1,13 @@
 package core.actors;
 
+import core.Offer;
+import core.Transaction;
+import core.commodities.Commodity;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import core.Offer;
-import core.Transaction;
-import core.commodities.Commodity;
 
 /**
  * Abstract class the represents every player.
@@ -105,7 +105,7 @@ public abstract class Actor {
 		while(Math.floor(vol1 * exchangeMatrix[tradedAway][want]) < needMatrix.get(wantComm) && vol1 < this.volumes.get(commodities.get(tradedAway)))
 			vol1++;
 		int vol2 = (int) Math.ceil(vol1 * exchangeMatrix[tradedAway][want]);
-		bestOffer = new Offer(new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want), this), vol1);
+		bestOffer = new Offer(new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want)), this);
 		//       System.out.println("Best Offer: " + vol1 + " " + commodities.get(tradedAway).name() + " for " + vol2 + " " + commodities.get(want).name());
 		return bestOffer;
 	}
@@ -155,7 +155,7 @@ public abstract class Actor {
 			}
 			row++;
 		}
-		thought();
+		//thought();
 	}
 	
 	public void thought() {

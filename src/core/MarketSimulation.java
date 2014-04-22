@@ -26,14 +26,14 @@ public class MarketSimulation extends Simulation {
 	protected OfferChannel offerChannel;
 	private int playerStartVolumes = 50;
 	
-	public MarketSimulation(double dt, double offerDT) {
+	public MarketSimulation(double dt, double offerDT, int numActors) {
 		super(dt);
-		this.actors = new HashSet<>();
+		this.actors = new HashSet<>(numActors);
 		this.commodities = Collections.synchronizedList(new LinkedList<Commodity>());
 		this.transactions = new LinkedBlockingQueue<>();
 		
 		//Creates the transaction thread that evaluates offers, every offerDT.
-		offerChannel = new OfferChannel(getTransactions(), getActors(), offerDT);
+		offerChannel = new OfferChannel(getTransactions(), getActors(), offerDT,numActors);
 		offerChannel.setDaemon(true);
 	}
 	
@@ -47,6 +47,10 @@ public class MarketSimulation extends Simulation {
 	
 	public List<Commodity> getCommodities() {
 		return this.commodities;
+	}
+	
+	public OfferChannel getOfferChannel() {
+		return this.offerChannel;
 	}
 	
 	/**
@@ -74,7 +78,9 @@ public class MarketSimulation extends Simulation {
 	@Override
 	public void run() {
 		while(!Thread.currentThread().isInterrupted()) {
+
 			tick();
+
 			try {
 				Thread.yield();
 			} finally {
@@ -110,9 +116,11 @@ public class MarketSimulation extends Simulation {
 	protected void tick() {
 		//Do we want evaluation and update to be sequential or concurrent.
 		//Seems smarter to have them operate at same time so actors always have the most up to date info.
+        long startTime = System.currentTimeMillis();
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket();
 		}
+        System.out.println("EvalMarket Tick Took: " + (System.currentTimeMillis() - startTime) + " ms");
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : this.commodities) { // go through all the commodities
 			HashMap<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity

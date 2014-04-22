@@ -1,9 +1,10 @@
-package core.GUI;
+package core.GUI.MakeOfferScene;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
+import core.GUI.GraphicalObject;
 import static java.awt.Color.RED;
 
 
@@ -16,8 +17,8 @@ public class SelectInput extends GraphicalObject {
 	SelectionButton up;
 	SelectionButton down;
 	
-	public SelectInput(int x, int y, int width, int height, DoubleBufferedCanvas canvas, LinkedList<String> options, LinkedList<Color> colors) {
-		super(x, y, width, height, canvas);
+	public SelectInput(int x, int y, int width, int height, LinkedList<String> options, LinkedList<Color> colors) {
+		super(x, y, width, height);
 		this.options = options;
 		this.colors = colors;
 		this.selection = 0;

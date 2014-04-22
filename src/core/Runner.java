@@ -2,10 +2,12 @@ package core;
 
 import core.GUI.MarketCanvas;
 import core.actors.Farmer;
+import core.actors.Merchant;
 import core.commodities.Commodity;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 import static java.awt.Color.DARK_GRAY;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
@@ -18,9 +20,9 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
  */
 public class Runner {
 
-    static final double dt = 1d;
-    static final double offerDT = dt * 3;
-    static final int numActors = 100;
+    static final double dt = .01d;
+    static final double offerDT = dt;
+    static final int numActors = 400;
     static int tickerMagnitude = 30;
     static int width = 900;
     static int height = 700;
@@ -30,13 +32,18 @@ public class Runner {
      * @param args - Command Line Args
      */
     public static void main(String[] args) {
-        MarketSimulation sim = new MarketSimulation(dt, offerDT);
+        MarketSimulation sim = new MarketSimulation(dt, offerDT,numActors);
 
         for (Commodity item : Commodity.values())
             sim.addCommodity(item);
 
-        for (int i = 0; i < numActors; i++)
-            sim.addActor(new Farmer(sim.getCommodities(),sim.getTransactions()));
+        for (int i = 0; i < numActors; i++){
+        	Random r = new Random();
+        	if(r.nextBoolean())
+        		sim.addActor(new Farmer(sim.getCommodities(), sim.getTransactions()));
+        	else
+        		sim.addActor(new Merchant(sim.getCommodities(), sim.getTransactions()));
+        }
 
         sim.createTickers(tickerMagnitude); // required
         MarketCanvas canvas = new MarketCanvas(60, sim);
@@ -58,7 +65,6 @@ public class Runner {
         f.add(canvas);
         f.setVisible(true);
         canvas.start();
-
         sim.start();
     }
 }
