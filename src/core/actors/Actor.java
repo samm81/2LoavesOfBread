@@ -1,13 +1,13 @@
 package core.actors;
 
+import core.Offer;
+import core.Transaction;
+import core.commodities.Commodity;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import core.Offer;
-import core.Transaction;
-import core.commodities.Commodity;
 
 /**
  * Abstract class the represents every player.
@@ -155,7 +155,7 @@ public abstract class Actor {
 			}
 			row++;
 		}
-		thought();
+		//thought();
 	}
 	
 	public void thought() {

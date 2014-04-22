@@ -26,14 +26,14 @@ public class MarketSimulation extends Simulation {
 	protected OfferChannel offerChannel;
 	private int playerStartVolumes = 50;
 	
-	public MarketSimulation(double dt, double offerDT) {
+	public MarketSimulation(double dt, double offerDT, int numActors) {
 		super(dt);
-		this.actors = new HashSet<>();
+		this.actors = new HashSet<>(numActors);
 		this.commodities = Collections.synchronizedList(new LinkedList<Commodity>());
 		this.transactions = new LinkedBlockingQueue<>();
 		
 		//Creates the transaction thread that evaluates offers, every offerDT.
-		offerChannel = new OfferChannel(getTransactions(), getActors(), offerDT);
+		offerChannel = new OfferChannel(getTransactions(), getActors(), offerDT,numActors);
 		offerChannel.setDaemon(true);
 	}
 	

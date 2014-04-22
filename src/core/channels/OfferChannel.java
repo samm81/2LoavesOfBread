@@ -5,12 +5,15 @@ import core.Transaction;
 import core.actors.Actor;
 import core.commodities.Commodity;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 
- * {@link #OfferChannel(java.util.concurrent.LinkedBlockingQueue, java.util.HashSet, double)} - Basic Constructor for the thread.
+ * {@link #OfferChannel(java.util.concurrent.LinkedBlockingQueue, java.util.HashSet, double, int)} - Basic Constructor for the thread.
  * {@link #run()} - Calls tick, then yields to main thread
  * {@link #tick()} - Every dt it gets all the new offers from the actors, and then tries to match them.
  * {@link #isViable(core.Offer, core.Offer)} - Method That ensures that two offers are viable with one another.
@@ -24,13 +27,15 @@ public class OfferChannel extends Thread {
 	protected LinkedBlockingQueue<Transaction> globalTransactions;
 	protected HashMap<Actor, Offer> offersMap;
 	private double dt;
-	
-	public OfferChannel(LinkedBlockingQueue<Transaction> globalTransactions, HashSet<Actor> actors, double dt) {
+	private Offer [] offers;
+	public OfferChannel(LinkedBlockingQueue<Transaction> globalTransactions, HashSet<Actor> actors, double dt, int numActors) {
 		this.globalTransactions = globalTransactions;
 		this.actors = actors;
 		this.dt = dt;
 		this.thread = new Thread(this);
 		this.offersMap = new HashMap<Actor, Offer>();
+        //FIXME: +1 Corresponds to the number of actors, should be passed in or some sort of call.
+        this.offers  = new Offer[numActors+1];
 	}
 	
 	public HashMap<Actor, Offer> getOffersMap() {
@@ -46,7 +51,8 @@ public class OfferChannel extends Thread {
 			tick();
 			try {
 				Thread.yield();
-			} finally {
+			}
+            finally {
 				try {
 					Thread.sleep((long) (this.dt * 1000));
 				} catch(InterruptedException e) {
@@ -60,29 +66,33 @@ public class OfferChannel extends Thread {
 	 * Run every dt to get the actor's best offers and then process them
 	 */
 	private void tick() {
+        long startTime = System.currentTimeMillis();
 		for(Actor actor : this.actors) {
 			Offer offer = actor.getBestOffer();
 			offersMap.put(actor, offer);
 		}
 		processOffers();
+        System.out.println("Tick Took: " + (System.currentTimeMillis() - startTime) + " ms");
 	}
 	
 	/**
 	 * Processes the offers in the queue
 	 */
 	private void processOffers() {
-		ArrayList<Offer> offers = Collections.list(Collections.enumeration(offersMap.values()));
-		Collections.shuffle(offers);
-		
-		for(int i = 0; i < offers.size(); i++) {
-			Offer first = offers.get(i);
-			for(int j = i + 1; j < offers.size(); j++) {
-				Offer second = offers.get(j);
+        int count = 0;
+        for (Map.Entry<Actor,Offer> entry : offersMap.entrySet()) {
+            offers[count] = entry.getValue();
+            count++;
+        }
+		//ArrayList<Offer> offers = Collections.list(Collections.enumeration(offersMap.values()));
+//		Collections.shuffle(offers);
+		for(int i = 0; i < offers.length; i++) {
+			Offer first = offers[i];
+			for(int j = i + 1; j < offers.length; j++) {
+				Offer second = offers[j];
 				if(isViable(first, second)) {
 					acceptOffers(first, second);
-					
-					offers.remove(j);
-					
+//					offers.remove(j);
 					//System.out.println("Matched offer " + first + " with " + second);
 					break;
 				}
@@ -122,11 +132,9 @@ public class OfferChannel extends Thread {
 			return false;
 		if(!first.getCommodity1().name().equals(second.getCommodity2().name()) || !first.getCommodity2().name().equals(second.getCommodity1().name()))
 			return false;
-		if(first.getMinReceive() > second.getMaxTradeVolume() || (second.getMinReceive() > first.getMaxTradeVolume()))
-			return false;
-		
-		return true;
-	}
+        return !(first.getMinReceive() > second.getMaxTradeVolume() || (second.getMinReceive() > first.getMaxTradeVolume()));
+
+    }
 	
 	/**
 	 * @param commodity - The commodity to be inquired about.

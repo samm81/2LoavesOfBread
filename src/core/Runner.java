@@ -1,17 +1,16 @@
 package core;
 
-import static java.awt.Color.DARK_GRAY;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-
-import java.awt.Toolkit;
-import java.util.Random;
-
-import javax.swing.JFrame;
-
 import core.GUI.MarketCanvas;
 import core.actors.Farmer;
 import core.actors.Merchant;
 import core.commodities.Commodity;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Random;
+
+import static java.awt.Color.DARK_GRAY;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
  * The runner for the game. Gets the frame, the canvas, and the
@@ -21,8 +20,8 @@ import core.commodities.Commodity;
  */
 public class Runner {
 
-    static final double dt = .05d;
-    static final double offerDT = .05;
+    static final double dt = .01d;
+    static final double offerDT = dt;
     static final int numActors = 400;
     static int tickerMagnitude = 30;
     static int width = 900;
@@ -33,7 +32,7 @@ public class Runner {
      * @param args - Command Line Args
      */
     public static void main(String[] args) {
-        MarketSimulation sim = new MarketSimulation(dt, offerDT);
+        MarketSimulation sim = new MarketSimulation(dt, offerDT,numActors);
 
         for (Commodity item : Commodity.values())
             sim.addCommodity(item);
@@ -66,7 +65,6 @@ public class Runner {
         f.add(canvas);
         f.setVisible(true);
         canvas.start();
-
         sim.start();
     }
 }
