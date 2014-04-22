@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import core.Offer;
 import core.Transaction;
+import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
 public class Player extends Actor {
@@ -35,7 +36,7 @@ public class Player extends Actor {
 	}
 	
 	@Override
-	public void evaluateMarket() {}
+	public void evaluateMarket(OfferChannel offerChannel) {}
 	
 	@Override
 	public boolean acceptTransaction(Transaction t) {

@@ -118,7 +118,7 @@ public class MarketSimulation extends Simulation {
 		//Seems smarter to have them operate at same time so actors always have the most up to date info.
         long startTime = System.currentTimeMillis();
 		for(Actor actor : this.actors) {
-			actor.evaluateMarket();
+			actor.evaluateMarket(offerChannel);
 		}
         System.out.println("EvalMarket Tick Took: " + (System.currentTimeMillis() - startTime) + " ms");
 		// updates the tickers with the most recent ratio

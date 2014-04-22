@@ -1,13 +1,14 @@
 package core.actors;
 
-import core.Offer;
-import core.Transaction;
-import core.commodities.Commodity;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import core.Offer;
+import core.Transaction;
+import core.channels.OfferChannel;
+import core.commodities.Commodity;
 
 /**
  * Abstract class the represents every player.
@@ -114,7 +115,7 @@ public abstract class Actor {
 	 * EvaluateMarket is how an actor will change the values in the market's exchange rates
 	 * for various goods. It represents the ability of people to recognize changing prices.
 	 */
-	public void evaluateMarket() {
+	public void evaluateMarket(OfferChannel offerChannel) {
 		int col;
 		int row = 0;
 		//change the exchange matrix.
@@ -124,9 +125,9 @@ public abstract class Actor {
 		double[] marketshare = new double[commodities.size()];
 		double totalComm = 0;
 		for(int i = 0; i < marketshare.length; i++) {
-			for(Transaction t : this.commodities.get(i).getTransactions()) {
-				marketshare[i] += t.getVolume1();
-				totalComm += t.getVolume1();
+			for(Offer o : offerChannel.getPendingOffers(commodities.get(i))) {
+				marketshare[i] += o.getMaxTradeVolume();
+				totalComm += o.getMaxTradeVolume();
 			}
 		}
 		for(int i = 0; i < marketshare.length; i++) {
