@@ -5,7 +5,11 @@ import core.Transaction;
 import core.actors.Actor;
 import core.commodities.Commodity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -22,7 +26,7 @@ public class OfferChannel extends Thread {
     public Thread thread;
     protected HashSet<Actor> actors;
     protected LinkedBlockingQueue<Transaction> globalTransactions;
-    protected HashMap<Actor, Offer> offersMap;
+    protected ConcurrentHashMap<Actor, Offer> offersMap;
     private double dt;
     private Offer[] offers;
 
@@ -31,12 +35,12 @@ public class OfferChannel extends Thread {
         this.actors = actors;
         this.dt = dt;
         this.thread = new Thread(this);
-        this.offersMap = new HashMap<Actor, Offer>();
+        this.offersMap = new ConcurrentHashMap<Actor, Offer>();
         //FIXME: +1 Corresponds to the number of actors, should be passed in or some sort of call.
         this.offers = new Offer[numActors + 1];
     }
 
-    public HashMap<Actor, Offer> getOffersMap() {
+    public ConcurrentHashMap<Actor, Offer> getOffersMap() {
         return this.offersMap;
     }
 
