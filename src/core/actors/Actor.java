@@ -62,7 +62,7 @@ public abstract class Actor {
 		
 	}
 	
-	public Actor() { }
+	public Actor() {}
 	
 	/**
 	 * Get Best Offer returns a transaction that the actor will submit based on
@@ -158,22 +158,24 @@ public abstract class Actor {
 		thought();
 	}
 	
-	public void thought()
-	{
-		System.out.println(this);
-		System.out.println("Valuation:...");
-		for(int i = 0; i < inventoryVal.length; i++)
-		{
-			System.out.println("I own" + inventoryVal[i] + " of the" + commodities.get(i).name() + " commodity. ");
+	public void thought() {
+		System.out.println(this + " reporting for duty");
+		System.out.println("Status:");
+		for(Commodity commodity : commodities){
+			System.out.println("I have " + volumes.get(commodity) + " " + commodity.name());
 		}
-		for(int i = 0; i < exchangeMatrix.length; i++)
-		{
-			System.out.print("\n\n I think that " + commodities.get(i).name() + " is worth ");
-			for(int j = 0; j < exchangeMatrix[i].length; j++)
-			{
-				System.out.print(exchangeMatrix[i][j] + " " + commodities.get(j).name() + " ");
+		System.out.println("Valuation:");
+		for(int i = 0; i < inventoryVal.length; i++) {
+			System.out.println("I think my inventory is worth " + inventoryVal[i] + " " + commodities.get(i).name());
+		}
+		for(int i = 0; i < exchangeMatrix.length; i++) {
+			System.out.print("I think that 1 " + commodities.get(i).name() + " is worth...  ");
+			for(int j = 0; j < exchangeMatrix[i].length; j++) {
+				System.out.format("%.2f %s   ", exchangeMatrix[i][j], commodities.get(j).name());
 			}
+			System.out.println();
 		}
+		System.out.println();
 	}
 	
 	/**
