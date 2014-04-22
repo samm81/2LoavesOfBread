@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
 
+import core.Transaction;
 import core.GUI.Listener;
 import core.GUI.Scene;
 import core.GUI.TransparencyOverlay;
@@ -13,6 +14,7 @@ import core.commodities.Commodity;
 public class MakeOfferScene extends Scene implements Listener {
 	
 	TickerScene tickerScene;
+	MakeOfferPopup makeOfferPopup;
 	
 	public MakeOfferScene(int width, int height, List<Commodity> commodities, TickerScene tickerScene, Listener listener) {
 		super(listener);
@@ -30,6 +32,19 @@ public class MakeOfferScene extends Scene implements Listener {
 		graphicalObjects.add(transparencyOverlay);
 		graphicalObjects.add(makeOfferPopup);
 		graphicalObjects.add(goButton);
+		
+		this.makeOfferPopup = makeOfferPopup;
+	}
+	
+	public Transaction getSubmittedTransaction() {
+		Commodity commodity1 = makeOfferPopup.getCommodity1();
+		Commodity commodity2 = makeOfferPopup.getCommodity2();
+		Integer volume1 = makeOfferPopup.getVolume1();
+		Integer volume2 = makeOfferPopup.getVolume2();
+		if(volume1 == null || volume2 == null)
+			return null;
+		
+		return new Transaction(volume1, commodity1, volume2, commodity2);
 	}
 	
 	@Override

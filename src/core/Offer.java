@@ -24,12 +24,12 @@ public class Offer {
 		this.sender = sender;
 	}
 	
-	public Offer(Transaction t, int maxTradeVolume) {
+	public Offer(Transaction t, Actor sender) {
 		this.commodity1 = t.getCommodity1();
 		this.commodity2 = t.getCommodity2();
+		this.maxTradeVolume = t.getVolume1();
 		this.minReceive = t.getVolume2();
-		this.sender = t.getSender();
-		this.maxTradeVolume = maxTradeVolume;
+		this.sender = sender;
 	}
 	
 	public Commodity getCommodity1() {

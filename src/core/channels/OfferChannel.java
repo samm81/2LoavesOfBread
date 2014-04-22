@@ -95,11 +95,11 @@ public class OfferChannel extends Thread {
 	}
 	
 	public void acceptOffers(Offer first, Offer second) {
-		Transaction t = new Transaction(first.getMinReceive(), first.getCommodity2(), second.getMinReceive(), first.getCommodity1(), first.getSender());
-		Transaction q = new Transaction(second.getMinReceive(), second.getCommodity2(), first.getMinReceive(), second.getCommodity1(), second.getSender());
+		Transaction t = new Transaction(first.getMinReceive(), first.getCommodity2(), second.getMinReceive(), first.getCommodity1());
+		Transaction q = new Transaction(second.getMinReceive(), second.getCommodity2(), first.getMinReceive(), second.getCommodity1());
 		
-		t.getSender().acceptTransaction(t);
-		q.getSender().acceptTransaction(q);
+		first.getSender().acceptTransaction(t);
+		second.getSender().acceptTransaction(q);
 		
 		t.getCommodity1().addTransaction(t);
 		t.getCommodity2().addTransaction(q);
