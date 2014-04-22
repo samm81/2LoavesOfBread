@@ -14,8 +14,8 @@ public class ViewMarketScene extends Scene implements Listener {
 	
 	TickerScene tickerScene;
 	
-	public ViewMarketScene(int width, int height, OfferChannel offerChannel, TickerScene tickerScene) {
-		super();
+	public ViewMarketScene(int width, int height, OfferChannel offerChannel, TickerScene tickerScene, Listener listener) {
+		super(listener);
 		this.tickerScene = tickerScene;
 		
 		TransparencyOverlay transparencyOverlay = new TransparencyOverlay(width, height, new Color(1f, 1f, 1f, .6f), this);
@@ -38,8 +38,13 @@ public class ViewMarketScene extends Scene implements Listener {
 	
 	@Override
 	public void hear(String message) {
-		// TODO Auto-generated method stub
-		
+		switch(message) {
+		case "ClearOverlay":
+			listener.hear("TickerScene");
+			break;
+		default:
+			listener.hear(message);
+		}
 	}
 	
 }

@@ -30,7 +30,7 @@ public class TransparencyOverlay extends GraphicalObject {
     @Override
     public void clicked(MouseEvent e) {
         super.clicked(e);
-        listener.hear("ClearOverlays");
+        listener.hear("ClearOverlay");
     }
 
 }

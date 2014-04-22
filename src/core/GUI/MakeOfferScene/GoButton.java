@@ -1,4 +1,4 @@
-package core.GUI.TickerScene;
+package core.GUI.MakeOfferScene;
 
 import static java.awt.Color.BLACK;
 
@@ -37,7 +37,7 @@ public class GoButton extends Button {
 
         g.setFont(new Font("Sans Serif", Font.BOLD, 40));
         g.setColor(BLACK);
-        g.drawString(message, textX, textY);
+        g.drawString(text, textX, textY);
     }
 
 }

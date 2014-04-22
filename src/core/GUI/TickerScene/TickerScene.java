@@ -12,13 +12,13 @@ import core.commodities.Commodity;
 
 public class TickerScene extends Scene implements Listener {
 	
-	public TickerScene(int width, int height, List<Commodity> list, Player player) {
-		super();
+	public TickerScene(int width, int height, List<Commodity> list, Player player, Listener listener) {
+		super(listener);
 		
 		Key key = new Key(0, 0, width, 40, list);
 		Inventory inventory = new Inventory(0, height - 150, width, 150, list, player);
-		GenericButton makeOfferButton = new GenericButton(width - 250, height - 125, 220, 50, new Color(.31f, .84f, .92f), "MAKE OFFER", "MakeOfferOverlay", this);
-		GenericButton viewMarketButton = new GenericButton(width - 250, height - 70, 220, 50, new Color(.31f, .84f, .92f), "VIEW MARKET", "ViewMarketOverlay", this);
+		GenericButton makeOfferButton = new GenericButton(width - 250, height - 125, 220, 50, new Color(.31f, .84f, .92f), "MAKE OFFER", "MakeOffer", this);
+		GenericButton viewMarketButton = new GenericButton(width - 250, height - 70, 220, 50, new Color(.31f, .84f, .92f), "VIEW MARKET", "ViewMarket", this);
 		
 		LinkedList<Graph> graphs = createGraphs(width, list, 200);
 		
@@ -55,8 +55,7 @@ public class TickerScene extends Scene implements Listener {
 	
 	@Override
 	public void hear(String message) {
-		// TODO Auto-generated method stub
-		
+		listener.hear(message);
 	}
 	
 }

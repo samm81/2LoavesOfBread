@@ -8,9 +8,11 @@ import java.util.LinkedList;
 public abstract class Scene {
 	
 	protected LinkedList<GraphicalObject> graphicalObjects;
+	protected Listener listener;
 	
-	public Scene() {
+	public Scene(Listener listener) {
 		this.graphicalObjects = new LinkedList<GraphicalObject>();
+		this.listener = listener;
 	}
 	
 	public void drawSelf(Graphics2D g) {
