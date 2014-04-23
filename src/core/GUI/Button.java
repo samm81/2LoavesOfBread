@@ -12,6 +12,9 @@ public abstract class Button extends GraphicalObject {
 	protected String text;
 	protected String message;
 	protected Listener listener;
+
+	private Color backgroundColorClickable;
+	private Color backgroundColorUnclickable;
 	
 	public Button(int x, int y, int width, int height, Color backgroundColor, String text, String message, Listener listener) {
 		super(x, y, width, height);
@@ -19,6 +22,17 @@ public abstract class Button extends GraphicalObject {
 		this.text = text;
 		this.message = message;
 		this.listener = listener;
+		
+		this.backgroundColorClickable = backgroundColor;
+		this.backgroundColorUnclickable = backgroundColor.darker().darker();
+	}
+	
+	
+	public void setClickable(boolean clickable) {
+		if(clickable)
+			this.backgroundColor = backgroundColorClickable;
+		else
+			this.backgroundColor = backgroundColorUnclickable;
 	}
 
 	@Override

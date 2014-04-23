@@ -63,7 +63,7 @@ public class Inventory extends GraphicalObject {
             }
         }
         
-        int offerX = x + 480;
+        int offerX = x + 450;
         int offerY = y + 55;
         
         Offer offer = player.getBestOffer();

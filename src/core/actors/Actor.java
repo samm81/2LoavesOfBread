@@ -155,7 +155,7 @@ public abstract class Actor {
 			}
 			row++;
 		}
-		thought();
+		//thought();
 	}
 	
 	public void thought() {
