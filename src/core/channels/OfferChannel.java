@@ -70,6 +70,8 @@ public class OfferChannel extends Thread {
         long startTime = System.currentTimeMillis();
         for (Actor actor : this.actors) {
             Offer offer = actor.getBestOffer();
+            if(offer == null)
+                offer = new Offer(Commodity.Bread,Commodity.Bread,1,1,actor);
             offersMap.put(actor, offer);
         }
         processOffers();
