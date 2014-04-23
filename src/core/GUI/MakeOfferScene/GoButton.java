@@ -21,6 +21,7 @@ public class GoButton extends Button {
 
 	public GoButton(int x, int y, int width, int height, Listener listener) {
 		super(x, y, width, height, Color.GREEN, "GO", "OfferMade", listener);
+		this.setClickable(false);
 	}
 
     @Override

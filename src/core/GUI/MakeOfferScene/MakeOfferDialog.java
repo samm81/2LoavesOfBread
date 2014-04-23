@@ -19,7 +19,7 @@ import static java.awt.Color.BLACK;
  * 
  * @author Sam Maynard
  */
-public class MakeOfferPopup extends GraphicalObject {
+public class MakeOfferDialog extends GraphicalObject {
 	
 	List<Commodity> commodities;
 	
@@ -31,7 +31,7 @@ public class MakeOfferPopup extends GraphicalObject {
 	
 	Listener listener;
 	
-	public MakeOfferPopup(int x, int y, int width, int height, Listener listener, List<Commodity> commodities) {
+	public MakeOfferDialog(int x, int y, int width, int height, Listener listener, List<Commodity> commodities) {
 		super(x, y, width, height);
 		this.commodities = commodities;
 		this.listener = listener;

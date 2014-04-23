@@ -14,7 +14,8 @@ import core.commodities.Commodity;
 public class MakeOfferScene extends Scene implements Listener {
 	
 	TickerScene tickerScene;
-	MakeOfferPopup makeOfferPopup;
+	MakeOfferDialog makeOfferPopup;
+	GoButton goButton;
 	
 	public MakeOfferScene(int width, int height, List<Commodity> commodities, TickerScene tickerScene, Listener listener) {
 		super(listener);
@@ -26,7 +27,7 @@ public class MakeOfferScene extends Scene implements Listener {
 		int h = 100;
 		int x = width / 2 - w / 2;
 		int y = height / 2 - h / 2;
-		MakeOfferPopup makeOfferPopup = new MakeOfferPopup(x, y, w, h, this, commodities);
+		MakeOfferDialog makeOfferPopup = new MakeOfferDialog(x, y, w, h, this, commodities);
 		GoButton goButton = new GoButton(x + w - 95, y + 25, 75, 50, this);
 		
 		graphicalObjects.add(transparencyOverlay);
@@ -34,6 +35,7 @@ public class MakeOfferScene extends Scene implements Listener {
 		graphicalObjects.add(goButton);
 		
 		this.makeOfferPopup = makeOfferPopup;
+		this.goButton = goButton;
 	}
 	
 	public Transaction getSubmittedTransaction() {
@@ -50,6 +52,10 @@ public class MakeOfferScene extends Scene implements Listener {
 	@Override
 	public void drawSelf(Graphics2D g) {
 		tickerScene.drawSelf(g);
+		if(getSubmittedTransaction() != null)
+			goButton.setClickable(true);
+		else
+			goButton.setClickable(false);
 		super.drawSelf(g);
 	}
 	
