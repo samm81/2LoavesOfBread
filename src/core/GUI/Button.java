@@ -44,7 +44,7 @@ public abstract class Button extends GraphicalObject {
 	@Override
 	public void clicked(MouseEvent click) {
 		super.clicked(click);
-		listener.hear(message);
+		listener.hear(message, this);
 	}
 	
 }

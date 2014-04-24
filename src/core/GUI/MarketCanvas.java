@@ -48,7 +48,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		int height = this.getHeight();
 		tickerScene = new TickerScene(width, height, sim.getCommodities(), sim.getPlayer(), this);
 		makeOfferScene = new MakeOfferScene(width, height, sim.getCommodities(), tickerScene, this);
-		viewMarketScene = new ViewMarketScene(width, height, sim.getOfferChannel(), tickerScene, this);
+		viewMarketScene = new ViewMarketScene(width, height, sim.getOfferChannel(), sim.getPlayer(), tickerScene, this);
 		
 		scenes.add(tickerScene);
 		scenes.add(makeOfferScene);
@@ -84,7 +84,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	}
 	
 	@Override
-	public void hear(String message) {
+	public void hear(String message, Object sender) {
 		switch(message) {
 		case "TickerScene":
 			setSelectedScene(tickerScene);
@@ -100,7 +100,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			if(submittedTransaction != null){
 				Offer offer = new Offer(submittedTransaction, sim.getPlayer());
 				sim.getPlayer().setBestOffer(offer);
-				this.hear("TickerScene");
+				this.hear("TickerScene", this);
 			}
 			break;
 		default:
@@ -108,5 +108,5 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			break;
 		}
 	}
-	
+
 }

@@ -4,19 +4,30 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 import core.Offer;
 import core.GUI.GraphicalObject;
+import core.GUI.Listener;
 import core.commodities.Commodity;
 
-public class OfferEntry extends GraphicalObject {
+public class OfferEntry extends GraphicalObject implements Listener {
 	
-	Offer offer;
+	private Offer offer;
+	private Listener listener;
+	private AcceptOfferButton acceptOfferButton;
 	
-	public OfferEntry(int x, int y, int width, int height, Offer offer) {
+	public OfferEntry(int x, int y, int width, int height, Offer offer, Listener listener) {
 		super(x, y, width, height);
 		this.offer = offer;
+		this.listener = listener;
+		
+		this.acceptOfferButton = new AcceptOfferButton(x + 550, y + 3, 75, height - 6, Color.GREEN, this);
+	}
+	
+	public Offer getOffer() {
+		return this.offer;
 	}
 	
 	@Override
@@ -45,6 +56,8 @@ public class OfferEntry extends GraphicalObject {
 		drawNum(volume2, offerX, offerY, g);
 		offerX += 50;
 		drawCommodity(commodity2, offerX, offerY, g);
+		
+		acceptOfferButton.drawSelf(g);
 	}
 	
 	private void drawNum(int num, int x, int y, Graphics2D g) {
@@ -63,6 +76,18 @@ public class OfferEntry extends GraphicalObject {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Sans Serif", Font.PLAIN, 26));
 		g.drawString(string, x, y);
+	}
+	
+	@Override
+	public void clicked(MouseEvent click) {
+		super.clicked(click);
+		if(acceptOfferButton.pointInBounds(click.getX(), click.getY()))
+			acceptOfferButton.clicked(click);
+	}
+	
+	@Override
+	public void hear(String message, Object sender) {
+		listener.hear(message, this);
 	}
 	
 }

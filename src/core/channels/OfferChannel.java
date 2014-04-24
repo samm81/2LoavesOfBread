@@ -1,16 +1,16 @@
 package core.channels;
 
-import core.Offer;
-import core.Transaction;
-import core.actors.Actor;
-import core.commodities.Commodity;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import core.Offer;
+import core.Transaction;
+import core.actors.Actor;
+import core.commodities.Commodity;
 
 /**
  * 
@@ -93,9 +93,6 @@ public class OfferChannel extends Thread {
 				if(isViable(first, second)) {
 					acceptOffers(first, second);
 					
-					offersMap.remove(first.getSender());
-					offersMap.remove(second.getSender());
-					
 					//					offers.remove(j);
 					//System.out.println("Matched offer " + first + " with " + second);
 					break;
@@ -119,6 +116,9 @@ public class OfferChannel extends Thread {
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		offersMap.remove(first.getSender());
+		offersMap.remove(second.getSender());
 	}
 	
 	/**
@@ -163,4 +163,5 @@ public class OfferChannel extends Thread {
 		}
 		return offerArrayList;
 	}
+	
 }

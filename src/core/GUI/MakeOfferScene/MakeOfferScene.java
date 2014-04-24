@@ -60,13 +60,13 @@ public class MakeOfferScene extends Scene implements Listener {
 	}
 	
 	@Override
-	public void hear(String message) {
+	public void hear(String message, Object sender) {
 		switch(message) {
 		case "ClearOverlay":
-			listener.hear("TickerScene");
+			listener.hear("TickerScene", this);
 			break;
 		default:
-			listener.hear(message);
+			listener.hear(message, this);
 		}
 	}
 	

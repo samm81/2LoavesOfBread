@@ -7,6 +7,7 @@ import core.GUI.Listener;
 import core.GUI.Scene;
 import core.GUI.TransparencyOverlay;
 import core.GUI.TickerScene.TickerScene;
+import core.actors.Player;
 import core.channels.OfferChannel;
 
 
@@ -14,7 +15,7 @@ public class ViewMarketScene extends Scene implements Listener {
 	
 	TickerScene tickerScene;
 	
-	public ViewMarketScene(int width, int height, OfferChannel offerChannel, TickerScene tickerScene, Listener listener) {
+	public ViewMarketScene(int width, int height, OfferChannel offerChannel, Player player, TickerScene tickerScene, Listener listener) {
 		super(listener);
 		this.tickerScene = tickerScene;
 		
@@ -24,7 +25,7 @@ public class ViewMarketScene extends Scene implements Listener {
         int h = 600;
         int x = width / 2 - w / 2;
         int y = height / 2 - h / 2;
-        ViewMarketPopup viewMarketPopup = new ViewMarketPopup(x, y, w, h, offerChannel);
+        ViewMarketPopup viewMarketPopup = new ViewMarketPopup(x, y, w, h, offerChannel, player, this);
         
         graphicalObjects.add(transparencyOverlay);
         graphicalObjects.add(viewMarketPopup);
@@ -37,13 +38,13 @@ public class ViewMarketScene extends Scene implements Listener {
 	}
 	
 	@Override
-	public void hear(String message) {
+	public void hear(String message, Object sender) {
 		switch(message) {
 		case "ClearOverlay":
-			listener.hear("TickerScene");
+			listener.hear("TickerScene", this);
 			break;
 		default:
-			listener.hear(message);
+			listener.hear(message, this);
 		}
 	}
 	

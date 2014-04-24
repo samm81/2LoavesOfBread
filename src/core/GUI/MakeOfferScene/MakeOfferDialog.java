@@ -132,7 +132,7 @@ public class MakeOfferDialog extends GraphicalObject {
 		}
 		
 		if(keyPress.getKeyCode() == KeyEvent.VK_ENTER) {
-			listener.hear("OfferMade");
+			listener.hear("OfferMade", this);
 		}
 		input1.keyPressed(keyPress);
 		input2.keyPressed(keyPress);

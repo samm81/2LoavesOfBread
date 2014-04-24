@@ -54,8 +54,8 @@ public class TickerScene extends Scene implements Listener {
 	}
 	
 	@Override
-	public void hear(String message) {
-		listener.hear(message);
+	public void hear(String message, Object sender) {
+		listener.hear(message, this);
 	}
 	
 }
