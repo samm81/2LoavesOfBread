@@ -116,11 +116,10 @@ public class MarketSimulation extends Simulation {
 	protected void tick() {
 		//Do we want evaluation and update to be sequential or concurrent.
 		//Seems smarter to have them operate at same time so actors always have the most up to date info.
-        long startTime = System.currentTimeMillis();
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket(offerChannel);
 		}
-        System.out.println("EvalMarket Tick Took: " + (System.currentTimeMillis() - startTime) + " ms");
+
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : this.commodities) { // go through all the commodities
 			HashMap<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity

@@ -1,4 +1,4 @@
-package core.GUI;
+package core.GUI.ViewMarketScene;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,6 +7,7 @@ import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 
 import core.Offer;
+import core.GUI.GraphicalObject;
 import core.commodities.Commodity;
 
 public class OfferEntry extends GraphicalObject {
@@ -36,13 +37,13 @@ public class OfferEntry extends GraphicalObject {
 		Commodity commodity2 = offer.getCommodity2();
 		
 		drawNum(volume1, offerX, offerY, g);
-		offerX += 40;
+		offerX += 50;
 		drawCommodity(commodity1, offerX, offerY, g);
 		offerX += 170;
 		drawString(" for ", offerX, offerY, g);
 		offerX += 70;
 		drawNum(volume2, offerX, offerY, g);
-		offerX += 40;
+		offerX += 50;
 		drawCommodity(commodity2, offerX, offerY, g);
 	}
 	
