@@ -38,7 +38,6 @@ public class AcceptOfferButton extends Button {
 	@Override
 	public void clicked(MouseEvent click) {
 		super.clicked(click);
-		System.out.println("ASDG");
 		listener.hear(message, this);
 	}
 	
