@@ -14,13 +14,16 @@ public class UpScrollButton extends Button {
 	public UpScrollButton(int x, int y, int width, int height, Color backgroundColor, Listener listener) {
 		super(x, y, width, height, backgroundColor, "", "ScrollUp", listener);
 		arrow = new Polygon();
-		int pointX = x + 3;
-		int pointY = y + height - 3;
+		
+		int size = width - 16;
+		
+		int pointX = x + (width - size) / 2;
+		int pointY = y + (height / 2) + (size / 2);
 		arrow.addPoint(pointX, pointY);
-		pointX = x + width - 3;
+		pointX += size;
 		arrow.addPoint(pointX, pointY);
 		pointX = x + (width / 2);
-		pointY = y + 3;
+		pointY -= size;
 		arrow.addPoint(pointX, pointY);
 	}
 	

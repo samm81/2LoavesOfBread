@@ -15,15 +15,15 @@ public class DownScrollButton extends Button {
 		super(x, y, width, height, backgroundColor, "", "ScrollDown", listener);
 		arrow = new Polygon();
 		
-		int offset = 10;
+		int size = width - 16;
 		
-		int pointX = x + offset;
-		int pointY = y + offset;
+		int pointX = x + (width - size) / 2;
+		int pointY = y + (height / 2) - (size / 2);
 		arrow.addPoint(pointX, pointY);
-		pointX = x + width - offset;
+		pointX += size;
 		arrow.addPoint(pointX, pointY);
 		pointX = x + (width / 2);
-		pointY = y + height - offset;
+		pointY += size;
 		arrow.addPoint(pointX, pointY);
 	}
 	

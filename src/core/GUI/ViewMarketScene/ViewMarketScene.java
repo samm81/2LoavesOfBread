@@ -17,6 +17,9 @@ public class ViewMarketScene extends Scene implements Listener {
 	
 	TickerScene tickerScene;
 	
+	UpScrollButton upScroll;
+	DownScrollButton downScroll;
+	
 	public ViewMarketScene(int width, int height, OfferChannel offerChannel, Player player, TickerScene tickerScene, Listener listener) {
 		super(listener);
 		this.tickerScene = tickerScene;
@@ -31,13 +34,14 @@ public class ViewMarketScene extends Scene implements Listener {
         ViewMarketPopup viewMarketPopup = new ViewMarketPopup(x, y, w, h, offerChannel, player, this);
         graphicalObjects.add(viewMarketPopup);
 
-        int scrollButtonX = x + w - 50;
-        int scrollButtonY = y + 10;
-        int scrollButtonHeight = 50;
+        int scrollButtonX = x + w - 60;
+        int scrollButtonY = y + 22;
+        int scrollButtonHeight = h/2 - 30;
         int scrollButtonWidth = 40;
-        UpScrollButton upScroll = new UpScrollButton(scrollButtonX, scrollButtonY, scrollButtonWidth, scrollButtonHeight, Color.WHITE, viewMarketPopup);
-        scrollButtonY = y + h - 60;
-        DownScrollButton downScroll = new DownScrollButton(scrollButtonX, scrollButtonY, scrollButtonWidth, scrollButtonHeight, Color.WHITE, viewMarketPopup);
+        upScroll = new UpScrollButton(scrollButtonX, scrollButtonY, scrollButtonWidth, scrollButtonHeight, Color.WHITE, viewMarketPopup);
+        scrollButtonY = y + h/2 + 12;
+        downScroll = new DownScrollButton(scrollButtonX, scrollButtonY, scrollButtonWidth, scrollButtonHeight, Color.WHITE, viewMarketPopup);
+        upScroll.setClickable(false);
         graphicalObjects.add(upScroll);
         graphicalObjects.add(downScroll);
 	}
@@ -54,8 +58,15 @@ public class ViewMarketScene extends Scene implements Listener {
 		case "ClearOverlay":
 			listener.hear("TickerScene", this);
 			break;
+		case "Topped":
+			upScroll.setClickable(false);
+			break;
+		case "Untopped":
+			upScroll.setClickable(true);
+			break;
 		default:
 			listener.hear(message, this);
+			break;
 		}
 	}
 	
