@@ -3,9 +3,11 @@ package core.GUI.ViewMarketScene;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import core.GUI.DownScrollButton;
 import core.GUI.Listener;
 import core.GUI.Scene;
 import core.GUI.TransparencyOverlay;
+import core.GUI.UpScrollButton;
 import core.GUI.TickerScene.TickerScene;
 import core.actors.Player;
 import core.channels.OfferChannel;
@@ -20,15 +22,24 @@ public class ViewMarketScene extends Scene implements Listener {
 		this.tickerScene = tickerScene;
 		
 		TransparencyOverlay transparencyOverlay = new TransparencyOverlay(width, height, new Color(1f, 1f, 1f, .6f), this);
+		graphicalObjects.add(transparencyOverlay);
 		
 		int w = 800;
         int h = 600;
         int x = width / 2 - w / 2;
         int y = height / 2 - h / 2;
         ViewMarketPopup viewMarketPopup = new ViewMarketPopup(x, y, w, h, offerChannel, player, this);
-        
-        graphicalObjects.add(transparencyOverlay);
         graphicalObjects.add(viewMarketPopup);
+
+        int scrollButtonX = x + w - 50;
+        int scrollButtonY = y + 10;
+        int scrollButtonHeight = 50;
+        int scrollButtonWidth = 40;
+        UpScrollButton upScroll = new UpScrollButton(scrollButtonX, scrollButtonY, scrollButtonWidth, scrollButtonHeight, Color.WHITE, viewMarketPopup);
+        scrollButtonY = y + h - 60;
+        DownScrollButton downScroll = new DownScrollButton(scrollButtonX, scrollButtonY, scrollButtonWidth, scrollButtonHeight, Color.WHITE, viewMarketPopup);
+        graphicalObjects.add(upScroll);
+        graphicalObjects.add(downScroll);
 	}
 
 	@Override
