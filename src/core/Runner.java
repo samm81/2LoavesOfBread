@@ -48,7 +48,7 @@ public class Runner {
 		
 		LinkedBlockingQueue<Transaction> transactions = new LinkedBlockingQueue<Transaction>();
 		
-		Player player = new Player(commodities, new int[] { 2, 0, 0, 0 });
+		Player player = new Player(commodities, new int[] { 2, 0, 0, 0, 0, 0 });
 		
 		HashSet<Actor> actors = new HashSet<Actor>();
 		for(int i = 0; i < numActors; i++) {
