@@ -22,19 +22,15 @@ public class MarketSimulation extends Simulation {
 	protected HashSet<Actor> actors;
 	protected List<Commodity> commodities;
 	protected LinkedBlockingQueue<Transaction> transactions;
-	
 	protected OfferChannel offerChannel;
-	private int playerStartVolumes = 50;
 	
-	public MarketSimulation(double dt, double offerDT, int numActors) {
+	public MarketSimulation(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, Player player, HashSet<Actor> actors, OfferChannel offerChannel, double dt) {
 		super(dt);
-		this.actors = new HashSet<>(numActors);
-		this.commodities = Collections.synchronizedList(new LinkedList<Commodity>());
-		this.transactions = new LinkedBlockingQueue<>();
-		
-		//Creates the transaction thread that evaluates offers, every offerDT.
-		offerChannel = new OfferChannel(getTransactions(), getActors(), offerDT,numActors);
-		offerChannel.setDaemon(true);
+		this.actors = actors;
+		this.commodities = commodities;
+		this.transactions = transactions;
+		this.player = player;
+		this.offerChannel = offerChannel;
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -49,38 +45,23 @@ public class MarketSimulation extends Simulation {
 		return this.commodities;
 	}
 	
-	public OfferChannel getOfferChannel() {
-		return this.offerChannel;
-	}
-	
-	/**
-	 * @param actor - Takes in an abstract Actor.
-	 */
-	public void addActor(Actor actor) {
-		assert actor != null : "Null Actor.";
-		this.actors.add(actor);
-	}
-	
 	public Player getPlayer() {
 		return this.player;
 	}
 	
-	public void addCommodity(Commodity commodity) {
-		this.commodities.add(commodity);
+	public OfferChannel getOfferChannel() {
+		return this.offerChannel;
 	}
 	
-	public void createTickers(int tickerMagnitude) {
-		for(Commodity commodity : this.commodities) {
-			commodity.createTickersFromCommodities(this.commodities, tickerMagnitude);
-		}
-	}
+	@Override
+	protected void initialize() {}
 	
 	@Override
 	public void run() {
 		while(!Thread.currentThread().isInterrupted()) {
-
+			
 			tick();
-
+			
 			try {
 				Thread.yield();
 			} finally {
@@ -91,18 +72,6 @@ public class MarketSimulation extends Simulation {
 				}
 			}
 		}
-	}
-	
-	@Override
-	protected void initialize() {
-		int[] playerStartingVolumes = new int[this.commodities.size()];
-		for(int i=0;i<playerStartingVolumes.length;i++)
-			playerStartingVolumes[i] = playerStartVolumes ;
-		this.player = new Player(this.commodities, playerStartingVolumes);
-		
-		actors.add(player);
-		
-		offerChannel.start();
 	}
 	
 	/**
@@ -119,7 +88,7 @@ public class MarketSimulation extends Simulation {
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket(offerChannel);
 		}
-
+		
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : this.commodities) { // go through all the commodities
 			HashMap<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
@@ -135,4 +104,5 @@ public class MarketSimulation extends Simulation {
 			}
 		}
 	}
+
 }
