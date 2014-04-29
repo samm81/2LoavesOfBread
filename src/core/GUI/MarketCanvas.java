@@ -46,7 +46,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		
 		int width = this.getWidth();
 		int height = this.getHeight();
-		tickerScene = new TickerScene(width, height, sim.getCommodities(), sim.getPlayer(), this);
+		tickerScene = new TickerScene(width, height, sim.getCommodities(), sim.getPlayer(), sim, this);
 		makeOfferScene = new MakeOfferScene(width, height, sim.getCommodities(), tickerScene, this);
 		viewMarketScene = new ViewMarketScene(width, height, sim.getOfferChannel(), sim.getPlayer(), tickerScene, this);
 		

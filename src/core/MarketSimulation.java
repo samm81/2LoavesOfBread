@@ -24,6 +24,9 @@ public class MarketSimulation extends Simulation {
 	protected LinkedBlockingQueue<Transaction> transactions;
 	protected OfferChannel offerChannel;
 	
+	protected Long time;
+	protected Long last;
+	
 	public MarketSimulation(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, Player player, HashSet<Actor> actors, OfferChannel offerChannel, double dt) {
 		super(dt);
 		this.actors = actors;
@@ -31,6 +34,7 @@ public class MarketSimulation extends Simulation {
 		this.transactions = transactions;
 		this.player = player;
 		this.offerChannel = offerChannel;
+		time = Long.valueOf(60 * 10 * 1000);
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -53,15 +57,23 @@ public class MarketSimulation extends Simulation {
 		return this.offerChannel;
 	}
 	
+	public Long getTime() {
+		return this.time;
+	}
+	
+	public Integer getTimeInSeconds() {
+		return Integer.valueOf((int) (this.time / 1000));
+	}
+	
 	@Override
-	protected void initialize() {}
+	protected void initialize() {
+		last = System.currentTimeMillis();
+	}
 	
 	@Override
 	public void run() {
 		while(!Thread.currentThread().isInterrupted()) {
-			
 			tick();
-			
 			try {
 				Thread.yield();
 			} finally {
@@ -83,6 +95,11 @@ public class MarketSimulation extends Simulation {
 	 */
 	@Override
 	protected void tick() {
+		
+		long now = System.currentTimeMillis();
+		time -= now - last;
+		last = now;
+		
 		//Do we want evaluation and update to be sequential or concurrent.
 		//Seems smarter to have them operate at same time so actors always have the most up to date info.
 		for(Actor actor : this.actors) {

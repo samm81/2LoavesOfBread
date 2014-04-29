@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
+import core.MarketSimulation;
 import core.GUI.Graph;
 import core.GUI.Listener;
 import core.GUI.Scene;
@@ -12,23 +13,26 @@ import core.commodities.Commodity;
 
 public class TickerScene extends Scene implements Listener {
 	
-	public TickerScene(int width, int height, List<Commodity> list, Player player, Listener listener) {
+	public TickerScene(int width, int height, List<Commodity> list, Player player, MarketSimulation sim, Listener listener) {
 		super(listener);
 		
 		Key key = new Key(0, 0, width, 40, list);
+		graphicalObjects.add(key);
+		
 		Inventory inventory = new Inventory(0, height - 150, width, 150, list, player);
+		graphicalObjects.add(inventory);
+		
 		GenericButton makeOfferButton = new GenericButton(width - 250, height - 125, 220, 50, new Color(.31f, .84f, .92f), "MAKE OFFER", "MakeOffer", this);
 		GenericButton viewMarketButton = new GenericButton(width - 250, height - 70, 220, 50, new Color(.31f, .84f, .92f), "VIEW MARKET", "ViewMarket", this);
-		
-		LinkedList<Graph> graphs = createGraphs(width, list, 200);
-		
-		graphicalObjects.add(key);
-		graphicalObjects.add(inventory);
 		graphicalObjects.add(makeOfferButton);
 		graphicalObjects.add(viewMarketButton);
+		
+		LinkedList<Graph> graphs = createGraphs(width, list, 200);
 		for(Graph graph : graphs)
 			graphicalObjects.add(graph);
 		
+		Timer timer = new Timer(width - 290, height - 205, 100, 50, sim);
+		graphicalObjects.add(timer);
 	}
 	
 	/**
