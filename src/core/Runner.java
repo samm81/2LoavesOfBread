@@ -27,7 +27,7 @@ import core.commodities.Commodity;
  */
 public class Runner {
 	
-	static final double dt = .1d;
+	static final double dt = 2d;
 	static final double offerDT = dt;
 	static final int numActors = 400;
 	static int tickerMagnitude = 30;
@@ -48,7 +48,7 @@ public class Runner {
 		
 		LinkedBlockingQueue<Transaction> transactions = new LinkedBlockingQueue<Transaction>();
 		
-		Player player = new Player(commodities, new int[] { 2, 0, 0, 0 /* , 0, 0 */});
+		Player player = new Player(commodities, new int[] { 2, 0, 0, 0 /* , 0, 0 */}, new int[] { 0, 0, 0, 10 });
 		
 		HashSet<Actor> actors = new HashSet<Actor>();
 		for(int i = 0; i < numActors; i++) {

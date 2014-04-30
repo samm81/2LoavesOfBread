@@ -11,10 +11,18 @@ import core.commodities.Commodity;
 public class Player extends Actor {
 	
 	Offer bestOffer;
+	ConcurrentHashMap<Commodity, Integer> goalVolumes;
 	
-	public Player(List<Commodity> commodities, int[] startingVolumes) {
+	public Player(List<Commodity> commodities, int[] startingVolumes, int[] goalVolumes) {
 		this.volumes = new ConcurrentHashMap<Commodity, Integer>(startingVolumes.length);
+		this.goalVolumes = new ConcurrentHashMap<Commodity, Integer>(goalVolumes.length);
 		int i = 0;
+		for(Commodity commodity : commodities) {
+			this.goalVolumes.put(commodity, goalVolumes[i]);
+			i++;
+		}
+		
+		i = 0;
 		for(Commodity commodity : commodities) {
 			this.volumes.put(commodity, startingVolumes[i]);
 			i++;
@@ -25,6 +33,9 @@ public class Player extends Actor {
 	public ConcurrentHashMap<Commodity, Integer> getVolumes() {
 		return this.volumes;
 	}
+	public ConcurrentHashMap<Commodity, Integer> getGoalVolumes() {
+		return this.goalVolumes;
+	}
 	
 	public void setBestOffer(Offer bestOffer) {
 		this.bestOffer = bestOffer;
@@ -34,6 +45,7 @@ public class Player extends Actor {
 	public Offer getBestOffer() {
 		return this.bestOffer;
 	}
+	
 	
 	@Override
 	public void evaluateMarket(OfferChannel offerChannel) {}
