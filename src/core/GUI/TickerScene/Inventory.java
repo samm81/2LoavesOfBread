@@ -1,4 +1,4 @@
-package core.GUI;
+package core.GUI.TickerScene;
 
 import static java.awt.Color.BLACK;
 
@@ -10,6 +10,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.List;
 
 import core.Offer;
+import core.GUI.GraphicalObject;
 import core.actors.Player;
 import core.commodities.Commodity;
 
@@ -25,8 +26,8 @@ public class Inventory extends GraphicalObject {
     List<Commodity> commodities;
     Player player;
 
-    public Inventory(int x, int y, int width, int height, DoubleBufferedCanvas canvas, java.util.List<Commodity> commodities, Player player) {
-        super(x, y, width, height, canvas);
+    public Inventory(int x, int y, int width, int height, List<Commodity> commodities, Player player) {
+        super(x, y, width, height);
         this.commodities = commodities;
         this.player = player;
     }
@@ -45,6 +46,12 @@ public class Inventory extends GraphicalObject {
         g.setFont(new Font("Sans Serif", Font.BOLD, 22));
         g.setColor(BLACK);
         g.drawString("Inventory:", titleX, titleY);
+        
+        titleX += 200;
+        g.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        g.setColor(BLACK);
+        g.drawString("Goals:", titleX, titleY);
+        titleX -= 200;
 
         int commodityX = titleX + 10;
         int commodityY = titleY + 25;
@@ -62,7 +69,22 @@ public class Inventory extends GraphicalObject {
             }
         }
         
-        int offerX = x + 480;
+        commodityX += 100;
+        for (Commodity commodity : this.commodities) {
+            String name = commodity.name();
+            Integer volume = player.getGoalVolumes().get(commodity);
+            g.setFont(new Font("Sans Serif", Font.BOLD, 16));
+            g.setColor(commodity.getColor());
+            g.drawString(volume + " " + name, commodityX, commodityY);
+
+            commodityY += 25;
+            if (commodityY > (this.y + this.height - 20)) {
+                commodityY = titleY + 25;
+                commodityX += 100;
+            }
+        }
+        
+        int offerX = x + 450;
         int offerY = y + 55;
         
         Offer offer = player.getBestOffer();

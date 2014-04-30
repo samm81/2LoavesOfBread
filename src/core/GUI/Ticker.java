@@ -5,7 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Ticker {
 	
-	final int baseMaxData = 10;
+	final int baseMaxData = 3;
 	final int radius = 4;
 	LinkedBlockingQueue<Double> datum;
 	double maxData;
@@ -68,7 +68,7 @@ public class Ticker {
 			if(data != 0) {
 				double dataY = y + height - ((double) height * (data / this.maxData));
 				g.fillOval((int) (dataX - this.radius / 2d), (int) (dataY - this.radius / 2d), this.radius, this.radius);
-				//g.fillRect((int) dataX - 1, (int) dataY, 2, (int) ((y + height) - dataY));
+				g.fillRect((int) dataX - 1, (int) dataY, 2, (int) ((y + height) - dataY));
 			}
 			
 			dataX += dx;

@@ -6,22 +6,20 @@ import java.awt.event.MouseEvent;
 
 import static java.awt.Color.BLACK;
 
-abstract class GraphicalObject implements Clickable {
+public abstract class GraphicalObject implements Clickable {
 
     protected int x;
     protected int y;
     protected int width;
     protected int height;
-    DoubleBufferedCanvas canvas;
     Shape shape;
 
-    public GraphicalObject(int x, int y, int width, int height, DoubleBufferedCanvas canvas) {
+    public GraphicalObject(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.shape = makeShape(x, y, width, height);
-        this.canvas = canvas;
     }
 
     /**
@@ -76,15 +74,15 @@ abstract class GraphicalObject implements Clickable {
     }
 
     @Override
-    public void clicked(MouseEvent e) {
+    public void clicked(MouseEvent click) {
     }
 
     /**
      * Allows the GraphicalObject to manipulate keyboard input
      *
-     * @param e the KeyEvent of a key press
+     * @param keystroke the KeyEvent of a key press
      */
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent keystroke) {
     }
 
 }

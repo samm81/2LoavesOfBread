@@ -14,7 +14,7 @@ import java.util.LinkedList;
  * @author Sam Maynard
  */
 @SuppressWarnings ("serial")
-abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
+public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, Listener {
 
     protected Thread thread;
 
@@ -24,7 +24,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
     protected int bufferHeight;
     protected Graphics bufferGraphics;
     protected HashMap<Integer, Boolean> keys = new HashMap<>();
-    protected LinkedList<KeyEvent> keyPresses = new LinkedList<>();
+    protected LinkedList<KeyEvent> keystrokes = new LinkedList<>();
     protected LinkedList<MouseEvent> mouseClicks = new LinkedList<>();
     private int pauseTime;
     private long lastTime;
@@ -70,7 +70,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
                 int key = e.getKeyCode();
                 keys.put(key, false);
 
-                keyPresses.add(e);
+                keystrokes.add(e);
             }
         });
         this.setFocusTraversalKeysEnabled(false);
@@ -118,7 +118,7 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
      * @return true if there are key presses waiting, false otherwise
      */
     public boolean keyPressesWaiting() {
-        return keyPresses.size() != 0;
+        return keystrokes.size() != 0;
     }
 
     /**
@@ -126,11 +126,11 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
      *
      * @return key press queue with all KeyEvents that have occured
      */
-    public LinkedList<KeyEvent> flushKeyPressQueue() {
+    public LinkedList<KeyEvent> flushKeystrokeQueue() {
         LinkedList<KeyEvent> keyPresses = new LinkedList<>();
-        for (KeyEvent keyPress : this.keyPresses)
+        for (KeyEvent keyPress : this.keystrokes)
             keyPresses.add(keyPress);
-        this.keyPresses.clear();
+        this.keystrokes.clear();
         return keyPresses;
     }
 
@@ -245,8 +245,6 @@ abstract class DoubleBufferedCanvas extends Canvas implements Runnable {
      * allows for the processing of mouse clicks and key presses
      */
     abstract protected void processInputs();
-
-    abstract public void message(String message);
 
     /**
      * Class for creating an FPS Counter

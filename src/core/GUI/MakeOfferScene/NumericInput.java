@@ -1,9 +1,10 @@
-package core.GUI;
+package core.GUI.MakeOfferScene;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import core.GUI.GraphicalObject;
 import static java.awt.Color.BLACK;
 import static java.awt.event.KeyEvent.VK_BACK_SPACE;
 
@@ -20,8 +21,8 @@ public class NumericInput extends GraphicalObject {
 	private long blink = 450;
 	private boolean drawingCursor = true;
 	
-	public NumericInput(int x, int y, int width, int height, int inputChars, DoubleBufferedCanvas canvas) {
-		super(x, y, width, height, canvas);
+	public NumericInput(int x, int y, int width, int height, int inputChars) {
+		super(x, y, width, height);
 		input = new char[inputChars];
 		for(int i = 0; i < inputChars; i++) {
 			underscores += "_";

@@ -7,6 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import core.Offer;
 import core.Transaction;
+import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
 /**
@@ -62,7 +63,7 @@ public abstract class Actor {
 		
 	}
 	
-	public Actor() { }
+	public Actor() {}
 	
 	/**
 	 * Get Best Offer returns a transaction that the actor will submit based on
@@ -105,7 +106,7 @@ public abstract class Actor {
 		while(Math.floor(vol1 * exchangeMatrix[tradedAway][want]) < needMatrix.get(wantComm) && vol1 < this.volumes.get(commodities.get(tradedAway)))
 			vol1++;
 		int vol2 = (int) Math.ceil(vol1 * exchangeMatrix[tradedAway][want]);
-		bestOffer = new Offer(new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want), this), vol1);
+		bestOffer = new Offer(new Transaction(vol1, this.commodities.get(tradedAway), vol2, this.commodities.get(want)), this);
 		//       System.out.println("Best Offer: " + vol1 + " " + commodities.get(tradedAway).name() + " for " + vol2 + " " + commodities.get(want).name());
 		return bestOffer;
 	}
@@ -114,7 +115,7 @@ public abstract class Actor {
 	 * EvaluateMarket is how an actor will change the values in the market's exchange rates
 	 * for various goods. It represents the ability of people to recognize changing prices.
 	 */
-	public void evaluateMarket() {
+	public void evaluateMarket(OfferChannel offerChannel) {
 		int col;
 		int row = 0;
 		//change the exchange matrix.
@@ -124,9 +125,9 @@ public abstract class Actor {
 		double[] marketshare = new double[commodities.size()];
 		double totalComm = 0;
 		for(int i = 0; i < marketshare.length; i++) {
-			for(Transaction t : this.commodities.get(i).getTransactions()) {
-				marketshare[i] += t.getVolume1();
-				totalComm += t.getVolume1();
+			for(Offer o : offerChannel.getPendingOffers(commodities.get(i))) {
+				marketshare[i] += o.getMaxTradeVolume();
+				totalComm += o.getMaxTradeVolume();
 			}
 		}
 		for(int i = 0; i < marketshare.length; i++) {
@@ -155,6 +156,27 @@ public abstract class Actor {
 			}
 			row++;
 		}
+		//thought();
+	}
+	
+	public void thought() {
+		System.out.println(this + " reporting for duty");
+		System.out.println("Status:");
+		for(Commodity commodity : commodities){
+			System.out.println("I have " + volumes.get(commodity) + " " + commodity.name());
+		}
+		System.out.println("Valuation:");
+		for(int i = 0; i < inventoryVal.length; i++) {
+			System.out.println("I think my inventory is worth " + inventoryVal[i] + " " + commodities.get(i).name());
+		}
+		for(int i = 0; i < exchangeMatrix.length; i++) {
+			System.out.print("I think that 1 " + commodities.get(i).name() + " is worth...  ");
+			for(int j = 0; j < exchangeMatrix[i].length; j++) {
+				System.out.format("%.2f %s   ", exchangeMatrix[i][j], commodities.get(j).name());
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 	
 	/**

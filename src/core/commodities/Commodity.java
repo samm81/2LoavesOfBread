@@ -17,7 +17,9 @@ public enum Commodity {
     Bread(Color.YELLOW.darker()),
     Fish(Color.BLUE),
     Oxen(Color.RED),
-    Watermelon(Color.GREEN);
+    Watermelon(Color.GREEN);//,
+    //Radish(Color.MAGENTA),
+    //Olive(Color.GREEN.darker().darker());
 
     LinkedBlockingQueue<Transaction> transactions; // every transaction that has occurred involving this commodity
     HashMap<String, Ticker> tickers; // the tickers for the objects it trades for
