@@ -52,6 +52,10 @@ public class Offer {
 		return minReceive;
 	}
 	
+	public Offer reverse(){
+		return new Offer(commodity2, commodity1, minReceive, maxTradeVolume, sender);
+	}
+	
 	@Override
 	public String toString() {
 		return this.sender + "wanting to trade at most " + this.maxTradeVolume + " " + this.commodity1 + " for at least " + this.minReceive + " " + this.commodity2;

@@ -37,7 +37,6 @@ public class AcceptOfferButton extends Button {
 	
 	@Override
 	public void clicked(MouseEvent click) {
-		super.clicked(click);
 		listener.hear(message, this);
 	}
 	
