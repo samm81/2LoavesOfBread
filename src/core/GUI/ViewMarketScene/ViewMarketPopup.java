@@ -81,9 +81,6 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		
 		Collection<Offer> offers = offerChannel.getOffersMap().values();
 		ArrayList<Offer> orderedOffers = Collections.list(Collections.enumeration(offers));
-		for(int i=0;i<orderedOffers.size();i++){
-			orderedOffers.set(i, orderedOffers.get(i).reverse());
-		}
 		Collections.sort(orderedOffers, comparator);
 		
 		int offerX = this.x + 20;

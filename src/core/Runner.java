@@ -13,7 +13,9 @@ import javax.swing.JFrame;
 
 import core.GUI.MarketCanvas;
 import core.actors.Actor;
+import core.actors.Baker;
 import core.actors.Farmer;
+import core.actors.Fisherman;
 import core.actors.Merchant;
 import core.actors.Player;
 import core.channels.OfferChannel;
@@ -48,15 +50,17 @@ public class Runner {
 		
 		LinkedBlockingQueue<Transaction> transactions = new LinkedBlockingQueue<Transaction>();
 		
-		Player player = new Player(commodities, new int[] { 2, 0, 0, 0 /* , 0, 0 */}, new int[] { 0, 0, 0, 10 });
+		Player player = new Player(commodities, new int[] { 2, 0, 0, 0 }, new int[] { 0, 0, 0, 10 });
 		
 		HashSet<Actor> actors = new HashSet<Actor>();
 		for(int i = 0; i < numActors; i++) {
 			Random r = new Random();
-			if(r.nextBoolean())
-				actors.add(new Farmer(commodities, transactions));
-			else
-				actors.add(new Merchant(commodities, transactions));
+			switch(r.nextInt(4)){
+			case 0: actors.add(new Baker(commodities, transactions)); break;
+			case 1: actors.add(new Farmer(commodities, transactions)); break;
+			case 2: actors.add(new Fisherman(commodities, transactions)); break;
+			case 3: actors.add(new Merchant(commodities, transactions)); break;
+			}
 		}
 		actors.add(player);
 		

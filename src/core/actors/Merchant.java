@@ -12,6 +12,6 @@ import core.commodities.Commodity;
 public class Merchant extends Actor {
 	
 	public Merchant(List<Commodity> list, LinkedBlockingQueue<Transaction> transactions) {
-		super(list, transactions, new int[] { 4, 4, 4, 4/*, 4, 4*/ }, new int[] { 10, 10, 10, 10/*, 10, 10*/ }, 0.25);
+		super(list, transactions, new int[] { 4, 4, 4, 4 }, new int[] { 20, 20, 20, 20 });
 	}
 }

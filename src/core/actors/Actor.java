@@ -26,8 +26,6 @@ public abstract class Actor {
 	protected ConcurrentHashMap<Commodity, Integer> volumes;
 	
 	private int[] initialValues;
-	@SuppressWarnings("unused")
-	private double risk;
 	protected Offer bestOffer;
 	
 	/**
@@ -36,7 +34,7 @@ public abstract class Actor {
 	 * @param startingVolumes
 	 * @param priorities
 	 */
-	public Actor(List<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, int[] startingVolumes, int[] priorities, double risk) {
+	public Actor(List<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, int[] startingVolumes, int[] priorities) {
 		this.volumes = new ConcurrentHashMap<Commodity, Integer>(startingVolumes.length);
 		this.exchangeMatrix = new double[startingVolumes.length][startingVolumes.length];
 		this.inventoryVal = new double[startingVolumes.length];
@@ -45,7 +43,6 @@ public abstract class Actor {
 		this.priorityMatrix = priorities;
 		this.commodities = commodities;
 		this.transactions = transactions;
-		this.risk = risk;
 		
 		//exchange matrix setup.
 		for(int row = 0; row < exchangeMatrix.length; row++) {
