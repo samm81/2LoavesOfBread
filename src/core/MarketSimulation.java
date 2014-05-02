@@ -6,7 +6,10 @@ import core.actors.Player;
 import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -34,7 +37,7 @@ public class MarketSimulation extends Simulation {
 		this.transactions = transactions;
 		this.player = player;
 		this.offerChannel = offerChannel;
-		time = Long.valueOf(60 * 10 * 1000);
+		time = (long) (60 * 10 * 1000);
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
@@ -62,7 +65,7 @@ public class MarketSimulation extends Simulation {
 	}
 	
 	public Integer getTimeInSeconds() {
-		return Integer.valueOf((int) (this.time / 1000));
+		return (int) (this.time / 1000);
 	}
 	
 	@Override

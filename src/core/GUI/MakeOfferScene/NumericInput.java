@@ -1,10 +1,11 @@
 package core.GUI.MakeOfferScene;
 
+import core.GUI.GraphicalObject;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import core.GUI.GraphicalObject;
 import static java.awt.Color.BLACK;
 import static java.awt.event.KeyEvent.VK_BACK_SPACE;
 
@@ -42,14 +43,9 @@ public class NumericInput extends GraphicalObject {
 		Integer num = null;
 		try {
 			num = Integer.parseInt(String.valueOf(input[0]));
-		} catch(NumberFormatException e) {}
-		try {
 			num = Integer.parseInt(String.valueOf(input[1]));
-		} catch(NumberFormatException e) {}
-		try {
 			num = Integer.parseInt(String.valueOf(input));
 		} catch(NumberFormatException e) {}
-		
 		return num;
 	}
 	
