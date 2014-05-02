@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 
 import core.GUI.GraphicalObject;
@@ -39,11 +38,6 @@ public class Title extends GraphicalObject {
 		
 		g.setColor(Color.BLUE);
 		g.drawString("TUTORIAL", 150, 250);
-	}
-	
-	@Override
-	public void clicked(MouseEvent click) {
-		listener.hear("Play", this);
 	}
 	
 }
