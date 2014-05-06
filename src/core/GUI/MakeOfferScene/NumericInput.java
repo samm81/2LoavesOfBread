@@ -43,7 +43,11 @@ public class NumericInput extends GraphicalObject {
 		Integer num = null;
 		try {
 			num = Integer.parseInt(String.valueOf(input[0]));
+		} catch(NumberFormatException e) {}
+		try {
 			num = Integer.parseInt(String.valueOf(input[1]));
+		} catch(NumberFormatException e) {}
+		try {
 			num = Integer.parseInt(String.valueOf(input));
 		} catch(NumberFormatException e) {}
 		return num;
