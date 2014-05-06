@@ -39,9 +39,9 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 			public int compare(Offer offer1, Offer offer2) {
 				int compare = offer1.getCommodity1().compareTo(offer2.getCommodity1());
 				if(compare == 0) {
-					compare = offer1.getCommodity2().compareTo(offer2.getCommodity2());
+					compare = Integer.compare(offer1.getMaxTradeVolume(), offer2.getMaxTradeVolume());
 					if(compare == 0) {
-						compare = Integer.compare(offer1.getMaxTradeVolume(), offer2.getMaxTradeVolume());
+						compare = offer1.getCommodity2().compareTo(offer2.getCommodity2());
 						if(compare == 0) {
 							compare = Integer.compare(offer1.getMinReceive(), offer2.getMinReceive());
 							return compare;
@@ -81,6 +81,9 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		
 		Collection<Offer> offers = offerChannel.getOffersMap().values();
 		ArrayList<Offer> orderedOffers = Collections.list(Collections.enumeration(offers));
+		for(int i = 0; i < orderedOffers.size(); i++) {
+			orderedOffers.set(i, orderedOffers.get(i).reverse());
+		}
 		Collections.sort(orderedOffers, comparator);
 		
 		int offerX = this.x + 20;
@@ -92,7 +95,12 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 			if(i < orderedOffers.size())
 				offer = orderedOffers.get(i);
 			if(offer != null) {
-				OfferEntry offerEntry = new OfferEntry(offerX, offerY, 700, 30, offer, this);
+				boolean acceptable = false;
+				Offer playerOffer = new Offer(offer.toTransaction(), player);
+				if(player.canMakeOffer(playerOffer))
+					acceptable = true;
+				
+				OfferEntry offerEntry = new OfferEntry(offerX, offerY, 700, 30, acceptable, offer, this);
 				offerEntry.drawSelf(g);
 				
 				offerEntries.add(offerEntry);
@@ -110,13 +118,16 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 				offerEntry.clicked(click);
 	}
 	
+	private Offer makePlayerOffer(Offer offer) {
+		return new Offer(offer.toTransaction().reverse(), player);
+	}
+	
 	@Override
 	public void hear(String message, Object sender) {
 		switch(message) {
 		case "AcceptOffer":
-			OfferEntry entry = (OfferEntry) sender;
-			Offer offer = entry.getOffer();
-			Offer playerOffer = new Offer(offer.getCommodity2(), offer.getCommodity1(), offer.getMinReceive(), offer.getMaxTradeVolume(), player);
+			Offer offer = ((OfferEntry) sender).getOffer();
+			Offer playerOffer = makePlayerOffer(offer);
 			offerChannel.acceptOffers(offer, playerOffer);
 			listener.hear("ClearOverlay", this);
 			break;

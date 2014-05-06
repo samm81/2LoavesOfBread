@@ -50,6 +50,22 @@ public class Player extends Actor {
 	@Override
 	public void evaluateMarket(OfferChannel offerChannel) {}
 	
+	public boolean canMakeOffer(Transaction transaction){
+		if(transaction == null)
+			return false;
+		Commodity commodity = transaction.getCommodity1();
+		int volume = transaction.getVolume1();
+		return volumes.get(commodity) >= volume;
+	}
+
+	public boolean canMakeOffer(Offer offer) {
+		if(offer == null || offer.getSender() != this)
+			return false;
+		Commodity commodity = offer.getCommodity1();
+		int volume = offer.getMaxTradeVolume();
+		return volumes.get(commodity) >= volume;
+	}
+	
 	@Override
 	public boolean acceptTransaction(Transaction t) {
 		//System.out.println("Player accepting transaction " + t);
@@ -58,5 +74,6 @@ public class Player extends Actor {
 		this.bestOffer = null;
 		return true;
 	}
+
 	
 }

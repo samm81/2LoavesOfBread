@@ -46,10 +46,10 @@ public class TickerScene extends Scene implements Listener {
 	private LinkedList<Graph> createGraphs(int width, List<Commodity> list, int graphHeight) {
 		LinkedList<Graph> graphs = new LinkedList<>();
 		
-		int graphWidth = width / 2 - 5;
+		int graphWidth = width / 2 - 2;
 		int i = 0;
 		for(Commodity commodity : list) {
-			int x = (i % 2) * (width / 2 + 5);
+			int x = (i % 2) * (width / 2 + 2);
 			int y = 45 + (i / 2) * 203;
 			graphs.add(new Graph(x, y, graphWidth, graphHeight, commodity));
 			i++;
