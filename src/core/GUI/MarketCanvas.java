@@ -7,8 +7,6 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
 import core.MarketSimulation;
-import core.Offer;
-import core.Transaction;
 import core.GUI.MakeOfferScene.MakeOfferScene;
 import core.GUI.TickerScene.TickerScene;
 import core.GUI.TitleScene.TitleScene;
@@ -50,7 +48,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		int height = this.getHeight();
 		titleScene = new TitleScene(width, height, this);
 		tickerScene = new TickerScene(width, height, sim.getCommodities(), sim.getPlayer(), sim, this);
-		makeOfferScene = new MakeOfferScene(width, height, sim.getCommodities(), tickerScene, this);
+		makeOfferScene = new MakeOfferScene(width, height, sim.getCommodities(), sim.getPlayer(), tickerScene, this);
 		viewMarketScene = new ViewMarketScene(width, height, sim.getOfferChannel(), sim.getPlayer(), tickerScene, this);
 		
 		scenes.add(titleScene);
@@ -98,14 +96,6 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			break;
 		case "ViewMarket":
 			setSelectedScene(viewMarketScene);
-			break;
-		case "OfferMade":
-			Transaction submittedTransaction = makeOfferScene.getSubmittedTransaction();
-			if(submittedTransaction != null){
-				Offer offer = new Offer(submittedTransaction, sim.getPlayer());
-				sim.getPlayer().setBestOffer(offer);
-				this.hear("TickerScene", this);
-			}
 			break;
 		default:
 			System.out.println(message);

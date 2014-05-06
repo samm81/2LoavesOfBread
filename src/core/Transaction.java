@@ -47,7 +47,7 @@ public class Transaction {
         return ((double)this.volume2 / (double)this.volume1);
     }
 
-    public Transaction getReversedTransaction() {
+    public Transaction reverse() {
         return new Transaction(this.volume2, this.commodity2, this.volume1, this.commodity1);
     }
 

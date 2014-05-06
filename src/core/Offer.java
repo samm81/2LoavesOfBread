@@ -56,6 +56,11 @@ public class Offer {
 		return new Offer(commodity2, commodity1, minReceive, maxTradeVolume, sender);
 	}
 	
+	
+	public Transaction toTransaction() {
+		return new Transaction(maxTradeVolume, commodity1, minReceive, commodity2);
+	}
+	
 	@Override
 	public String toString() {
 		return this.sender + "wanting to trade at most " + this.maxTradeVolume + " " + this.commodity1 + " for at least " + this.minReceive + " " + this.commodity2;

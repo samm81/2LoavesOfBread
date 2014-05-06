@@ -5,14 +5,14 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 
-
 public abstract class Button extends GraphicalObject {
 	
 	protected Color backgroundColor;
 	protected String text;
 	protected String message;
 	protected Listener listener;
-
+	
+	private boolean clickable = true;
 	private Color backgroundColorClickable;
 	private Color backgroundColorUnclickable;
 	
@@ -27,14 +27,14 @@ public abstract class Button extends GraphicalObject {
 		this.backgroundColorUnclickable = backgroundColor.darker().darker();
 	}
 	
-	
 	public void setClickable(boolean clickable) {
+		this.clickable = clickable;
 		if(clickable)
 			this.backgroundColor = backgroundColorClickable;
 		else
 			this.backgroundColor = backgroundColorUnclickable;
 	}
-
+	
 	@Override
 	protected abstract Shape makeShape(int x, int y, int width, int height);
 	
@@ -43,8 +43,10 @@ public abstract class Button extends GraphicalObject {
 	
 	@Override
 	public void clicked(MouseEvent click) {
-		super.clicked(click);
-		listener.hear(message, this);
+		if(clickable) {
+			super.clicked(click);
+			listener.hear(message, this);
+		}
 	}
 	
 }

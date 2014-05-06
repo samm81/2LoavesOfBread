@@ -35,8 +35,8 @@ public class ViewMarketScene extends Scene implements Listener {
         graphicalObjects.add(viewMarketPopup);
 
         int scrollButtonX = x + w - 60;
-        int scrollButtonY = y + 22;
-        int scrollButtonHeight = h/2 - 30;
+        int scrollButtonY = y + 60;
+        int scrollButtonHeight = h/2 - 50;
         int scrollButtonWidth = 40;
         upScroll = new UpScrollButton(scrollButtonX, scrollButtonY, scrollButtonWidth, scrollButtonHeight, Color.WHITE, viewMarketPopup);
         scrollButtonY = y + h/2 + 12;

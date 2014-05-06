@@ -77,7 +77,7 @@ public enum Commodity {
      */
     public void addTransaction(Transaction transaction) {
         if (!isOrderedProperly(transaction)) {
-            transaction = transaction.getReversedTransaction();
+            transaction = transaction.reverse();
         }
         this.transactions.add(transaction);
 
