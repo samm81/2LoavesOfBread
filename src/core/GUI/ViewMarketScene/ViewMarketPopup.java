@@ -59,14 +59,20 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 	}
 	
 	private void scrollUp() {
-		if(offerListingsStart != 0)
+		if(offerListingsStart > 0) {
 			offerListingsStart -= numOfferListings;
-		if(offerListingsStart == 0)
+		} else {
 			listener.hear("Topped", this);
+		}
+		listener.hear("Unbottomed", this);
 	}
 	
 	private void scrollDown() {
-		offerListingsStart += numOfferListings;
+		if(offerListingsStart + numOfferListings <= offerChannel.getOffersMap().size()) {
+			offerListingsStart += numOfferListings;
+		} else {
+			listener.hear("Bottomed", this);
+		}
 		listener.hear("Untopped", this);
 	}
 	

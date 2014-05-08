@@ -64,6 +64,12 @@ public class ViewMarketScene extends Scene implements Listener {
 		case "Untopped":
 			upScroll.setClickable(true);
 			break;
+		case "Bottomed":
+			downScroll.setClickable(false);
+			break;
+		case "Unbottomed":
+			downScroll.setClickable(true);
+			break;
 		default:
 			listener.hear(message, this);
 			break;
