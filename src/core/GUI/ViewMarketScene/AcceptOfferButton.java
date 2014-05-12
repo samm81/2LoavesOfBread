@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
-import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 import core.GUI.Button;
@@ -33,11 +32,6 @@ public class AcceptOfferButton extends Button {
 		int textY = y + 17;
 		
 		g.drawString(text, textX, textY);
-	}
-	
-	@Override
-	public void clicked(MouseEvent click) {
-		listener.hear(message, this);
 	}
 	
 }

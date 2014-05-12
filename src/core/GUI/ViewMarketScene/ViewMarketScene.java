@@ -44,6 +44,9 @@ public class ViewMarketScene extends Scene implements Listener {
         upScroll.setClickable(false);
         graphicalObjects.add(upScroll);
         graphicalObjects.add(downScroll);
+        
+        FilterCheckbox filterCheckbox = new FilterCheckbox(x + width - 213, y + 10, 30, viewMarketPopup);
+        graphicalObjects.add(filterCheckbox);
 	}
 
 	@Override
@@ -64,12 +67,14 @@ public class ViewMarketScene extends Scene implements Listener {
 		case "Untopped":
 			upScroll.setClickable(true);
 			break;
+			/*
 		case "Bottomed":
 			downScroll.setClickable(false);
 			break;
 		case "Unbottomed":
 			downScroll.setClickable(true);
 			break;
+			*/
 		default:
 			listener.hear(message, this);
 			break;

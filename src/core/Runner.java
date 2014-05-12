@@ -50,7 +50,7 @@ public class Runner {
 		
 		LinkedBlockingQueue<Transaction> transactions = new LinkedBlockingQueue<Transaction>();
 		
-		Player player = new Player(commodities, new int[] { 2, 0, 0, 0 }, new int[] { 0, 0, 0, 10 });
+		Player player = new Player(commodities, new int[] { 2, 0, 0, 0 }, new int[] { 0, 0, 0, 40 });
 		
 		HashSet<Actor> actors = new HashSet<Actor>();
 		for(int i = 0; i < numActors; i++) {

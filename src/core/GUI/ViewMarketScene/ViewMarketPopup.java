@@ -23,10 +23,13 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 	Listener listener;
 	LinkedList<OfferEntry> offerEntries;
 	
-	Comparator<Offer> comparator;
+	Comparator<Offer> noFilterComparator;
+	Comparator<Offer> filterComparator;
 	
 	int offerListingsStart = 0;
 	int numOfferListings = 14;
+	
+	boolean filtering = false;
 	
 	public ViewMarketPopup(int x, int y, int width, int height, OfferChannel offerChannel, Player player, Listener listener) {
 		super(x, y, width, height);
@@ -34,7 +37,7 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		this.player = player;
 		this.listener = listener;
 		
-		comparator = new Comparator<Offer>() {
+		noFilterComparator = new Comparator<Offer>() {
 			
 			public int compare(Offer offer1, Offer offer2) {
 				int compare = offer1.getCommodity1().compareTo(offer2.getCommodity1());
@@ -56,6 +59,43 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 				}
 			}
 		};
+		
+		filterComparator = new Comparator<Offer>() {
+			
+			public int compare(Offer offer1, Offer offer2) {
+
+				if(!(playerCanMakeOffer(offer1) && playerCanMakeOffer(offer2))){
+					if(playerCanMakeOffer(offer1))
+						return -1;
+					if(playerCanMakeOffer(offer2))
+						return 1;
+				}
+					
+				int compare = offer1.getCommodity1().compareTo(offer2.getCommodity1());
+				if(compare == 0) {
+					compare = Integer.compare(offer1.getMaxTradeVolume(), offer2.getMaxTradeVolume());
+					if(compare == 0) {
+						compare = offer1.getCommodity2().compareTo(offer2.getCommodity2());
+						if(compare == 0) {
+							compare = Integer.compare(offer1.getMinReceive(), offer2.getMinReceive());
+							return compare;
+						} else {
+							return compare;
+						}
+					} else {
+						return compare;
+					}
+				} else {
+					return compare;
+				}
+			}
+		};
+	}
+	
+	
+	public boolean playerCanMakeOffer(Offer offer) {
+		Offer playerOffer = new Offer(offer.toTransaction(), player);
+		return player.canMakeOffer(playerOffer);
 	}
 	
 	private void scrollUp() {
@@ -90,7 +130,11 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		for(int i = 0; i < orderedOffers.size(); i++) {
 			orderedOffers.set(i, orderedOffers.get(i).reverse());
 		}
-		Collections.sort(orderedOffers, comparator);
+		
+		if(filtering)
+			Collections.sort(orderedOffers, filterComparator);
+		else
+			Collections.sort(orderedOffers, noFilterComparator);
 		
 		int offerX = this.x + 20;
 		int offerY = this.y + 50;
@@ -142,6 +186,9 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 			break;
 		case "ScrollDown":
 			scrollDown();
+			break;
+		case "Filter":
+			filtering = !filtering;
 			break;
 		default:
 			System.out.println(message);

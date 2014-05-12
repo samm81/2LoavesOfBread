@@ -37,7 +37,7 @@ public class MarketSimulation extends Simulation {
 		this.transactions = transactions;
 		this.player = player;
 		this.offerChannel = offerChannel;
-		time = (long) (60 * 10 * 1000);
+		time = (long) (60 * 3 * 1000);
 	}
 	
 	public LinkedBlockingQueue<Transaction> getTransactions() {
