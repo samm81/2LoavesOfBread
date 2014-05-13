@@ -27,6 +27,8 @@ public class MarketSimulation extends Simulation {
 	protected LinkedBlockingQueue<Transaction> transactions;
 	protected OfferChannel offerChannel;
 	
+	protected double[][] totalexchange;
+	protected double[] totalmarketshare;
 	protected Long time;
 	protected Long last;
 	
@@ -103,11 +105,55 @@ public class MarketSimulation extends Simulation {
 		time -= now - last;
 		last = now;
 		
+		this.totalexchange = new double[commodities.size()][commodities.size()];
+		this.totalmarketshare= new double[commodities.size()];
+		for(int i = 0; i < totalmarketshare.length; i++)
+		{
+			totalmarketshare[i] = 0;
+			for(int j = 0; j < totalexchange[i].length; j++)
+			{
+				totalexchange[i][j] = 0;
+			}
+		}
+		
 		//Do we want evaluation and update to be sequential or concurrent.
 		//Seems smarter to have them operate at same time so actors always have the most up to date info.
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket(offerChannel);
+			actor.addValues(totalexchange, totalmarketshare);
 		}
+		/*
+		for(int i = 0; i < totalexchange.length; i++)
+		{
+			totalmarketshare[i]/=this.actors.size();
+		}
+		*/
+		System.out.println("World total market share for each item: ");
+		for(int i = 0; i < totalexchange.length; i++)
+		{
+			System.out.print(commodities.get(i) + ": " + totalmarketshare[i] + " ");
+			for(int j = 0; j < totalexchange[i].length; j++)
+			{
+				totalexchange[i][j]/=this.actors.size();
+			}
+		}
+		
+		System.out.println("\nExchange rate average");
+		for(int i = 0; i < commodities.size(); i++)
+		{
+			System.out.print("\t\t " + commodities.get(i));
+		}
+		System.out.print("\n");
+		for(int i = 0; i < totalexchange.length; i++)
+		{
+			System.out.print(commodities.get(i) + "\t");
+			for(int j = 0; j < totalexchange[i].length; j++)
+			{
+				System.out.print("\t " + totalexchange[i][j]);
+			}
+			System.out.print("\n");
+		}
+		
 		
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : this.commodities) { // go through all the commodities

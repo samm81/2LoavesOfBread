@@ -25,6 +25,7 @@ public abstract class Actor {
 	protected int[] priorityMatrix;
 	protected ConcurrentHashMap<Commodity, Integer> volumes;
 	
+	private double[] marketshare;
 	private int[] initialValues;
 	protected Offer bestOffer;
 	
@@ -119,7 +120,7 @@ public abstract class Actor {
 		//Exchange Matrix is set up so
 		//row and column 0 is one commodity, row, column 1 is one commodity ... etc.
 		//this for loop shows the movement of markets
-		double[] marketshare = new double[commodities.size()];
+		marketshare = new double[commodities.size()];
 		double totalComm = 0;
 		for(int i = 0; i < marketshare.length; i++) {
 			for(Offer o : offerChannel.getPendingOffers(commodities.get(i))) {
@@ -139,9 +140,9 @@ public abstract class Actor {
 					exchangeMatrix[row][col] = 1;
 				} else if(x.getMostRecentRatios().get(y.name()) != null && totalComm != 0) {
 					if(marketshare[row] > marketshare[col])
-						exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1 - ((marketshare[row] - marketshare[col])) / 1.5) + (Math.random() * 2 - 1);
+						exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1 - ((marketshare[row] - marketshare[col])) / 1.90) + (Math.random() * 0.5 - 0.25);
 					else
-						exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1 - ((marketshare[col] - marketshare[row])) / .5 + (Math.random() * 2 - 1));
+						exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1 - ((marketshare[col] - marketshare[row])) / .10) + (Math.random() * 0.5 - 0.25);
 				} else {
 					exchangeMatrix[row][col] = Math.abs(exchangeMatrix[row][col] + (((Math.random() * 8) - 4)));
 				}
@@ -189,5 +190,20 @@ public abstract class Actor {
 			return true;
 		}
 		return false;
+	}
+	
+	public void addValues(double[][] exchangerates, double[] marketshares)
+	{
+		if(marketshare != null)
+		{
+			for(int i = 0; i < marketshares.length; i++)
+			{
+				marketshares[i]+=marketshare[i];
+				for(int j = 0; j < exchangeMatrix.length; j++)
+				{
+					exchangerates[i][j]+=exchangeMatrix[i][j];
+				}
+			}
+		}
 	}
 }

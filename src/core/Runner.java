@@ -18,6 +18,7 @@ import core.actors.Farmer;
 import core.actors.Fisherman;
 import core.actors.Merchant;
 import core.actors.Player;
+import core.actors.TestActor;
 import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
@@ -53,7 +54,7 @@ public class Runner {
 		Player player = new Player(commodities, new int[] { 2, 0, 0, 0 }, new int[] { 0, 0, 0, 10 });
 		
 		HashSet<Actor> actors = new HashSet<Actor>();
-		for(int i = 0; i < numActors; i++) {
+		/*for(int i = 0; i < numActors; i++) {
 			Random r = new Random();
 			switch(r.nextInt(4)){
 			case 0: actors.add(new Baker(commodities, transactions)); break;
@@ -61,6 +62,10 @@ public class Runner {
 			case 2: actors.add(new Fisherman(commodities, transactions)); break;
 			case 3: actors.add(new Merchant(commodities, transactions)); break;
 			}
+		}*/
+		for(int i = 0; i < numActors; i++)
+		{
+			actors.add(new TestActor(commodities, transactions));
 		}
 		actors.add(player);
 		
