@@ -19,7 +19,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * 
  * @author Sam "Fabulous Hands" Maynard
  */
-public class MarketSimulation extends Simulation {
+public class MarketSimulation extends TickableThread {
 	
 	protected Player player;
 	protected HashSet<Actor> actors;
@@ -27,25 +27,17 @@ public class MarketSimulation extends Simulation {
 	protected LinkedBlockingQueue<Transaction> transactions;
 	protected OfferChannel offerChannel;
 	
-	protected Long time;
-	protected Long last;
+	private long timeLimit;
+	private long startTime;
 	
-	public MarketSimulation(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, Player player, HashSet<Actor> actors, OfferChannel offerChannel, double dt) {
+	public MarketSimulation(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, Player player, HashSet<Actor> actors, OfferChannel offerChannel, long timeLimit, double dt) {
 		super(dt);
 		this.actors = actors;
 		this.commodities = commodities;
 		this.transactions = transactions;
 		this.player = player;
 		this.offerChannel = offerChannel;
-		time = (long) (60 * 3 * 1000);
-	}
-	
-	public LinkedBlockingQueue<Transaction> getTransactions() {
-		return this.transactions;
-	}
-	
-	public HashSet<Actor> getActors() {
-		return this.actors;
+		this.timeLimit = timeLimit;
 	}
 	
 	public List<Commodity> getCommodities() {
@@ -60,33 +52,17 @@ public class MarketSimulation extends Simulation {
 		return this.offerChannel;
 	}
 	
-	public Long getTime() {
-		return this.time;
+	public Long getTimeLeft() {
+		return timeLimit - (time - startTime);
 	}
 	
-	public Integer getTimeInSeconds() {
-		return (int) (this.time / 1000);
+	public Integer getTimeLeftInSeconds() {
+		return (int) (getTimeLeft() / 1000);
 	}
-	
+
 	@Override
 	protected void initialize() {
-		last = System.currentTimeMillis();
-	}
-	
-	@Override
-	public void run() {
-		while(!Thread.currentThread().isInterrupted()) {
-			tick();
-			try {
-				Thread.yield();
-			} finally {
-				try {
-					Thread.sleep((long) (this.dt * 1000));
-				} catch(InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		startTime = System.currentTimeMillis();
 	}
 	
 	/**
@@ -98,13 +74,6 @@ public class MarketSimulation extends Simulation {
 	 */
 	@Override
 	protected void tick() {
-		
-		long now = System.currentTimeMillis();
-		time -= now - last;
-		last = now;
-		
-		//Do we want evaluation and update to be sequential or concurrent.
-		//Seems smarter to have them operate at same time so actors always have the most up to date info.
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket(offerChannel);
 		}
@@ -124,5 +93,6 @@ public class MarketSimulation extends Simulation {
 			}
 		}
 	}
+
 
 }

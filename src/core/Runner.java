@@ -4,22 +4,10 @@ import static java.awt.Color.DARK_GRAY;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 import java.awt.Toolkit;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.swing.JFrame;
 
 import core.GUI.MarketCanvas;
-import core.actors.Actor;
-import core.actors.Baker;
-import core.actors.Farmer;
-import core.actors.Fisherman;
-import core.actors.Merchant;
-import core.actors.Player;
-import core.channels.OfferChannel;
-import core.commodities.Commodity;
 
 /**
  * The runner for the game. Gets the frame, the canvas, and the
@@ -29,48 +17,17 @@ import core.commodities.Commodity;
  */
 public class Runner {
 	
-	static final double dt = 2d;
-	static final double offerDT = dt;
-	static final int numActors = 400;
-	static int tickerMagnitude = 30;
 	static int width = 900;
 	static int height = 700;
 	
 	/**
-	 * Sets Up Market Simulation, Canvas, and OfferChannel
+	 * Sets Up Market TickableThread, Canvas, and OfferChannel
 	 * @param args - Command Line Args
 	 */
 	public static void main(String[] args) {
-		LinkedList<Commodity> commodities = new LinkedList<Commodity>();
-		for(Commodity item : Commodity.values())
-			commodities.add(item);
+		Game game = new Game();
 		
-		for(Commodity commodity : commodities)
-			commodity.createTickersFromCommodities(commodities, tickerMagnitude);
-		
-		LinkedBlockingQueue<Transaction> transactions = new LinkedBlockingQueue<Transaction>();
-		
-		Player player = new Player(commodities, new int[] { 2, 0, 0, 0 }, new int[] { 0, 0, 0, 40 });
-		
-		HashSet<Actor> actors = new HashSet<Actor>();
-		for(int i = 0; i < numActors; i++) {
-			Random r = new Random();
-			switch(r.nextInt(4)){
-			case 0: actors.add(new Baker(commodities, transactions)); break;
-			case 1: actors.add(new Farmer(commodities, transactions)); break;
-			case 2: actors.add(new Fisherman(commodities, transactions)); break;
-			case 3: actors.add(new Merchant(commodities, transactions)); break;
-			}
-		}
-		actors.add(player);
-		
-		//Creates the transaction thread that evaluates offers, every offerDT.
-		OfferChannel offerChannel = new OfferChannel(transactions, actors, offerDT, actors.size());
-		offerChannel.setDaemon(true);
-		
-		MarketSimulation sim = new MarketSimulation(commodities, transactions, player, actors, offerChannel, dt);
-		
-		MarketCanvas canvas = new MarketCanvas(60, sim);
+		MarketCanvas canvas = game.getMarketCanvas();
 		
 		JFrame f = new JFrame("Two Loaves of Bread");
 		f.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -90,7 +47,6 @@ public class Runner {
 		f.setVisible(true);
 		
 		canvas.start();
-		sim.start();
-		offerChannel.start();
+		
 	}
 }
