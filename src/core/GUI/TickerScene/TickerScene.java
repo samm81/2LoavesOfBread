@@ -38,7 +38,7 @@ public class TickerScene extends Scene implements Listener {
 	/**
 	* generates the graphs from a list of commodities
 	*
-	* @param width the width of the scene
+	* @param width the width of the underlyingScene
 	* @param list the commodities to generate graphs from
 	* @param graphHeight the height of the graphs
 	* @return LinkedList<Graph> of the graphs created

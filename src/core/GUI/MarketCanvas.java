@@ -8,11 +8,13 @@ import java.util.LinkedList;
 
 import core.Game;
 import core.MarketSimulation;
+import core.GUI.CommodityCrashScene.CommodityCrashScene;
 import core.GUI.EndGameScene.EndGameScene;
 import core.GUI.MakeOfferScene.MakeOfferScene;
 import core.GUI.TickerScene.TickerScene;
 import core.GUI.TitleScene.TitleScene;
 import core.GUI.ViewMarketScene.ViewMarketScene;
+import core.commodities.Commodity;
 
 /**
  * The general container for all the games elements.
@@ -30,6 +32,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	MakeOfferScene makeOfferScene;
 	ViewMarketScene viewMarketScene;
 	EndGameScene endGameScene;
+	CommodityCrashScene commodityCrashScene;
 	
 	LinkedList<Scene> scenes;
 	
@@ -65,12 +68,14 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		makeOfferScene = new MakeOfferScene(width, height, sim.getCommodities(), sim.getPlayer(), tickerScene, this);
 		viewMarketScene = new ViewMarketScene(width, height, sim.getOfferChannel(), sim.getPlayer(), tickerScene, this);
 		endGameScene = new EndGameScene(this);
+		commodityCrashScene = new CommodityCrashScene(width, height, Commodity.Bread, tickerScene, this);
 		
 		scenes.add(titleScene);
 		scenes.add(tickerScene);
 		scenes.add(makeOfferScene);
 		scenes.add(viewMarketScene);
 		scenes.add(endGameScene);
+		scenes.add(commodityCrashScene);
 		
 		selectedScene = titleScene;
 	}
@@ -118,6 +123,10 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			break;
 		case "GameLost":
 			setSelectedScene(endGameScene);
+			break;
+		case "CommodityCrash":
+			commodityCrashScene = new CommodityCrashScene(getWidth(), getHeight(), (Commodity)sender, selectedScene, this);
+			setSelectedScene(commodityCrashScene);
 			break;
 		default:
 			System.out.println(message);

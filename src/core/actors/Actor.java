@@ -62,6 +62,14 @@ public abstract class Actor {
 	
 	public Actor() {}
 	
+	public int getCommodityVolume(Commodity commodity){
+		return volumes.get(commodity);
+	}
+	
+	public void setCommodityVolume(Commodity commodity, int volume) {
+		volumes.put(commodity, volume);
+	}
+	
 	/**
 	 * Get Best Offer returns a transaction that the actor will submit based on
 	 * an actor's want matrix and exchange matrix.
@@ -159,7 +167,7 @@ public abstract class Actor {
 	public void thought() {
 		System.out.println(this + " reporting for duty");
 		System.out.println("Status:");
-		for(Commodity commodity : commodities){
+		for(Commodity commodity : commodities) {
 			System.out.println("I have " + volumes.get(commodity) + " " + commodity.name());
 		}
 		System.out.println("Valuation:");

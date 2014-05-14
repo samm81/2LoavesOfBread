@@ -16,7 +16,7 @@ import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
 public class Game extends TickableThread {
-
+	
 	final double dt = 2d;
 	final double offerDT = dt;
 	final long timeLimit = 60 * 8 * 1000;
@@ -30,12 +30,16 @@ public class Game extends TickableThread {
 	private HashSet<Actor> actors;
 	private OfferChannel offerChannel;
 	private MarketCanvas marketCanvas;
-
+	
+	private Random r;
+	
 	public Game() {
 		super(1);
 		initializeObjects();
 		sim = new MarketSimulation(commodities, transactions, player, actors, offerChannel, timeLimit, dt);
 		marketCanvas = new MarketCanvas(60, sim, this);
+		
+		r = new Random();
 	}
 	
 	private void initializeObjects() {
@@ -81,20 +85,32 @@ public class Game extends TickableThread {
 	public void play() {
 		this.start();
 	}
-
+	
 	@Override
 	protected void initialize() {
 		sim.start();
 		offerChannel.start();
 	}
-
+	
 	@Override
 	protected void tick() {
 		long timeLeft = sim.getTimeLeft();
-		if(timeLeft < 0){
+		if(timeLeft < 0) {
 			marketCanvas.hear("GameLost", sim);
 		}
+		
+		if(r.nextFloat() < .01) {
+			Commodity[] values = Commodity.values();
+			crashCommodity(values[r.nextInt(values.length)]);
+		}
 	}
-
-
+	
+	private void crashCommodity(Commodity commodity) {
+		for(Actor actor : actors) {
+			if(actor.getCommodityVolume(commodity) > 1)
+				actor.setCommodityVolume(commodity, 1);
+		}
+		marketCanvas.hear("CommodityCrash", commodity);
+	}
+	
 }
