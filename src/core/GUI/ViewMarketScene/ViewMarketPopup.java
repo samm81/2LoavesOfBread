@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import core.Offer;
+import core.Transaction;
 import core.GUI.GraphicalObject;
 import core.GUI.Listener;
 import core.actors.Player;
@@ -29,7 +31,8 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 	int offerListingsStart = 0;
 	int numOfferListings = 14;
 	
-	boolean filtering = false;
+	private boolean filtering = true;
+	private boolean makingNonReduntant = true;
 	
 	public ViewMarketPopup(int x, int y, int width, int height, OfferChannel offerChannel, Player player, Listener listener) {
 		super(x, y, width, height);
@@ -63,14 +66,14 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		filterComparator = new Comparator<Offer>() {
 			
 			public int compare(Offer offer1, Offer offer2) {
-
-				if(!(playerCanMakeOffer(offer1) && playerCanMakeOffer(offer2))){
+				
+				if(!(playerCanMakeOffer(offer1) && playerCanMakeOffer(offer2))) {
 					if(playerCanMakeOffer(offer1))
 						return -1;
 					if(playerCanMakeOffer(offer2))
 						return 1;
 				}
-					
+				
 				int compare = offer1.getCommodity1().compareTo(offer2.getCommodity1());
 				if(compare == 0) {
 					compare = Integer.compare(offer1.getMaxTradeVolume(), offer2.getMaxTradeVolume());
@@ -91,7 +94,6 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 			}
 		};
 	}
-	
 	
 	public boolean playerCanMakeOffer(Offer offer) {
 		Offer playerOffer = new Offer(offer.toTransaction(), player);
@@ -126,6 +128,15 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		this.drawOutline(g);
 		
 		Collection<Offer> offers = offerChannel.getOffersMap().values();
+		
+		if(makingNonReduntant) {
+			HashMap<Transaction, Offer> nonRedundantOffers = new HashMap<Transaction, Offer>();
+			for(Offer offer : offers) {
+				nonRedundantOffers.put(offer.toTransaction(), offer);
+			}
+			offers = nonRedundantOffers.values();
+		}
+		
 		ArrayList<Offer> orderedOffers = Collections.list(Collections.enumeration(offers));
 		for(int i = 0; i < orderedOffers.size(); i++) {
 			orderedOffers.set(i, orderedOffers.get(i).reverse());
@@ -190,6 +201,8 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		case "Filter":
 			filtering = !filtering;
 			break;
+		case "MakeNonRedundant":
+			makingNonReduntant = !makingNonReduntant;
 		default:
 			System.out.println(message);
 			break;

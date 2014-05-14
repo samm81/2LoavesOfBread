@@ -47,6 +47,7 @@ public class Runner {
 		f.setVisible(true);
 		
 		canvas.start();
+		game.startThreads();
 		
 	}
 }

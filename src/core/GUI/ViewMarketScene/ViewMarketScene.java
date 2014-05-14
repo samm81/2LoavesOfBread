@@ -47,6 +47,9 @@ public class ViewMarketScene extends Scene implements Listener {
         
         FilterCheckbox filterCheckbox = new FilterCheckbox(x + width - 213, y + 10, 30, viewMarketPopup);
         graphicalObjects.add(filterCheckbox);
+        
+        MakingNonReduntantCheckbox makingNonReduntantCheckbox = new MakingNonReduntantCheckbox(x + width - 450, y + 10, 30, viewMarketPopup);
+        graphicalObjects.add(makingNonReduntantCheckbox);
 	}
 
 	@Override

@@ -11,13 +11,13 @@ import core.GUI.Button;
 import core.GUI.Listener;
 
 
-public class FilterCheckbox extends Button {
+public class MakingNonReduntantCheckbox extends Button {
 
 	private boolean checked = true;
 	private int checkedSquareOffest = 6;
 	
-	public FilterCheckbox(int x, int y, int size, Listener listener) {
-		super(x, y, size, size, Color.WHITE, "acceptable offers at top", "Filter", listener);
+	public MakingNonReduntantCheckbox(int x, int y, int size, Listener listener) {
+		super(x, y, size, size, Color.WHITE, "don't show reduntant offers", "MakeNonRedundant", listener);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class FilterCheckbox extends Button {
 		
 		g.setFont(new Font("Sans Serif", Font.PLAIN, 18));
 		g.setColor(Color.BLACK);
-		g.drawString(text, x - 195, y + 22);
+		g.drawString(text, x - 220, y + 22);
 		
 	}
 	
