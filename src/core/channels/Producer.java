@@ -4,9 +4,7 @@ import core.Offer;
 import core.actors.Actor;
 import core.commodities.Commodity;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * @author Brian Oluwo
@@ -23,6 +21,7 @@ public class Producer extends Thread {
         this.dt = dt;
         this.offers = new HashMap<Actor, Offer>();
         this.update = true;
+        produce();
     }
 
     @Override
@@ -50,38 +49,32 @@ public class Producer extends Thread {
     private void produce() {
         for (Actor actor : this.actors) {
             Offer offer = actor.getBestOffer();
-            offers.put(actor, offer);
+            if(offer != null)
+                offers.put(actor, offer);
         }
     }
 
-    /**
-     * @param commodity - The commodity to be inquired about.
-     * @return - # of Offers that offer commodity as their trading away commodity
-     */
-    public int getNumberOfOffers(Commodity commodity) {
-        Collection<Offer> offerCollection = this.offers.values();
-        int count = 0;
-        for (Offer offer : offerCollection) {
-            if (offer.getCommodity1().equals(commodity))
-                count++;
-        }
-        return count;
+    public ArrayList<Offer> getPendingOffers() {
+        return Collections.list(Collections.enumeration(offers.values()));
     }
 
-    /**
-     * Specific for between two commodities. Takes longer.
-     *
-     * @param tradeAway - Trading Away Commodity
-     * @param tradeFor  - Trading For Commodity
-     * @return - Number of Trades trading away tradeAway, for tradeFor
-     */
-    public int getNumberOfOffers(Commodity tradeAway, Commodity tradeFor) {
-        Collection<Offer> offerCollection = this.offers.values();
-        int count = 0;
-        for (Offer offer : offerCollection) {
-            if (offer.getCommodity1().equals(tradeAway) && offer.getCommodity2().equals(tradeFor))
-                count++;
+    public ArrayList<Offer> getPendingOffers(Commodity commodity) {
+        ArrayList<Offer> offerArrayList = new ArrayList<>();
+        for(Map.Entry<Actor, Offer> entry : offers.entrySet()) {
+            Offer offer = entry.getValue();
+            if(offer.getCommodity1().equals(commodity))
+                offerArrayList.add(offer);
         }
-        return count;
+        return offerArrayList;
+    }
+
+    public ArrayList<Offer> getPendingOffers(Commodity tradeAway, Commodity tradeFor) {
+        ArrayList<Offer> offerArrayList = new ArrayList<>();
+        for(Map.Entry<Actor, Offer> entry : offers.entrySet()) {
+            Offer offer = entry.getValue();
+            if(offer.getCommodity1().equals(tradeAway) && offer.getCommodity2().equals(tradeFor))
+                offerArrayList.add(offer);
+        }
+        return offerArrayList;
     }
 }
