@@ -145,7 +145,7 @@ public abstract class Actor {
 			for(Commodity y : Commodity.values()) {
 				if(y == x) {
 					exchangeMatrix[row][col] = 1;
-				} else if(x.getMostRecentRatios().get(y.name()) != null && totalComm != 0) {
+				} else if(x.getMostRecentRatios(y).size() != 0 && totalComm != 0) {
 					if(marketshare[row] > marketshare[col])
 						exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1 - ((marketshare[row] - marketshare[col])) / 1.5) + (Math.random() * 2 - 1);
 					else

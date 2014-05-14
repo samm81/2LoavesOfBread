@@ -27,7 +27,6 @@ public class WonGamePopup extends GraphicalObject {
 		g.setFont(new Font("Sans Serif", Font.PLAIN, 36));
 		g.setColor(Color.BLACK);
 		g.drawString("Congratulations!!", x + 50, y + height - 40);
-		
 	}
 	
 }

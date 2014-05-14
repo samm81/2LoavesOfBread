@@ -80,11 +80,14 @@ public class MarketSimulation extends TickableThread {
 		
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : this.commodities) { // go through all the commodities
-			HashMap<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
-			for(Entry<String, Ticker> entry : tickers.entrySet()) { // find the most recent transaction value for each ticker commodity, and update the ticker
+			HashMap<Commodity, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
+			for(Entry<Commodity, Ticker> entry : tickers.entrySet()) { // find the most recent transaction value for each ticker commodity, and update the ticker
 				Ticker ticker = entry.getValue();
-				String tickerName = entry.getKey();
-				double dataPoint = commodity.getMostRecentRatios().get(tickerName);
+				Commodity tickerCommodity = entry.getKey();
+				double dataPoint = commodity.getAverageRatio(tickerCommodity);
+				if(dataPoint < 0)
+					dataPoint = commodity.getLastAverage(tickerCommodity);
+				
 				try {
 					ticker.addDataPoint(dataPoint);
 				} catch(InterruptedException e) {
