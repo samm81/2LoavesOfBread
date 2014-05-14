@@ -126,6 +126,7 @@ public class Game extends TickableThread {
 			if(!(actor instanceof Player) && actor.getCommodityVolume(commodity) > 1)
 				actor.setCommodityVolume(commodity, 1);
 		}
+		offerChannel.clear();
 		marketCanvas.hear("CommodityCrash", commodity);
 	}
 	

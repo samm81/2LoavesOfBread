@@ -36,7 +36,7 @@ public class CommodityCrashPopup extends GraphicalObject {
 		g.setColor(color);
 		g.drawString(name, x + 20, y + height - 40);
 		g.setColor(Color.BLACK);
-		g.drawString("has dissapeared from the market", x + 250, y + height - 40);
+		g.drawString("has disappeared from the market", x + 250, y + height - 40);
 	}
 	
 }

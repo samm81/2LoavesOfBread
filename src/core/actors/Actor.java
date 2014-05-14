@@ -69,6 +69,7 @@ public abstract class Actor {
 	public Actor() {}
 	
 	public int getCommodityVolume(Commodity commodity){
+		System.out.println(commodity.name());
 		return volumes.get(commodity);
 	}
 	

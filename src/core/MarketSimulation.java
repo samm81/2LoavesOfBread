@@ -96,6 +96,7 @@ public class MarketSimulation extends TickableThread {
 		 * totalmarketshare[i]/=this.actors.size();
 		 * }
 		 */
+
 		System.out.println("World total market share for each item: ");
 		for(int i = 0; i < totalexchange.length; i++) {
 			System.out.print(commodities.get(i).name().charAt(0) + ": " + totalmarketshare[i] + " ");
@@ -103,7 +104,7 @@ public class MarketSimulation extends TickableThread {
 				totalexchange[i][j] /= this.actors.size();
 			}
 		}
-		
+
 		System.out.println("\nExchange rate average");
 		for(int i = 0; i < commodities.size(); i++) {
 			System.out.print("\t" + commodities.get(i));
