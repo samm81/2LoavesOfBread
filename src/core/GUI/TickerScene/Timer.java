@@ -28,7 +28,7 @@ public class Timer extends GraphicalObject {
 		g.setFont(new Font("Sans Serif", Font.PLAIN, 30));
 		g.setColor(Color.GRAY);
 		
-		String str = "Time remaining: " + sim.getTimeInSeconds().toString();
+		String str = "Time remaining: " + sim.getTimeLeftInSeconds().toString();
 		g.drawString(str, x - 30, y + height - 3);
 	}
 	

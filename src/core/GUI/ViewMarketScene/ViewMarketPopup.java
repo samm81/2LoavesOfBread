@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import core.Offer;
+import core.Transaction;
 import core.GUI.GraphicalObject;
 import core.GUI.Listener;
 import core.actors.Player;
@@ -23,10 +25,14 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 	Listener listener;
 	LinkedList<OfferEntry> offerEntries;
 	
-	Comparator<Offer> comparator;
+	Comparator<Offer> noFilterComparator;
+	Comparator<Offer> filterComparator;
 	
 	int offerListingsStart = 0;
 	int numOfferListings = 14;
+	
+	private boolean filtering = true;
+	private boolean makingNonReduntant = true;
 	
 	public ViewMarketPopup(int x, int y, int width, int height, OfferChannel offerChannel, Player player, Listener listener) {
 		super(x, y, width, height);
@@ -34,7 +40,7 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		this.player = player;
 		this.listener = listener;
 		
-		comparator = new Comparator<Offer>() {
+		noFilterComparator = new Comparator<Offer>() {
 			
 			public int compare(Offer offer1, Offer offer2) {
 				int compare = offer1.getCommodity1().compareTo(offer2.getCommodity1());
@@ -56,17 +62,59 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 				}
 			}
 		};
+		
+		filterComparator = new Comparator<Offer>() {
+			
+			public int compare(Offer offer1, Offer offer2) {
+				
+				if(!(playerCanMakeOffer(offer1) && playerCanMakeOffer(offer2))) {
+					if(playerCanMakeOffer(offer1))
+						return -1;
+					if(playerCanMakeOffer(offer2))
+						return 1;
+				}
+				
+				int compare = offer1.getCommodity1().compareTo(offer2.getCommodity1());
+				if(compare == 0) {
+					compare = Integer.compare(offer1.getMaxTradeVolume(), offer2.getMaxTradeVolume());
+					if(compare == 0) {
+						compare = offer1.getCommodity2().compareTo(offer2.getCommodity2());
+						if(compare == 0) {
+							compare = Integer.compare(offer1.getMinReceive(), offer2.getMinReceive());
+							return compare;
+						} else {
+							return compare;
+						}
+					} else {
+						return compare;
+					}
+				} else {
+					return compare;
+				}
+			}
+		};
+	}
+	
+	public boolean playerCanMakeOffer(Offer offer) {
+		Offer playerOffer = new Offer(offer.toTransaction(), player);
+		return player.canMakeOffer(playerOffer);
 	}
 	
 	private void scrollUp() {
-		if(offerListingsStart != 0)
+		if(offerListingsStart > 0) {
 			offerListingsStart -= numOfferListings;
-		if(offerListingsStart == 0)
+		} else {
 			listener.hear("Topped", this);
+		}
+		listener.hear("Unbottomed", this);
 	}
 	
 	private void scrollDown() {
-		offerListingsStart += numOfferListings;
+		if(offerListingsStart + numOfferListings <= offerChannel.getOffersMap().size()) {
+			offerListingsStart += numOfferListings;
+		} else {
+			listener.hear("Bottomed", this);
+		}
 		listener.hear("Untopped", this);
 	}
 	
@@ -80,11 +128,24 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		this.drawOutline(g);
 		
 		Collection<Offer> offers = offerChannel.getOffersMap().values();
+		
+		if(makingNonReduntant) {
+			HashMap<Transaction, Offer> nonRedundantOffers = new HashMap<Transaction, Offer>();
+			for(Offer offer : offers) {
+				nonRedundantOffers.put(offer.toTransaction(), offer);
+			}
+			offers = nonRedundantOffers.values();
+		}
+		
 		ArrayList<Offer> orderedOffers = Collections.list(Collections.enumeration(offers));
 		for(int i = 0; i < orderedOffers.size(); i++) {
 			orderedOffers.set(i, orderedOffers.get(i).reverse());
 		}
-		Collections.sort(orderedOffers, comparator);
+		
+		if(filtering)
+			Collections.sort(orderedOffers, filterComparator);
+		else
+			Collections.sort(orderedOffers, noFilterComparator);
 		
 		int offerX = this.x + 20;
 		int offerY = this.y + 50;
@@ -137,6 +198,11 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		case "ScrollDown":
 			scrollDown();
 			break;
+		case "Filter":
+			filtering = !filtering;
+			break;
+		case "MakeNonRedundant":
+			makingNonReduntant = !makingNonReduntant;
 		default:
 			System.out.println(message);
 			break;
