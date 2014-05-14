@@ -44,9 +44,11 @@ public class OfferChannel extends Thread {
 		return this.offersMap;
 	}
 	
-	/**
-	 *
-	 */
+	
+	public void clear() {
+		offersMap.clear();
+	}
+	
 	@Override
 	public void run() {
 		while(!Thread.currentThread().isInterrupted()) {

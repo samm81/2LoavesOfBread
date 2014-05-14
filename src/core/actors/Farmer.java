@@ -12,6 +12,6 @@ import core.commodities.Commodity;
 public class Farmer extends Actor {
 	
 	public Farmer(List<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions) {
-		super(commodities, transactions, new int[] { 25, 25, 25, 25/*, 25, 25*/ }, new int[] { 100, 100, 100, 100/*, 100, 100*/ }, 1);
+		super(commodities, transactions, new int[] { 0, 0, 4, 5 }, new int[] { 30, 10, 4, 0 });
 	}
 }

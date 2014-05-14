@@ -35,8 +35,8 @@ public class ViewMarketScene extends Scene implements Listener {
         graphicalObjects.add(viewMarketPopup);
 
         int scrollButtonX = x + w - 60;
-        int scrollButtonY = y + 22;
-        int scrollButtonHeight = h/2 - 30;
+        int scrollButtonY = y + 60;
+        int scrollButtonHeight = h/2 - 50;
         int scrollButtonWidth = 40;
         upScroll = new UpScrollButton(scrollButtonX, scrollButtonY, scrollButtonWidth, scrollButtonHeight, Color.WHITE, viewMarketPopup);
         scrollButtonY = y + h/2 + 12;
@@ -44,6 +44,12 @@ public class ViewMarketScene extends Scene implements Listener {
         upScroll.setClickable(false);
         graphicalObjects.add(upScroll);
         graphicalObjects.add(downScroll);
+        
+        FilterCheckbox filterCheckbox = new FilterCheckbox(x + width - 213, y + 10, 30, viewMarketPopup);
+        graphicalObjects.add(filterCheckbox);
+        
+        MakingNonReduntantCheckbox makingNonReduntantCheckbox = new MakingNonReduntantCheckbox(x + width - 450, y + 10, 30, viewMarketPopup);
+        graphicalObjects.add(makingNonReduntantCheckbox);
 	}
 
 	@Override
@@ -64,6 +70,14 @@ public class ViewMarketScene extends Scene implements Listener {
 		case "Untopped":
 			upScroll.setClickable(true);
 			break;
+			/*
+		case "Bottomed":
+			downScroll.setClickable(false);
+			break;
+		case "Unbottomed":
+			downScroll.setClickable(true);
+			break;
+			*/
 		default:
 			listener.hear(message, this);
 			break;

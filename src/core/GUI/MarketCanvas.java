@@ -6,12 +6,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
+import core.Game;
 import core.MarketSimulation;
-import core.Offer;
-import core.Transaction;
+import core.GUI.CommodityCrashScene.CommodityCrashScene;
+import core.GUI.EndGameScene.EndGameScene;
 import core.GUI.MakeOfferScene.MakeOfferScene;
 import core.GUI.TickerScene.TickerScene;
+import core.GUI.TitleScene.TitleScene;
 import core.GUI.ViewMarketScene.ViewMarketScene;
+import core.GUI.WonGameScene.WonGameScene;
+import core.commodities.Commodity;
 
 /**
  * The general container for all the games elements.
@@ -22,22 +26,37 @@ import core.GUI.ViewMarketScene.ViewMarketScene;
 public class MarketCanvas extends DoubleBufferedCanvas {
 	
 	protected MarketSimulation sim;
+	private Game game;
 	
+	TitleScene titleScene;
 	TickerScene tickerScene;
 	MakeOfferScene makeOfferScene;
 	ViewMarketScene viewMarketScene;
+	EndGameScene endGameScene;
+	CommodityCrashScene commodityCrashScene;
+	WonGameScene wonGameScene;
 	
 	LinkedList<Scene> scenes;
 	
 	Scene selectedScene;
 	
-	public MarketCanvas(int fps, MarketSimulation sim) {
+	public MarketCanvas(int fps, MarketSimulation sim, Game game) {
 		super(fps);
+		this.sim = sim;
+		this.game = game;
+	}
+	
+	public void setMarketSimulation(MarketSimulation sim) {
 		this.sim = sim;
 	}
 	
 	private void setSelectedScene(Scene scene) {
 		selectedScene = scene;
+	}
+	
+	
+	public void reinit() {
+		init();
 	}
 	
 	@Override
@@ -46,15 +65,22 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		
 		int width = this.getWidth();
 		int height = this.getHeight();
+		titleScene = new TitleScene(width, height, this);
 		tickerScene = new TickerScene(width, height, sim.getCommodities(), sim.getPlayer(), sim, this);
-		makeOfferScene = new MakeOfferScene(width, height, sim.getCommodities(), tickerScene, this);
+		makeOfferScene = new MakeOfferScene(width, height, sim.getCommodities(), sim.getPlayer(), tickerScene, this);
 		viewMarketScene = new ViewMarketScene(width, height, sim.getOfferChannel(), sim.getPlayer(), tickerScene, this);
+		endGameScene = new EndGameScene(this);
+		commodityCrashScene = new CommodityCrashScene(width, height, Commodity.Bread, tickerScene, this);
+		wonGameScene = new WonGameScene(width, height, this);
 		
+		scenes.add(titleScene);
 		scenes.add(tickerScene);
 		scenes.add(makeOfferScene);
 		scenes.add(viewMarketScene);
+		scenes.add(endGameScene);
+		scenes.add(commodityCrashScene);
 		
-		selectedScene = tickerScene;
+		selectedScene = titleScene;
 	}
 	
 	@Override
@@ -74,7 +100,6 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 				selectedScene.processClick(click);
 			}
 		}
-		
 		if(this.keyPressesWaiting()) {
 			LinkedList<KeyEvent> keystrokes = this.flushKeystrokeQueue();
 			for(KeyEvent keystroke : keystrokes) {
@@ -86,6 +111,10 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	@Override
 	public void hear(String message, Object sender) {
 		switch(message) {
+		case "Play":
+			this.hear("TickerScene", sender);
+			game.play();
+			break;
 		case "TickerScene":
 			setSelectedScene(tickerScene);
 			break;
@@ -95,13 +124,15 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		case "ViewMarket":
 			setSelectedScene(viewMarketScene);
 			break;
-		case "OfferMade":
-			Transaction submittedTransaction = makeOfferScene.getSubmittedTransaction();
-			if(submittedTransaction != null){
-				Offer offer = new Offer(submittedTransaction, sim.getPlayer());
-				sim.getPlayer().setBestOffer(offer);
-				this.hear("TickerScene", this);
-			}
+		case "GameLost":
+			setSelectedScene(endGameScene);
+			break;
+		case "GameWon":
+			setSelectedScene(wonGameScene);
+			break;
+		case "CommodityCrash":
+			commodityCrashScene = new CommodityCrashScene(getWidth(), getHeight(), (Commodity)sender, selectedScene, this);
+			setSelectedScene(commodityCrashScene);
 			break;
 		default:
 			System.out.println(message);

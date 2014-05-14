@@ -25,8 +25,8 @@ public class SelectInput extends GraphicalObject {
 		
 		int buttonX = x + 200;
 		int buttonY = y + 30;
-		this.up = new SelectionButton(buttonX, buttonY - 27, 15, 15, true);
-		this.down= new SelectionButton(buttonX, buttonY - 7, 15, 15, false);
+		this.up = new SelectionButton(buttonX, buttonY - 30, 18, 18, true);
+		this.down= new SelectionButton(buttonX, buttonY - 7, 18, 18, false);
 	}
 	
 	

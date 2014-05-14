@@ -47,13 +47,23 @@ public class Transaction {
         return ((double)this.volume2 / (double)this.volume1);
     }
 
-    public Transaction getReversedTransaction() {
+    public Transaction reverse() {
         return new Transaction(this.volume2, this.commodity2, this.volume1, this.commodity1);
     }
 
     @Override
     public String toString() {
         return this.volume1 + " " + this.commodity1.name() + " for " + this.volume2 + " " + this.commodity2.name();
-
     }
+    
+    @Override
+    public int hashCode() {
+    	return commodity1.ordinal() * 1000000 + volume1 * 10000 + commodity2.ordinal() * 100 + volume2;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	return obj instanceof Transaction && obj.hashCode() == hashCode();
+    }
+    
 }

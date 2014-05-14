@@ -4,21 +4,25 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
 
+import core.Offer;
 import core.Transaction;
 import core.GUI.Listener;
 import core.GUI.Scene;
 import core.GUI.TransparencyOverlay;
 import core.GUI.TickerScene.TickerScene;
+import core.actors.Player;
 import core.commodities.Commodity;
 
 public class MakeOfferScene extends Scene implements Listener {
 	
+	Player player;
 	TickerScene tickerScene;
 	MakeOfferDialog makeOfferPopup;
 	GoButton goButton;
 	
-	public MakeOfferScene(int width, int height, List<Commodity> commodities, TickerScene tickerScene, Listener listener) {
+	public MakeOfferScene(int width, int height, List<Commodity> commodities, Player player, TickerScene tickerScene, Listener listener) {
 		super(listener);
+		this.player = player;
 		this.tickerScene = tickerScene;
 		
 		TransparencyOverlay transparencyOverlay = new TransparencyOverlay(width, height, new Color(1f, 1f, 1f, .6f), this);
@@ -52,7 +56,7 @@ public class MakeOfferScene extends Scene implements Listener {
 	@Override
 	public void drawSelf(Graphics2D g) {
 		tickerScene.drawSelf(g);
-		if(getSubmittedTransaction() != null)
+		if(player.canMakeOffer(getSubmittedTransaction()))
 			goButton.setClickable(true);
 		else
 			goButton.setClickable(false);
@@ -64,6 +68,11 @@ public class MakeOfferScene extends Scene implements Listener {
 		switch(message) {
 		case "ClearOverlay":
 			listener.hear("TickerScene", this);
+			break;
+		case "OfferMade":
+			Offer offer = new Offer(getSubmittedTransaction(), player);
+			player.setBestOffer(offer);
+			this.hear("TickerScene", this);
 			break;
 		default:
 			listener.hear(message, this);

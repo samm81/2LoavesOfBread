@@ -17,10 +17,9 @@ public class Ticker {
 		this.color = color;
 		this.numSteps = numSteps;
 		this.magnitude = magnitude;
-		
+
 		this.datum = new LinkedBlockingQueue<Double>(magnitude);
-		while(this.datum.offer(0d))
-			;
+		while(this.datum.offer(0d));
 		
 		this.maxData = this.baseMaxData;
 		findMaxData();

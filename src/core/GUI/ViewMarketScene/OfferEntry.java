@@ -18,12 +18,13 @@ public class OfferEntry extends GraphicalObject implements Listener {
 	private Listener listener;
 	private AcceptOfferButton acceptOfferButton;
 	
-	public OfferEntry(int x, int y, int width, int height, Offer offer, Listener listener) {
+	public OfferEntry(int x, int y, int width, int height, boolean acceptable, Offer offer, Listener listener) {
 		super(x, y, width, height);
 		this.offer = offer;
 		this.listener = listener;
 		
-		this.acceptOfferButton = new AcceptOfferButton(x + 550, y + 3, 75, height - 6, Color.GREEN, this);
+		this.acceptOfferButton = new AcceptOfferButton(x + 600, y + 3, 75, height - 6, Color.GREEN, this);
+		acceptOfferButton.setClickable(acceptable);
 	}
 	
 	public Offer getOffer() {
@@ -47,11 +48,13 @@ public class OfferEntry extends GraphicalObject implements Listener {
 		Commodity commodity1 = offer.getCommodity1();
 		Commodity commodity2 = offer.getCommodity2();
 		
+		drawString("for", offerX, offerY, g);
+		offerX += 50;
 		drawNum(volume1, offerX, offerY, g);
 		offerX += 50;
 		drawCommodity(commodity1, offerX, offerY, g);
 		offerX += 170;
-		drawString(" for ", offerX, offerY, g);
+		drawString(" get ", offerX, offerY, g);
 		offerX += 70;
 		drawNum(volume2, offerX, offerY, g);
 		offerX += 50;

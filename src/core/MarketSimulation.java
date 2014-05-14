@@ -6,7 +6,10 @@ import core.actors.Player;
 import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -16,7 +19,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * 
  * @author Sam "Fabulous Hands" Maynard
  */
-public class MarketSimulation extends Simulation {
+public class MarketSimulation extends TickableThread {
 	
 	protected Player player;
 	protected HashSet<Actor> actors;
@@ -24,25 +27,20 @@ public class MarketSimulation extends Simulation {
 	protected LinkedBlockingQueue<Transaction> transactions;
 	protected OfferChannel offerChannel;
 	
-	protected Long time;
-	protected Long last;
+	protected double[][] totalexchange;
+	protected double[] totalmarketshare;
 	
-	public MarketSimulation(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, Player player, HashSet<Actor> actors, OfferChannel offerChannel, double dt) {
+	private long timeLimit;
+	private long startTime;
+	
+	public MarketSimulation(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, Player player, HashSet<Actor> actors, OfferChannel offerChannel, long timeLimit, double dt) {
 		super(dt);
 		this.actors = actors;
 		this.commodities = commodities;
 		this.transactions = transactions;
 		this.player = player;
 		this.offerChannel = offerChannel;
-		time = Long.valueOf(60 * 10 * 1000);
-	}
-	
-	public LinkedBlockingQueue<Transaction> getTransactions() {
-		return this.transactions;
-	}
-	
-	public HashSet<Actor> getActors() {
-		return this.actors;
+		this.timeLimit = timeLimit;
 	}
 	
 	public List<Commodity> getCommodities() {
@@ -57,33 +55,17 @@ public class MarketSimulation extends Simulation {
 		return this.offerChannel;
 	}
 	
-	public Long getTime() {
-		return this.time;
+	public Long getTimeLeft() {
+		return timeLimit - (time - startTime);
 	}
 	
-	public Integer getTimeInSeconds() {
-		return Integer.valueOf((int) (this.time / 1000));
+	public Integer getTimeLeftInSeconds() {
+		return (int) (getTimeLeft() / 1000);
 	}
 	
 	@Override
 	protected void initialize() {
-		last = System.currentTimeMillis();
-	}
-	
-	@Override
-	public void run() {
-		while(!Thread.currentThread().isInterrupted()) {
-			tick();
-			try {
-				Thread.yield();
-			} finally {
-				try {
-					Thread.sleep((long) (this.dt * 1000));
-				} catch(InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		startTime = System.currentTimeMillis();
 	}
 	
 	/**
@@ -95,24 +77,58 @@ public class MarketSimulation extends Simulation {
 	 */
 	@Override
 	protected void tick() {
+		this.totalexchange = new double[commodities.size()][commodities.size()];
+		this.totalmarketshare = new double[commodities.size()];
+		for(int i = 0; i < totalmarketshare.length; i++) {
+			totalmarketshare[i] = 0;
+			for(int j = 0; j < totalexchange[i].length; j++) {
+				totalexchange[i][j] = 0;
+			}
+		}
 		
-		long now = System.currentTimeMillis();
-		time -= now - last;
-		last = now;
-		
-		//Do we want evaluation and update to be sequential or concurrent.
-		//Seems smarter to have them operate at same time so actors always have the most up to date info.
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket(offerChannel);
+			actor.addValues(totalexchange, totalmarketshare);
+		}
+		/*
+		 * for(int i = 0; i < totalexchange.length; i++)
+		 * {
+		 * totalmarketshare[i]/=this.actors.size();
+		 * }
+		 */
+
+		System.out.println("World total market share for each item: ");
+		for(int i = 0; i < totalexchange.length; i++) {
+			System.out.print(commodities.get(i).name().charAt(0) + ": " + totalmarketshare[i] + " ");
+			for(int j = 0; j < totalexchange[i].length; j++) {
+				totalexchange[i][j] /= this.actors.size();
+			}
+		}
+
+		System.out.println("\nExchange rate average");
+		for(int i = 0; i < commodities.size(); i++) {
+			System.out.print("\t" + commodities.get(i));
+		}
+		System.out.print("\n");
+		for(int i = 0; i < totalexchange.length; i++) {
+			System.out.print(commodities.get(i).name().charAt(0));
+			for(int j = 0; j < totalexchange[i].length; j++) {
+				
+				System.out.printf("\t %.2f", totalexchange[i][j]);
+			}
+			System.out.print("\n");
 		}
 		
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : this.commodities) { // go through all the commodities
-			HashMap<String, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
-			for(Entry<String, Ticker> entry : tickers.entrySet()) { // find the most recent transaction value for each ticker commodity, and update the ticker
+			HashMap<Commodity, Ticker> tickers = commodity.getTickers(); // get all the tickers for that commodity
+			for(Entry<Commodity, Ticker> entry : tickers.entrySet()) { // find the most recent transaction value for each ticker commodity, and update the ticker
 				Ticker ticker = entry.getValue();
-				String tickerName = entry.getKey();
-				double dataPoint = commodity.getMostRecentRatios().get(tickerName);
+				Commodity tickerCommodity = entry.getKey();
+				double dataPoint = commodity.getAverageRatio(tickerCommodity);
+				if(dataPoint < 0)
+					dataPoint = commodity.getLastAverage(tickerCommodity);
+				
 				try {
 					ticker.addDataPoint(dataPoint);
 				} catch(InterruptedException e) {
@@ -121,5 +137,5 @@ public class MarketSimulation extends Simulation {
 			}
 		}
 	}
-
+	
 }

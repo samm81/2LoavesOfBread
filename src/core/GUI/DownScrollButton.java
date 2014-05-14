@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Shape;
-import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 public class DownScrollButton extends Button {
@@ -38,12 +37,6 @@ public class DownScrollButton extends Button {
 		
 		g.setColor(Color.BLACK);
 		g.fill(arrow);
-	}
-	
-	@Override
-	public void clicked(MouseEvent click) {
-		super.clicked(click);
-		listener.hear(message, this);
 	}
 	
 }

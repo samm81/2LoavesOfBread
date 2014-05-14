@@ -33,6 +33,7 @@ public class Player extends Actor {
 	public ConcurrentHashMap<Commodity, Integer> getVolumes() {
 		return this.volumes;
 	}
+	
 	public ConcurrentHashMap<Commodity, Integer> getGoalVolumes() {
 		return this.goalVolumes;
 	}
@@ -46,19 +47,33 @@ public class Player extends Actor {
 		return this.bestOffer;
 	}
 	
-	
 	@Override
 	public void evaluateMarket(OfferChannel offerChannel) {}
 	
+	public boolean canMakeOffer(Transaction transaction){
+		if(transaction == null)
+			return false;
+		Commodity commodity = transaction.getCommodity1();
+		int volume = transaction.getVolume1();
+		return volumes.get(commodity) >= volume;
+	}
+
+	public boolean canMakeOffer(Offer offer) {
+		if(offer == null || offer.getSender() != this)
+			return false;
+		Commodity commodity = offer.getCommodity1();
+		int volume = offer.getMaxTradeVolume();
+		return volumes.get(commodity) >= volume;
+	}
+	
 	@Override
 	public boolean acceptTransaction(Transaction t) {
-		//if(this.volumes.get(t.commodity1) - t.volume1 > 0 && t.commodity1 != t.commodity2 && t.volume1 != 0 && t.volume2 != 0) {
-			System.out.println("Player accepting transaction " + t);
-			this.volumes.put(t.getCommodity1(), this.volumes.get(t.getCommodity1()) + t.getVolume1());
-			this.volumes.put(t.getCommodity2(), this.volumes.get(t.getCommodity2()) - t.getVolume2());
-			this.bestOffer = null;
-		//}
+		//System.out.println("Player accepting transaction " + t);
+		this.volumes.put(t.getCommodity1(), this.volumes.get(t.getCommodity1()) + t.getVolume1());
+		this.volumes.put(t.getCommodity2(), this.volumes.get(t.getCommodity2()) - t.getVolume2());
+		this.bestOffer = null;
 		return true;
 	}
+
 	
 }
