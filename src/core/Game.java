@@ -113,13 +113,17 @@ public class Game extends TickableThread {
 		
 		if(r.nextFloat() < .01) {
 			Commodity[] values = Commodity.values();
-			crashCommodity(values[r.nextInt(values.length)]);
+			Commodity commodity = null;
+			do{
+				commodity = values[r.nextInt(values.length)];
+			}while(commodity.equals(Commodity.Watermelon));
+			crashCommodity(commodity);
 		}
 	}
 	
 	private void crashCommodity(Commodity commodity) {
 		for(Actor actor : actors) {
-			if(actor.getCommodityVolume(commodity) > 1)
+			if(!(actor instanceof Player) && actor.getCommodityVolume(commodity) > 1)
 				actor.setCommodityVolume(commodity, 1);
 		}
 		marketCanvas.hear("CommodityCrash", commodity);
