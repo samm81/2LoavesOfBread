@@ -67,6 +67,10 @@ public class Runner {
 		{
 			actors.add(new TestActor(commodities, transactions));
 		}
+		for(int i = 0; i < 2; i++)
+		{
+			actors.add(new Merchant(commodities, transactions));
+		}
 		actors.add(player);
 		
 		//Creates the transaction thread that evaluates offers, every offerDT.

@@ -131,7 +131,7 @@ public class MarketSimulation extends Simulation {
 		System.out.println("World total market share for each item: ");
 		for(int i = 0; i < totalexchange.length; i++)
 		{
-			System.out.print(commodities.get(i) + ": " + totalmarketshare[i] + " ");
+			System.out.print(commodities.get(i).name().charAt(0) + ": " + totalmarketshare[i] + " ");
 			for(int j = 0; j < totalexchange[i].length; j++)
 			{
 				totalexchange[i][j]/=this.actors.size();
@@ -141,15 +141,16 @@ public class MarketSimulation extends Simulation {
 		System.out.println("\nExchange rate average");
 		for(int i = 0; i < commodities.size(); i++)
 		{
-			System.out.print("\t\t " + commodities.get(i));
+			System.out.print("\t" + commodities.get(i));
 		}
 		System.out.print("\n");
 		for(int i = 0; i < totalexchange.length; i++)
 		{
-			System.out.print(commodities.get(i) + "\t");
+			System.out.print(commodities.get(i).name().charAt(0));
 			for(int j = 0; j < totalexchange[i].length; j++)
 			{
-				System.out.print("\t " + totalexchange[i][j]);
+				
+				System.out.printf("\t %.2f", totalexchange[i][j]);
 			}
 			System.out.print("\n");
 		}

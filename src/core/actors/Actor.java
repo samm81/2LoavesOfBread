@@ -136,31 +136,38 @@ public abstract class Actor {
 			
 			marketshare[i] = marketshare[i] / totalComm;
 		}
-		
+		int need = 0;
+		for(int i = 0 ; i < commodities.size(); i++)
+		{
+			if(needMatrix.get(commodities.get(i)) > 0)
+				need+=needMatrix.get(commodities.get(i));
+		}
 		for(Commodity x : Commodity.values()) {
 			col = 0;
 			for(Commodity y : Commodity.values()) {
 				if(y == x) {
 					exchangeMatrix[row][col] = 1;
 				} else if(x.getMostRecentRatios().get(y.name()) != null && totalComm != 0) {
+					double needRow = needMatrix.get(commodities.get(row));
+					double needCol = needMatrix.get(commodities.get(col));
 					if(marketshare[row] > marketshare[col])
 					{
-						exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1 - ((marketshare[col] - marketshare[row])) / 1.25) + (Math.random() * 0.5 - 0.25);
-						if(needMatrix.get(commodities.get(col)) > 0)
-							exchangeMatrix[row][col]-=(needMatrix.get(commodities.get(col))*(Math.pow(0.1, Math.log10(needMatrix.get(commodities.get(col)) + 1))));
+						exchangeMatrix[row][col] = exchangeMatrix[row][col] * ((1-(marketshare[row]-marketshare[col])/1.1)) + (Math.random() * 0.1 - 0.05);;
 					}
 					else
 					{
-						exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1 + ((marketshare[col] - marketshare[row])) / .75) + (Math.random() * 0.5 - 0.25);
-						if(needMatrix.get(commodities.get(row)) > 0)
-							exchangeMatrix[row][col]+=(needMatrix.get(commodities.get(row))*(Math.pow(0.1,Math.log10(needMatrix.get(commodities.get(row)) + 1))));
+						exchangeMatrix[row][col] = exchangeMatrix[row][col] * ((1+(marketshare[col]-marketshare[row])/0.9)) + (Math.random() * 0.1 - 0.05);
 					}
+					if(needCol > needRow && needCol > 0 && needRow > 0)
+						exchangeMatrix[row][col]*=(1-(needCol-needRow)/need);
+					else
+						exchangeMatrix[row][col]*=(1+(needRow-needCol)/need);
 				} else {
 					exchangeMatrix[row][col] = Math.abs(exchangeMatrix[row][col] + (((Math.random() * 8) - 4)));
 				}
-				if(exchangeMatrix[row][col] > 24)
-					exchangeMatrix[row][col] = Math.random() * 24;
-				if(exchangeMatrix[row][col] < 0.042)
+				if(exchangeMatrix[row][col] > 12)
+					exchangeMatrix[row][col] = Math.random() * 12;
+				if(exchangeMatrix[row][col] < 0.084)
 					exchangeMatrix[row][col] = Math.random();
 				col++;
 			}
@@ -210,7 +217,7 @@ public abstract class Actor {
 		{
 			for(int i = 0; i < marketshares.length; i++)
 			{
-				marketshares[i]+=marketshare[i];
+				marketshares[i]=marketshare[i];
 				for(int j = 0; j < exchangeMatrix.length; j++)
 				{
 					exchangerates[i][j]+=exchangeMatrix[i][j];
