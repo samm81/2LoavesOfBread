@@ -12,6 +12,6 @@ import core.commodities.Commodity;
 public class TestActor extends Actor {
 	
 	public TestActor(List<Commodity> list, LinkedBlockingQueue<Transaction> transactions) {
-		super(list, transactions, new int[] { 100, 100, 1, 100}, new int[] { 20, 20, 200000, 20});
+		super(list, transactions, new int[] { 100, 100, 100, 100}, new int[] { 100, 90, 100, 110});
 	}
 }
