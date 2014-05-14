@@ -33,6 +33,8 @@ public class Game extends TickableThread {
 	
 	private Random r;
 	
+	private boolean won = false;
+	
 	public Game() {
 		super(1);
 		initializeObjects();
@@ -95,9 +97,19 @@ public class Game extends TickableThread {
 	@Override
 	protected void tick() {
 		long timeLeft = sim.getTimeLeft();
-		if(timeLeft < 0) {
-			marketCanvas.hear("GameLost", sim);
+		
+		if(!won) {
+			won = true;
+			for(Commodity commodity : commodities)
+				if(player.getVolumes().get(commodity) < player.getGoalVolumes().get(commodity))
+					won = false;
+			if(won)
+				marketCanvas.hear("GameWon", sim);
 		}
+		
+		
+		if(timeLeft < 0)
+			marketCanvas.hear("GameLost", sim);
 		
 		if(r.nextFloat() < .01) {
 			Commodity[] values = Commodity.values();

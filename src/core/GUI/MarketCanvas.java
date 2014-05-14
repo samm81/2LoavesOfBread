@@ -14,6 +14,7 @@ import core.GUI.MakeOfferScene.MakeOfferScene;
 import core.GUI.TickerScene.TickerScene;
 import core.GUI.TitleScene.TitleScene;
 import core.GUI.ViewMarketScene.ViewMarketScene;
+import core.GUI.WonGameScene.WonGameScene;
 import core.commodities.Commodity;
 
 /**
@@ -33,6 +34,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	ViewMarketScene viewMarketScene;
 	EndGameScene endGameScene;
 	CommodityCrashScene commodityCrashScene;
+	WonGameScene wonGameScene;
 	
 	LinkedList<Scene> scenes;
 	
@@ -69,6 +71,7 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		viewMarketScene = new ViewMarketScene(width, height, sim.getOfferChannel(), sim.getPlayer(), tickerScene, this);
 		endGameScene = new EndGameScene(this);
 		commodityCrashScene = new CommodityCrashScene(width, height, Commodity.Bread, tickerScene, this);
+		wonGameScene = new WonGameScene(width, height, this);
 		
 		scenes.add(titleScene);
 		scenes.add(tickerScene);
@@ -123,6 +126,9 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			break;
 		case "GameLost":
 			setSelectedScene(endGameScene);
+			break;
+		case "GameWon":
+			setSelectedScene(wonGameScene);
 			break;
 		case "CommodityCrash":
 			commodityCrashScene = new CommodityCrashScene(getWidth(), getHeight(), (Commodity)sender, selectedScene, this);

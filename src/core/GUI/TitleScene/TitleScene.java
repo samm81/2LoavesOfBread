@@ -14,8 +14,8 @@ public class TitleScene extends Scene implements Listener {
 		PlayButton playButton = new PlayButton(140, 175, 150, 35, this);
 		graphicalObjects.add(playButton);
 		
-		TutorialButton tutorialButton = new TutorialButton(140, 225, 150, 35, this);
-		graphicalObjects.add(tutorialButton);
+		//TutorialButton tutorialButton = new TutorialButton(140, 225, 150, 35, this);
+		//graphicalObjects.add(tutorialButton);
 	}
 
 	@Override
