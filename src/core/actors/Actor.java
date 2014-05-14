@@ -48,7 +48,8 @@ public abstract class Actor {
 		//exchange matrix setup.
 		for(int row = 0; row < exchangeMatrix.length; row++) {
 			for(int col = 0; col < exchangeMatrix[row].length; col++) {
-				exchangeMatrix[row][col] = Math.random() * 3;
+				exchangeMatrix[row][col] = Math.random() * 8;
+				exchangeMatrix[row][col]/=4;
 			}
 		}
 		int i = 0;

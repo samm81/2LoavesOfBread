@@ -65,11 +65,15 @@ public class Runner {
 		}*/
 		for(int i = 0; i < numActors; i++)
 		{
-			actors.add(new TestActor(commodities, transactions));
-		}
-		for(int i = 0; i < 2; i++)
-		{
-			actors.add(new Merchant(commodities, transactions));
+			int actor = (int) Math.random() * 4;
+			switch(actor)
+			{
+			case 0: actors.add(new Baker(commodities, transactions)); break;
+			case 1: actors.add(new Farmer(commodities, transactions)); break;
+			case 2: actors.add(new Fisherman(commodities, transactions)); break;
+			case 3: actors.add(new Merchant(commodities, transactions)); break;
+			}
+			
 		}
 		actors.add(player);
 		
