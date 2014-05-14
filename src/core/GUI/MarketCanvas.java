@@ -6,7 +6,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
+import core.Game;
 import core.MarketSimulation;
+import core.GUI.EndGameScene.EndGameScene;
 import core.GUI.MakeOfferScene.MakeOfferScene;
 import core.GUI.TickerScene.TickerScene;
 import core.GUI.TitleScene.TitleScene;
@@ -21,23 +23,35 @@ import core.GUI.ViewMarketScene.ViewMarketScene;
 public class MarketCanvas extends DoubleBufferedCanvas {
 	
 	protected MarketSimulation sim;
+	private Game game;
 	
 	TitleScene titleScene;
 	TickerScene tickerScene;
 	MakeOfferScene makeOfferScene;
 	ViewMarketScene viewMarketScene;
+	EndGameScene endGameScene;
 	
 	LinkedList<Scene> scenes;
 	
 	Scene selectedScene;
 	
-	public MarketCanvas(int fps, MarketSimulation sim) {
+	public MarketCanvas(int fps, MarketSimulation sim, Game game) {
 		super(fps);
+		this.sim = sim;
+		this.game = game;
+	}
+	
+	public void setMarketSimulation(MarketSimulation sim) {
 		this.sim = sim;
 	}
 	
 	private void setSelectedScene(Scene scene) {
 		selectedScene = scene;
+	}
+	
+	
+	public void reinit() {
+		init();
 	}
 	
 	@Override
@@ -50,11 +64,13 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		tickerScene = new TickerScene(width, height, sim.getCommodities(), sim.getPlayer(), sim, this);
 		makeOfferScene = new MakeOfferScene(width, height, sim.getCommodities(), sim.getPlayer(), tickerScene, this);
 		viewMarketScene = new ViewMarketScene(width, height, sim.getOfferChannel(), sim.getPlayer(), tickerScene, this);
+		endGameScene = new EndGameScene(this);
 		
 		scenes.add(titleScene);
 		scenes.add(tickerScene);
 		scenes.add(makeOfferScene);
 		scenes.add(viewMarketScene);
+		scenes.add(endGameScene);
 		
 		selectedScene = titleScene;
 	}
@@ -76,7 +92,6 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 				selectedScene.processClick(click);
 			}
 		}
-		
 		if(this.keyPressesWaiting()) {
 			LinkedList<KeyEvent> keystrokes = this.flushKeystrokeQueue();
 			for(KeyEvent keystroke : keystrokes) {
@@ -88,6 +103,10 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	@Override
 	public void hear(String message, Object sender) {
 		switch(message) {
+		case "Play":
+			this.hear("TickerScene", sender);
+			game.play();
+			break;
 		case "TickerScene":
 			setSelectedScene(tickerScene);
 			break;
@@ -96,6 +115,9 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 			break;
 		case "ViewMarket":
 			setSelectedScene(viewMarketScene);
+			break;
+		case "GameLost":
+			setSelectedScene(endGameScene);
 			break;
 		default:
 			System.out.println(message);

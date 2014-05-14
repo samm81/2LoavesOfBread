@@ -21,7 +21,7 @@ public class TitleScene extends Scene implements Listener {
 	@Override
 	public void hear(String message, Object sender) {
 		switch(message){
-		case "Play": listener.hear("TickerScene", this); break;
+		case "Play": listener.hear("Play", this); break;
 		case "Tutorial": listener.hear("HelpScene", this); break;
 		}
 	}
