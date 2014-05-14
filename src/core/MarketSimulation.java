@@ -27,6 +27,9 @@ public class MarketSimulation extends TickableThread {
 	protected LinkedBlockingQueue<Transaction> transactions;
 	protected OfferChannel offerChannel;
 	
+	protected double[][] totalexchange;
+	protected double[] totalmarketshare;
+	
 	private long timeLimit;
 	private long startTime;
 	
@@ -59,7 +62,7 @@ public class MarketSimulation extends TickableThread {
 	public Integer getTimeLeftInSeconds() {
 		return (int) (getTimeLeft() / 1000);
 	}
-
+	
 	@Override
 	protected void initialize() {
 		startTime = System.currentTimeMillis();
@@ -74,8 +77,45 @@ public class MarketSimulation extends TickableThread {
 	 */
 	@Override
 	protected void tick() {
+		this.totalexchange = new double[commodities.size()][commodities.size()];
+		this.totalmarketshare = new double[commodities.size()];
+		for(int i = 0; i < totalmarketshare.length; i++) {
+			totalmarketshare[i] = 0;
+			for(int j = 0; j < totalexchange[i].length; j++) {
+				totalexchange[i][j] = 0;
+			}
+		}
+		
 		for(Actor actor : this.actors) {
 			actor.evaluateMarket(offerChannel);
+			actor.addValues(totalexchange, totalmarketshare);
+		}
+		/*
+		 * for(int i = 0; i < totalexchange.length; i++)
+		 * {
+		 * totalmarketshare[i]/=this.actors.size();
+		 * }
+		 */
+		System.out.println("World total market share for each item: ");
+		for(int i = 0; i < totalexchange.length; i++) {
+			System.out.print(commodities.get(i).name().charAt(0) + ": " + totalmarketshare[i] + " ");
+			for(int j = 0; j < totalexchange[i].length; j++) {
+				totalexchange[i][j] /= this.actors.size();
+			}
+		}
+		
+		System.out.println("\nExchange rate average");
+		for(int i = 0; i < commodities.size(); i++) {
+			System.out.print("\t" + commodities.get(i));
+		}
+		System.out.print("\n");
+		for(int i = 0; i < totalexchange.length; i++) {
+			System.out.print(commodities.get(i).name().charAt(0));
+			for(int j = 0; j < totalexchange[i].length; j++) {
+				
+				System.out.printf("\t %.2f", totalexchange[i][j]);
+			}
+			System.out.print("\n");
 		}
 		
 		// updates the tickers with the most recent ratio
@@ -96,6 +136,5 @@ public class MarketSimulation extends TickableThread {
 			}
 		}
 	}
-
-
+	
 }
