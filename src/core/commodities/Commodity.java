@@ -86,7 +86,7 @@ public enum Commodity {
 	public void createTickersFromCommodities(List<Commodity> commodities, int tickerMagnitude) {
 		for(Commodity commodity : commodities) {
 			if(!commodity.name().equals(this.name())) {
-				this.tickers.put(commodity, new Ticker(tickerMagnitude, 5, commodity.getColor()));
+				this.tickers.put(commodity, new Ticker(tickerMagnitude, 6, commodity.getColor()));
 				this.mostRecentRatios.put(commodity, new LinkedList<Double>());
 				this.lastAverages.put(commodity, 1d);
 			}
