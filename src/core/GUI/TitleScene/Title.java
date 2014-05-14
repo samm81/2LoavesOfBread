@@ -34,7 +34,7 @@ public class Title extends GraphicalObject {
 		
 		g.setFont(new Font("Serif", Font.BOLD, 28));
 		g.setColor(Color.GREEN);
-		g.drawString("PLAY", 100, 280);
+		g.drawString("PLAY", 100, 300);
 		
 		//g.setColor(Color.BLUE);
 		//g.drawString("TUTORIAL", 150, 250);
@@ -42,8 +42,9 @@ public class Title extends GraphicalObject {
 		String str1 = "You are a young boy circa 1000 BCE. Your mother is sick and dying, and the";
 		String str2 = "village doctor will only cure her in exchange for 40 watermelons. Otherwise,";
 		String str3 = "your mother will die within 8 minutes. You have on your person only two loaves";
-		String str4 = "of bread. You enter the busy market, where hundreds of traders are exchanging";
-		String str5 = "goods at a rapid pace. You begin, determined to save your mother.";
+		String str4 = "(wow where did that 10 fish come from)";
+		String str5 = "of bread. You enter the busy market, where hundreds of traders are exchanging";
+		String str6 = "goods at a rapid pace. You begin, determined to save your mother.";
 		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Sans Serif", Font.PLAIN, 18));
@@ -52,6 +53,7 @@ public class Title extends GraphicalObject {
 		g.drawString(str3, 100, 190);
 		g.drawString(str4, 100, 210);
 		g.drawString(str5, 100, 230);
+		g.drawString(str6, 100, 250);
 	}
 	
 }

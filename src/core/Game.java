@@ -54,7 +54,7 @@ public class Game extends TickableThread {
 		
 		transactions = new LinkedBlockingQueue<Transaction>();
 		
-		player = new Player(commodities, new int[] { 2, 0, 0, 0 }, new int[] { 0, 0, 0, 40 });
+		player = new Player(commodities, new int[] { 2, 10, 0, 0 }, new int[] { 0, 0, 0, 40 });
 		
 		actors = new HashSet<Actor>();
 		for(int i = 0; i < numActors; i++) {

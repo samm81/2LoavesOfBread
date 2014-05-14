@@ -3,7 +3,6 @@ package core.commodities;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -23,7 +22,7 @@ public enum Commodity {
 	
 	LinkedBlockingQueue<Transaction> transactions; // every transaction that has occurred involving this commodity
 	HashMap<Commodity, Ticker> tickers; // the tickers for the objects it trades for
-	HashMap<Commodity, LinkedList<Double>> mostRecentRatios; // the most recent trade ratio for each other commodity
+	HashMap<Commodity, LinkedBlockingQueue<Double>> mostRecentRatios; // the most recent trade ratio for each other commodity
 	Color color; // the commodity's color
 	
 	HashMap<Commodity, Double> lastAverages;
@@ -31,7 +30,7 @@ public enum Commodity {
 	private Commodity(Color color) {
 		this.transactions = new LinkedBlockingQueue<>();
 		this.tickers = new HashMap<>();
-		this.mostRecentRatios = new HashMap<Commodity, LinkedList<Double>>();
+		this.mostRecentRatios = new HashMap<Commodity, LinkedBlockingQueue<Double>>();
 		this.color = color;
 		
 		this.lastAverages = new HashMap<Commodity, Double>();
@@ -49,7 +48,7 @@ public enum Commodity {
 		return this.tickers.values();
 	}
 	
-	public LinkedList<Double> getMostRecentRatios(Commodity commodity) {
+	public LinkedBlockingQueue<Double> getMostRecentRatios(Commodity commodity) {
 		return this.mostRecentRatios.get(commodity);
 	}
 	
@@ -60,7 +59,7 @@ public enum Commodity {
 	
 	public double getAverageRatio(Commodity commodity) {
 		double average = 0;
-		LinkedList<Double> datum = getMostRecentRatios(commodity);
+		LinkedBlockingQueue<Double> datum = getMostRecentRatios(commodity);
 		if(datum.size() == 0)
 			return -1;
 		for(double data : datum)
@@ -87,7 +86,7 @@ public enum Commodity {
 		for(Commodity commodity : commodities) {
 			if(!commodity.name().equals(this.name())) {
 				this.tickers.put(commodity, new Ticker(tickerMagnitude, 6, commodity.getColor()));
-				this.mostRecentRatios.put(commodity, new LinkedList<Double>());
+				this.mostRecentRatios.put(commodity, new LinkedBlockingQueue<Double>());
 				this.lastAverages.put(commodity, 1d);
 			}
 		}
