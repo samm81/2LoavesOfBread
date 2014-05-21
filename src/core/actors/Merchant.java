@@ -7,6 +7,7 @@ import core.Transaction;
 import core.commodities.Commodity;
 
 /**
+ * Merchant is an actor that begins the game with 4 of each commodity (except 1 watermelon) and wants 20 of each other commodity.
  * @author Brian Oluwo
  */
 public class Merchant extends Actor {

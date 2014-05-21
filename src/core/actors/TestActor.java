@@ -7,6 +7,7 @@ import core.Transaction;
 import core.commodities.Commodity;
 
 /**
+ * Test class.
  * @author Brian Oluwo
  */
 public class TestActor extends Actor {

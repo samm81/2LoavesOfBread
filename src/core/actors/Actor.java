@@ -66,8 +66,16 @@ public abstract class Actor {
 		
 	}
 	
+	/*
+	 * 
+	 */
 	public Actor() {}
 	
+	/**
+	 * GetCommodityVolume
+	 * @param commodity
+	 * @return the amount of a commodity in an actor's inventory.
+	 */
 	public int getCommodityVolume(Commodity commodity){
 		System.out.println(commodity.name());
 		return volumes.get(commodity);
@@ -186,6 +194,10 @@ public abstract class Actor {
 		//thought();
 	}
 	
+	/**
+	 * thought prints out why the actor's best offer and exchange rate values
+	 * change as they do.
+	 */
 	public void thought() {
 		System.out.println(this + " reporting for duty");
 		System.out.println("Status:");
@@ -221,6 +233,11 @@ public abstract class Actor {
 		return false;
 	}
 	
+	/**
+	 * addValues 
+	 * @param exchangerates
+	 * @param marketshares
+	 */
 	public void addValues(double[][] exchangerates, double[] marketshares)
 	{
 		if(marketshare != null)
