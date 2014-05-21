@@ -3,6 +3,11 @@ package core.GUI;
 import java.awt.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * The dots that populate a graph
+ * @author samwm_000
+ *
+ */
 public class Ticker {
 	
 	final int baseMaxData = 3;
@@ -13,6 +18,12 @@ public class Ticker {
 	int numSteps;
 	Color color;
 	
+	/**
+	 * constructor
+	 * @param magnitude number of points to display
+	 * @param numSteps number of lines to draw
+	 * @param color color of the points
+	 */
 	public Ticker(int magnitude, int numSteps, Color color) {
 		this.color = color;
 		this.numSteps = numSteps;
@@ -25,6 +36,9 @@ public class Ticker {
 		findMaxData();
 	}
 	
+	/**
+	 * finds the maximum of all the data points displayed
+	 */
 	private void findMaxData() {
 		for(double data : this.datum) {
 			if(data > this.maxData) {
@@ -33,6 +47,11 @@ public class Ticker {
 		}
 	}
 	
+	/**
+	 * adds a data point to the list of data points being displayed
+	 * @param dataPoint data point to add
+	 * @throws InterruptedException
+	 */
 	public void addDataPoint(double dataPoint) throws InterruptedException {
 		double first = this.datum.poll();
 		this.datum.offer(dataPoint);
@@ -47,6 +66,14 @@ public class Ticker {
 		
 	}
 	
+	/**
+	 * draws the points
+	 * @param x x position of upper left bound
+	 * @param y y position of upper left bound
+	 * @param width width bounds
+	 * @param height height bounds
+	 * @param g graphics to draw with
+	 */
 	public void drawSelf(int x, int y, int width, int height, Graphics2D g) {
 		g.setColor(new Color(.3f, .3f, .3f));
 		double dy = (double) height / (double) numSteps;
@@ -74,6 +101,13 @@ public class Ticker {
 		}
 	}
 	
+	/**
+	 * used to draw the labels for the lines
+	 * @param x x position of the label
+	 * @param y y position of the label
+	 * @param height height of the label
+	 * @param g graphics object to draw with
+	 */
 	public void drawLabel(int x, int y, int height, Graphics2D g) {
 		g.setFont(new Font("Sans Serif", Font.PLAIN, 12));
 		g.setColor(this.color);

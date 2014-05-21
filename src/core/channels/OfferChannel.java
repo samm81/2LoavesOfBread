@@ -1,16 +1,16 @@
 package core.channels;
 
+import core.Offer;
+import core.Transaction;
+import core.actors.Actor;
+import core.commodities.Commodity;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import core.Offer;
-import core.Transaction;
-import core.actors.Actor;
-import core.commodities.Commodity;
 
 /**
  * 
@@ -29,7 +29,14 @@ public class OfferChannel extends Thread {
 	protected ConcurrentHashMap<Actor, Offer> offersMap;
 	private double dt;
 	private Offer[] offers;
-	
+
+    /**
+     * Constructor
+     * @param globalTransactions - A Queue that holds all recorded transactions, used when an offer has been matched.
+     * @param actors - HashSet of Actors in the game.
+     * @param dt - The period of time between each evaluation of tick
+     * @param numActors - The Number of AI in the game
+     */
 	public OfferChannel(LinkedBlockingQueue<Transaction> globalTransactions, HashSet<Actor> actors, double dt, int numActors) {
 		this.globalTransactions = globalTransactions;
 		this.actors = actors;
@@ -39,14 +46,25 @@ public class OfferChannel extends Thread {
 		//FIXME: +1 Corresponds to the number of actors, should be passed in or some sort of call.
 		this.offers = new Offer[numActors + 1];
 	}
-	
+
+    /**
+     *
+     * @return The mapping of all current offers
+     */
 	public ConcurrentHashMap<Actor, Offer> getOffersMap() {
 		return this.offersMap;
 	}
-	
-	/**
-	 *
-	 */
+
+    /**
+     * Completely clears the OffersMap.
+     */
+	public void clear() {
+		this.offersMap.clear();
+	}
+
+    /**
+     * Overrides Thread.run() with our timed sleeping, evaluation yielding, and our {@link #tick()} method.
+     */
 	@Override
 	public void run() {
 		while(!Thread.currentThread().isInterrupted()) {
@@ -76,7 +94,7 @@ public class OfferChannel extends Thread {
 	}
 	
 	/**
-	 * Processes the offers in the queue
+	 * Processes the offers in the Map
 	 */
 	private void processOffers() {
 		int count = 0;
@@ -84,17 +102,12 @@ public class OfferChannel extends Thread {
 			offers[count] = entry.getValue();
 			count++;
 		}
-		//ArrayList<Offer> offers = Collections.list(Collections.enumeration(offersMap.values()));
-		//		Collections.shuffle(offers);
 		for(int i = 0; i < offers.length; i++) {
 			Offer first = offers[i];
 			for(int j = i + 1; j < offers.length; j++) {
 				Offer second = offers[j];
 				if(isViable(first, second)) {
 					acceptOffers(first, second);
-					
-					//					offers.remove(j);
-					//System.out.println("Matched offer " + first + " with " + second);
 					break;
 				}
 			}
@@ -122,6 +135,8 @@ public class OfferChannel extends Thread {
 	}
 	
 	/**
+     * Checks if an Offer is viable with another
+     *
 	 * Conditions to be checked:
 	 * 1. They get at least minReceive
 	 * 2. They give away no more than maxOffer
@@ -139,11 +154,20 @@ public class OfferChannel extends Thread {
 		return !(first.getMinReceive() > second.getMaxTradeVolume() || (second.getMinReceive() > first.getMaxTradeVolume()));
 		
 	}
-	
+
+    /**
+     * See return statement/method signature.
+     * @return An iterable ArrayList of all pending offers as of the moment the method is called.
+     */
 	public ArrayList<Offer> getPendingOffers() {
 		return Collections.list(Collections.enumeration(offersMap.values()));
 	}
-	
+
+    /**
+     * See return statement/method signature.
+     * @param commodity - Commodity being searched against
+     * @return - An Iterable ArrayList of all offers being made that are giving up "commodity"
+     */
 	public ArrayList<Offer> getPendingOffers(Commodity commodity) {
 		ArrayList<Offer> offerArrayList = new ArrayList<>();
 		for(Map.Entry<Actor, Offer> entry : offersMap.entrySet()) {
@@ -153,7 +177,13 @@ public class OfferChannel extends Thread {
 		}
 		return offerArrayList;
 	}
-	
+
+    /**
+     * See return statement/method signature.
+     * @param tradeAway - Commodity that is wished to be traded away
+     * @param tradeFor - Commodity that is wished to be acquired
+     * @return - An Iterable ArrayList of all offers being made that are giving up "tradeAway" for "tradeFor"
+     */
 	public ArrayList<Offer> getPendingOffers(Commodity tradeAway, Commodity tradeFor) {
 		ArrayList<Offer> offerArrayList = new ArrayList<>();
 		for(Map.Entry<Actor, Offer> entry : offersMap.entrySet()) {

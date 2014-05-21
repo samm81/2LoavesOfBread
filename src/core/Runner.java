@@ -10,10 +10,9 @@ import javax.swing.JFrame;
 import core.GUI.MarketCanvas;
 
 /**
- * The runner for the game. Gets the frame, the canvas, and the
- * simulation up and going. Holds all adjustable constants.
+ * The runner for the game. Gets the frame, the canvas, and the game going.
  *
- * @author Sam "Fabulous Hands" Maynard
+ * @author Sam Maynard
  */
 public class Runner {
 	
@@ -21,14 +20,10 @@ public class Runner {
 	static int height = 700;
 	
 	/**
-	 * Sets Up Market TickableThread, Canvas, and OfferChannel
+	 * Sets Up Market Canvas and Game
 	 * @param args - Command Line Args
 	 */
 	public static void main(String[] args) {
-		Game game = new Game();
-		
-		MarketCanvas canvas = game.getMarketCanvas();
-		
 		JFrame f = new JFrame("Two Loaves of Bread");
 		f.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		f.setResizable(false);
@@ -37,17 +32,19 @@ public class Runner {
 		int screenWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		int screenHeight = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		f.setBounds(screenWidth / 2 - width / 2, screenHeight / 2 - height / 2 - 50, width, height);
-		canvas.setBackground(DARK_GRAY);
-		// these two are the height and the width that the frame takes up with it's surrounding bar
-		// found by trial and error
+		
+		Game game = new Game();
+		MarketCanvas canvas = game.getMarketCanvas();
+		// height and the width that the frame takes up with it's surrounding bar, found by trial and error
 		final int frameWidthPadding = 6;
 		final int frameHeightPadding = 29;
 		canvas.setBounds(10, 10, f.getWidth() - frameWidthPadding - 20, f.getHeight() - frameHeightPadding - 20);
+		canvas.setBackground(DARK_GRAY);
+		
 		f.add(canvas);
-		f.setVisible(true);
-		
 		canvas.start();
-		game.startThreads();
-		
+
+		f.setVisible(true);
 	}
+	
 }

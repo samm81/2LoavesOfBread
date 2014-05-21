@@ -15,8 +15,13 @@ import core.actors.Player;
 import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
-public class Game {
-
+/**
+ * Class that holds all of the game's elements
+ * @author Sam Maynard
+ *
+ */
+public class Game extends TickableThread {
+	
 	final double dt = 2d;
 	final double offerDT = dt;
 	final long timeLimit = 60 * 8 * 1000;
@@ -30,8 +35,27 @@ public class Game {
 	private HashSet<Actor> actors;
 	private OfferChannel offerChannel;
 	private MarketCanvas marketCanvas;
-
+	
+	private Random r;
+	
+	private boolean won = false;
+	
+	/**
+	 * constructor
+	 */
 	public Game() {
+		super(1);
+		initializeObjects();
+		sim = new MarketSimulation(commodities, transactions, player, actors, offerChannel, timeLimit, dt);
+		marketCanvas = new MarketCanvas(60, sim, this);
+		
+		r = new Random();
+	}
+	
+	/**
+	 * initializes all of the game's objects
+	 */
+	private void initializeObjects() {
 		commodities = new LinkedList<Commodity>();
 		for(Commodity item : Commodity.values())
 			commodities.add(item);
@@ -41,7 +65,7 @@ public class Game {
 		
 		transactions = new LinkedBlockingQueue<Transaction>();
 		
-		player = new Player(commodities, new int[] { 2, 0, 0, 0 }, new int[] { 0, 0, 0, 40 });
+		player = new Player(commodities, new int[] { 2, 10, 0, 0 }, new int[] { 0, 0, 0, 40 });
 		
 		actors = new HashSet<Actor>();
 		for(int i = 0; i < numActors; i++) {
@@ -65,18 +89,64 @@ public class Game {
 		
 		offerChannel = new OfferChannel(transactions, actors, offerDT, actors.size());
 		offerChannel.setDaemon(true);
-		
-		sim = new MarketSimulation(commodities, transactions, player, actors, offerChannel, timeLimit, dt);
-		
-		marketCanvas = new MarketCanvas(60, sim);
 	}
 	
 	public MarketCanvas getMarketCanvas() {
 		return this.marketCanvas;
 	}
 	
-	public void startThreads() {
+	/**
+	 * starts the game
+	 */
+	public void play() {
+		this.start();
+	}
+	
+	@Override
+	protected void initialize() {
 		sim.start();
 		offerChannel.start();
 	}
+	
+	@Override
+	protected void tick() {
+		long timeLeft = sim.getTimeLeft();
+		
+		if(!won) {
+			won = true;
+			for(Commodity commodity : commodities)
+				if(player.getVolumes().get(commodity) < player.getGoalVolumes().get(commodity))
+					won = false;
+			if(won)
+				marketCanvas.hear("GameWon", sim);
+		}
+		
+		
+		if(timeLeft < 0)
+			marketCanvas.hear("GameLost", sim);
+		
+		if(r.nextFloat() < .01) {
+			Commodity[] values = Commodity.values();
+			Commodity commodity = null;
+			do{
+				commodity = values[r.nextInt(values.length)];
+			}while(commodity.equals(Commodity.Watermelon));
+			crashCommodity(commodity);
+		}
+	}
+	
+	/**
+	 * removes all the items save one of a commodity from each actor's inventory
+	 * (besides the player's)
+	 * @param commodity commodity to remove
+	 */
+	private void crashCommodity(Commodity commodity) {
+		for(Actor actor : actors) {
+			if(!(actor instanceof Player) && actor.getCommodityVolume(commodity) > 1)
+				actor.setCommodityVolume(commodity, 1);
+		}
+		offerChannel.clear();
+		marketCanvas.hear("CommodityCrash", commodity);
+	}
+	
 }

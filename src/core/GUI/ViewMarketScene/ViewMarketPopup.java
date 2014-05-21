@@ -18,6 +18,11 @@ import core.GUI.Listener;
 import core.actors.Player;
 import core.channels.OfferChannel;
 
+/**
+ * Class containing offers submitted to the market
+ * @author samwm_000
+ *
+ */
 public class ViewMarketPopup extends GraphicalObject implements Listener {
 	
 	OfferChannel offerChannel;
@@ -34,6 +39,11 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 	private boolean filtering = true;
 	private boolean makingNonReduntant = true;
 	
+	/**
+	 * constructor
+	 * @param offerChannel offer channel where offers are posted
+	 * @param player player to accept offers
+	 */
 	public ViewMarketPopup(int x, int y, int width, int height, OfferChannel offerChannel, Player player, Listener listener) {
 		super(x, y, width, height);
 		this.offerChannel = offerChannel;
@@ -43,13 +53,13 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		noFilterComparator = new Comparator<Offer>() {
 			
 			public int compare(Offer offer1, Offer offer2) {
-				int compare = offer1.getCommodity1().compareTo(offer2.getCommodity1());
+				int compare = offer1.getCommodity1().compareTo(offer2.getCommodity1()); // first sort by commodity one
 				if(compare == 0) {
-					compare = Integer.compare(offer1.getMaxTradeVolume(), offer2.getMaxTradeVolume());
+					compare = Integer.compare(offer1.getMaxTradeVolume(), offer2.getMaxTradeVolume()); // then by max trade volume
 					if(compare == 0) {
-						compare = offer1.getCommodity2().compareTo(offer2.getCommodity2());
+						compare = offer1.getCommodity2().compareTo(offer2.getCommodity2()); // then by commodity two
 						if(compare == 0) {
-							compare = Integer.compare(offer1.getMinReceive(), offer2.getMinReceive());
+							compare = Integer.compare(offer1.getMinReceive(), offer2.getMinReceive()); // then by min recieve volume
 							return compare;
 						} else {
 							return compare;
@@ -66,7 +76,8 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		filterComparator = new Comparator<Offer>() {
 			
 			public int compare(Offer offer1, Offer offer2) {
-				
+
+				// first sort by if the player can make the offer
 				if(!(playerCanMakeOffer(offer1) && playerCanMakeOffer(offer2))) {
 					if(playerCanMakeOffer(offer1))
 						return -1;
@@ -74,6 +85,7 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 						return 1;
 				}
 				
+				// then sort normally
 				int compare = offer1.getCommodity1().compareTo(offer2.getCommodity1());
 				if(compare == 0) {
 					compare = Integer.compare(offer1.getMaxTradeVolume(), offer2.getMaxTradeVolume());
@@ -95,11 +107,18 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		};
 	}
 	
+	/**
+	 * @param offer offer to test if makeable
+	 * @return if the player can make the offer
+	 */
 	public boolean playerCanMakeOffer(Offer offer) {
 		Offer playerOffer = new Offer(offer.toTransaction(), player);
 		return player.canMakeOffer(playerOffer);
 	}
 	
+	/**
+	 * scrolls the list of offers up a whole page
+	 */
 	private void scrollUp() {
 		if(offerListingsStart > 0) {
 			offerListingsStart -= numOfferListings;
@@ -109,6 +128,9 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 		listener.hear("Unbottomed", this);
 	}
 	
+	/**
+	 * scrolls the list of offers down a whole page
+	 */
 	private void scrollDown() {
 		if(offerListingsStart + numOfferListings <= offerChannel.getOffersMap().size()) {
 			offerListingsStart += numOfferListings;
@@ -179,6 +201,11 @@ public class ViewMarketPopup extends GraphicalObject implements Listener {
 				offerEntry.clicked(click);
 	}
 	
+	/**
+	 * reverses an offer and puts the player as the sender
+	 * @param offer offer to transform
+	 * @return player's equivalent offer
+	 */
 	private Offer makePlayerOffer(Offer offer) {
 		return new Offer(offer.toTransaction().reverse(), player);
 	}

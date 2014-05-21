@@ -25,6 +25,7 @@ public abstract class Actor {
 	protected int[] priorityMatrix;
 	protected ConcurrentHashMap<Commodity, Integer> volumes;
 	
+	private double[] marketshare;
 	private int[] initialValues;
 	protected Offer bestOffer;
 	
@@ -47,7 +48,8 @@ public abstract class Actor {
 		//exchange matrix setup.
 		for(int row = 0; row < exchangeMatrix.length; row++) {
 			for(int col = 0; col < exchangeMatrix[row].length; col++) {
-				exchangeMatrix[row][col] = Math.random() * 3;
+				exchangeMatrix[row][col] = Math.random() * 8;
+				exchangeMatrix[row][col]/=4;
 			}
 		}
 		int i = 0;
@@ -57,10 +59,31 @@ public abstract class Actor {
 			this.volumes.put(s, initialValues[i]);
 			i++;
 		}
+		for(int j = 0; j < commodities.size(); j++) {
+			needMatrix.put(commodities.get(j), priorityMatrix[j] - volumes.get(commodities.get(j)));
+		}
+
 		
 	}
 	
+	/*
+	 * 
+	 */
 	public Actor() {}
+	
+	/**
+	 * GetCommodityVolume
+	 * @param commodity
+	 * @return the amount of a commodity in an actor's inventory.
+	 */
+	public int getCommodityVolume(Commodity commodity){
+		System.out.println(commodity.name());
+		return volumes.get(commodity);
+	}
+	
+	public void setCommodityVolume(Commodity commodity, int volume) {
+		volumes.put(commodity, volume);
+	}
 	
 	/**
 	 * Get Best Offer returns a transaction that the actor will submit based on
@@ -85,7 +108,7 @@ public abstract class Actor {
 				wantComm = commodities.get(i);
 				want = i;
 			} else {
-				if(inventoryVal[i] / needMatrix.get(commodities.get(i)) > inventoryVal[want] / needMatrix.get(wantComm)) {
+				if(inventoryVal[i] / needMatrix.get(commodities.get(i)) < inventoryVal[want] / needMatrix.get(wantComm)) {
 					wantComm = commodities.get(i);
 					want = i;
 				}
@@ -119,7 +142,7 @@ public abstract class Actor {
 		//Exchange Matrix is set up so
 		//row and column 0 is one commodity, row, column 1 is one commodity ... etc.
 		//this for loop shows the movement of markets
-		double[] marketshare = new double[commodities.size()];
+		marketshare = new double[commodities.size()];
 		double totalComm = 0;
 		for(int i = 0; i < marketshare.length; i++) {
 			for(Offer o : offerChannel.getPendingOffers(commodities.get(i))) {
@@ -131,17 +154,32 @@ public abstract class Actor {
 			
 			marketshare[i] = marketshare[i] / totalComm;
 		}
-		
+		int need = 0;
+		for(int i = 0 ; i < commodities.size(); i++)
+		{
+			if(needMatrix.get(commodities.get(i)) > 0)
+				need+=needMatrix.get(commodities.get(i));
+		}
 		for(Commodity x : Commodity.values()) {
 			col = 0;
 			for(Commodity y : Commodity.values()) {
 				if(y == x) {
 					exchangeMatrix[row][col] = 1;
-				} else if(x.getMostRecentRatios().get(y.name()) != null && totalComm != 0) {
+				} else if(x.getMostRecentRatios(y).size() != 0 && totalComm != 0) {
+					double needRow = needMatrix.get(commodities.get(row));
+					double needCol = needMatrix.get(commodities.get(col));
 					if(marketshare[row] > marketshare[col])
-						exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1 - ((marketshare[row] - marketshare[col])) / 1.5) + (Math.random() * 2 - 1);
+					{
+						exchangeMatrix[row][col] = exchangeMatrix[row][col] * ((1-(marketshare[row]-marketshare[col])/1.1)) + (Math.random() * 0.1 - 0.05);;
+					}
 					else
-						exchangeMatrix[row][col] = exchangeMatrix[row][col] * (1 - ((marketshare[col] - marketshare[row])) / .5 + (Math.random() * 2 - 1));
+					{
+						exchangeMatrix[row][col] = exchangeMatrix[row][col] * ((1+(marketshare[col]-marketshare[row])/0.9)) + (Math.random() * 0.1 - 0.05);
+					}
+					if(needCol > needRow && needCol > 0 && needRow > 0)
+						exchangeMatrix[row][col]*=(1-(needCol-needRow)/need);
+					else
+						exchangeMatrix[row][col]*=(1+(needRow-needCol)/need);
 				} else {
 					exchangeMatrix[row][col] = Math.abs(exchangeMatrix[row][col] + (((Math.random() * 8) - 4)));
 				}
@@ -156,10 +194,14 @@ public abstract class Actor {
 		//thought();
 	}
 	
+	/**
+	 * thought prints out why the actor's best offer and exchange rate values
+	 * change as they do.
+	 */
 	public void thought() {
 		System.out.println(this + " reporting for duty");
 		System.out.println("Status:");
-		for(Commodity commodity : commodities){
+		for(Commodity commodity : commodities) {
 			System.out.println("I have " + volumes.get(commodity) + " " + commodity.name());
 		}
 		System.out.println("Valuation:");
@@ -189,5 +231,25 @@ public abstract class Actor {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * addValues 
+	 * @param exchangerates
+	 * @param marketshares
+	 */
+	public void addValues(double[][] exchangerates, double[] marketshares)
+	{
+		if(marketshare != null)
+		{
+			for(int i = 0; i < marketshares.length; i++)
+			{
+				marketshares[i]=marketshare[i];
+				for(int j = 0; j < exchangeMatrix.length; j++)
+				{
+					exchangerates[i][j]+=exchangeMatrix[i][j];
+				}
+			}
+		}
 	}
 }

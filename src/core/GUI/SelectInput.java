@@ -1,10 +1,9 @@
-package core.GUI.MakeOfferScene;
+package core.GUI;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
-import core.GUI.GraphicalObject;
 import static java.awt.Color.RED;
 
 
@@ -25,8 +24,8 @@ public class SelectInput extends GraphicalObject {
 		
 		int buttonX = x + 200;
 		int buttonY = y + 30;
-		this.up = new SelectionButton(buttonX, buttonY - 27, 15, 15, true);
-		this.down= new SelectionButton(buttonX, buttonY - 7, 15, 15, false);
+		this.up = new SelectionButton(buttonX, buttonY - 30, 18, 18, true);
+		this.down= new SelectionButton(buttonX, buttonY - 7, 18, 18, false);
 	}
 	
 	

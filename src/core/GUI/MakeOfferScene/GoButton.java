@@ -19,6 +19,9 @@ import core.GUI.Listener;
  */
 public class GoButton extends Button {
 
+	/**
+	 * constructor
+	 */
 	public GoButton(int x, int y, int width, int height, Listener listener) {
 		super(x, y, width, height, Color.GREEN, "GO", "OfferMade", listener);
 		this.setClickable(false);

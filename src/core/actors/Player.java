@@ -7,12 +7,24 @@ import core.Offer;
 import core.Transaction;
 import core.channels.OfferChannel;
 import core.commodities.Commodity;
-
+/**
+ * Player is the player actor, controlled by the player.
+ * @author patrickcshan
+ *
+ */
 public class Player extends Actor {
 	
 	Offer bestOffer;
 	ConcurrentHashMap<Commodity, Integer> goalVolumes;
-	
+	/**
+	 * Constructor for player
+	 * @param commodities 
+	 * the commodities in the system
+	 * @param startingVolumes 
+	 * the starting inventory
+	 * @param goalVolumes 
+	 * the goal of the player.
+	 */
 	public Player(List<Commodity> commodities, int[] startingVolumes, int[] goalVolumes) {
 		this.volumes = new ConcurrentHashMap<Commodity, Integer>(startingVolumes.length);
 		this.goalVolumes = new ConcurrentHashMap<Commodity, Integer>(goalVolumes.length);
@@ -30,24 +42,45 @@ public class Player extends Actor {
 		bestOffer = null;
 	}
 	
+	/**
+	 * Get the hashmap that contains the player's inventory
+	 * @return
+	 */
 	public ConcurrentHashMap<Commodity, Integer> getVolumes() {
 		return this.volumes;
 	}
 	
+	/**
+	 * Get the hashmap that contains the player's goal inventory.
+	 * @return
+	 */
 	public ConcurrentHashMap<Commodity, Integer> getGoalVolumes() {
 		return this.goalVolumes;
 	}
 	
+	/**
+	 * Sets player's best offer.
+	 * @param bestOffer
+	 */
 	public void setBestOffer(Offer bestOffer) {
 		this.bestOffer = bestOffer;
 	}
 	
 	@Override
+	/**
+	 * Getter for the best offer.
+	 */
 	public Offer getBestOffer() {
 		return this.bestOffer;
 	}
 	
 	@Override
+	/**
+	 * EvaluateMarket determines whether or not the player is still able to 
+	 * make the offer he wants to make (In case his inventory changes based on
+	 * view market). 
+	 * @param offerChannel
+	 */
 	public void evaluateMarket(OfferChannel offerChannel) {}
 	
 	public boolean canMakeOffer(Transaction transaction){
@@ -58,6 +91,11 @@ public class Player extends Actor {
 		return volumes.get(commodity) >= volume;
 	}
 
+	/**
+	 * Determines whether or not the player can make the offer.
+	 * @param offer
+	 * @return
+	 */
 	public boolean canMakeOffer(Offer offer) {
 		if(offer == null || offer.getSender() != this)
 			return false;
@@ -67,6 +105,10 @@ public class Player extends Actor {
 	}
 	
 	@Override
+	/**
+	 * Accepts transactions that satisfies both the player and the AI.
+	 * @param t
+	 */
 	public boolean acceptTransaction(Transaction t) {
 		//System.out.println("Player accepting transaction " + t);
 		this.volumes.put(t.getCommodity1(), this.volumes.get(t.getCommodity1()) + t.getVolume1());

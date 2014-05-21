@@ -10,12 +10,19 @@ import java.awt.event.MouseEvent;
 import core.GUI.Button;
 import core.GUI.Listener;
 
-
+/**
+ * Checkbox to allow the user to filter offers
+ * @author Sam Maynard
+ *
+ */
 public class MakingNonReduntantCheckbox extends Button {
 
 	private boolean checked = true;
 	private int checkedSquareOffest = 6;
 	
+	/**
+	 * constructor
+	 */
 	public MakingNonReduntantCheckbox(int x, int y, int size, Listener listener) {
 		super(x, y, size, size, Color.WHITE, "don't show reduntant offers", "MakeNonRedundant", listener);
 	}

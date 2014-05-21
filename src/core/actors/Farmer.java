@@ -6,7 +6,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import core.Transaction;
 import core.commodities.Commodity;
 
-/**
+/**Farmers are Actors that begin the game with
+ * 4 Oxen, and 5 Watermelon
+ * They desire: 30 loaves of bread, 10 fish, and 4 oxen.
  * @author Brian Oluwo
  */
 public class Farmer extends Actor {
