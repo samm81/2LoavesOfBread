@@ -9,11 +9,20 @@ import java.awt.geom.RoundRectangle2D;
 import core.GUI.GraphicalObject;
 import core.commodities.Commodity;
 
-
+/**
+ * A message to inform the user that a commodity has
+ * left the market
+ * @author Sam Maynard
+ *
+ */
 public class CommodityCrashPopup extends GraphicalObject {
 	
 	Commodity commodity;
 	
+	/**
+	 * constructor
+	 * @param commodity commodity that has disappeared from the market
+	 */
 	public CommodityCrashPopup(int x, int y, int width, int height, Commodity commodity) {
 		super(x, y, width, height);
 		this.commodity = commodity;

@@ -10,10 +10,9 @@ import javax.swing.JFrame;
 import core.GUI.MarketCanvas;
 
 /**
- * The runner for the game. Gets the frame, the canvas, and the
- * simulation up and going. Holds all adjustable constants.
+ * The runner for the game. Gets the frame, the canvas, and the game going.
  *
- * @author Sam "Fabulous Hands" Maynard
+ * @author Sam Maynard
  */
 public class Runner {
 	
@@ -21,7 +20,7 @@ public class Runner {
 	static int height = 700;
 	
 	/**
-	 * Sets Up Market TickableThread, Canvas, and OfferChannel
+	 * Sets Up Market Canvas and Game
 	 * @param args - Command Line Args
 	 */
 	public static void main(String[] args) {

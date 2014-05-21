@@ -3,8 +3,16 @@ package core.GUI.TitleScene;
 import core.GUI.Listener;
 import core.GUI.Scene;
 
+/**
+ * {@link Scene} that holds the objects for the title screen
+ * @author Sam Maynard
+ *
+ */
 public class TitleScene extends Scene implements Listener {
 
+	/**
+	 * constructor
+	 */
 	public TitleScene(int width, int height, Listener listener) {
 		super(listener);
 		

@@ -8,9 +8,16 @@ import java.awt.Shape;
 
 import core.GUI.GraphicalObject;
 
-
+/**
+ * The end of game message
+ * @author Sam Maynard
+ *
+ */
 public class EndGameMessage extends GraphicalObject {
 	
+	/**
+	 * constructor
+	 */
 	public EndGameMessage(int x, int y) {
 		super(x, y, 200, 90);
 	}

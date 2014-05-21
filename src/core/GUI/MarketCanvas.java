@@ -27,7 +27,11 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	
 	protected MarketSimulation sim;
 	private Game game;
+
+	LinkedList<Scene> scenes;
+	Scene selectedScene;
 	
+	// scenes that can be displayed
 	TitleScene titleScene;
 	TickerScene tickerScene;
 	MakeOfferScene makeOfferScene;
@@ -36,9 +40,6 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 	CommodityCrashScene commodityCrashScene;
 	WonGameScene wonGameScene;
 	
-	LinkedList<Scene> scenes;
-	
-	Scene selectedScene;
 	
 	public MarketCanvas(int fps, MarketSimulation sim, Game game) {
 		super(fps);
@@ -54,10 +55,6 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		selectedScene = scene;
 	}
 	
-	
-	public void reinit() {
-		init();
-	}
 	
 	@Override
 	void init() {
@@ -88,9 +85,6 @@ public class MarketCanvas extends DoubleBufferedCanvas {
 		Graphics2D g = (Graphics2D) graphics;
 		selectedScene.drawSelf(g);
 	}
-	
-	@Override
-	protected void updateVars() {}
 	
 	@Override
 	protected void processInputs() {

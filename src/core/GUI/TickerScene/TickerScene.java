@@ -11,15 +11,27 @@ import core.GUI.Scene;
 import core.actors.Player;
 import core.commodities.Commodity;
 
+/**
+ * {@link Scene} that holds the objects in the ticker scene,
+ * which is the main scene
+ * @author Sam Maynard
+ *
+ */
 public class TickerScene extends Scene implements Listener {
 	
-	public TickerScene(int width, int height, List<Commodity> list, Player player, MarketSimulation sim, Listener listener) {
+	/**
+	 * constructor
+	 * @param commodities list of commodities that will be shown as graphs
+	 * @param player player object who's inventory will be shown
+	 * @param sim sim object where timer is pulled from
+	 */
+	public TickerScene(int width, int height, List<Commodity> commodities, Player player, MarketSimulation sim, Listener listener) {
 		super(listener);
 		
-		Key key = new Key(0, 0, width, 40, list);
+		Key key = new Key(0, 0, width, 40, commodities);
 		graphicalObjects.add(key);
 		
-		Inventory inventory = new Inventory(0, height - 150, width, 150, list, player);
+		Inventory inventory = new Inventory(0, height - 150, width, 150, commodities, player);
 		graphicalObjects.add(inventory);
 		
 		GenericButton makeOfferButton = new GenericButton(width - 250, height - 125, 220, 50, new Color(.31f, .84f, .92f), "MAKE OFFER", "MakeOffer", this);
@@ -27,7 +39,7 @@ public class TickerScene extends Scene implements Listener {
 		graphicalObjects.add(makeOfferButton);
 		graphicalObjects.add(viewMarketButton);
 		
-		LinkedList<Graph> graphs = createGraphs(width, list, 200);
+		LinkedList<Graph> graphs = createGraphs(width, commodities, 200);
 		for(Graph graph : graphs)
 			graphicalObjects.add(graph);
 		

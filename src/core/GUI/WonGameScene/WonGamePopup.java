@@ -8,9 +8,16 @@ import java.awt.geom.RoundRectangle2D;
 
 import core.GUI.GraphicalObject;
 
-
+/**
+ * Object containing the won game message
+ * @author Sam Maynard
+ *
+ */
 public class WonGamePopup extends GraphicalObject {
 	
+	/**
+	 * constructor
+	 */
 	public WonGamePopup(int x, int y, int width, int height) {
 		super(x, y, width, height);
 	}

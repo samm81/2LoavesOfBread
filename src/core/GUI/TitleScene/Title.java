@@ -9,11 +9,18 @@ import java.awt.geom.Rectangle2D;
 import core.GUI.GraphicalObject;
 import core.GUI.Listener;
 
-
+/**
+ * Text displayed at the title screen
+ * @author Sam Maynard
+ *
+ */
 public class Title extends GraphicalObject {
 
 	Listener listener;
 	
+	/**
+	 * constructor
+	 */
 	public Title(int x, int y, int width, int height, Listener listener) {
 		super(x, y, width, height);
 		this.listener = listener;

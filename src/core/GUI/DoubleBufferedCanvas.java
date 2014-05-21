@@ -16,6 +16,7 @@ import java.util.LinkedList;
 @SuppressWarnings("serial")
 public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, Listener {
 	
+	// thread that runs the graphics
 	protected Thread thread;
 	
 	protected int fps;
@@ -44,8 +45,8 @@ public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, L
 	/**
 	 * constructor
 	 *
-	 * @param fps                        frames per second to run the canvas at
-	 * @param fpsCounterUpdatesPerSecond number of times per second to update the FPS counter
+	 * @param fps frames per second to run the canvas at, 0 to run as fast as possible
+	 * @param fpsCounterUpdatesPerSecond number of times per second to update the FPS counter per second
 	 */
 	public DoubleBufferedCanvas(int fps, float fpsCounterUpdatesPerSecond) {
 		super();
@@ -78,7 +79,6 @@ public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, L
 		
 		// now with a custom tolerance system
 		addMouseListener(new MouseAdapter() {
-			
 			int x;
 			int y;
 			MouseEvent e;
@@ -105,7 +105,7 @@ public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, L
 	}
 	
 	/**
-	 * Checks if the given key is pressed.
+	 * Checks if the given key is pressed
 	 *
 	 * @param keyEvent key to check
 	 * @return true if the key is being pressed, false otherwise
@@ -126,7 +126,7 @@ public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, L
 	/**
 	 * returns the key press queue and clears it
 	 *
-	 * @return key press queue with all KeyEvents that have occured
+	 * @return key press queue with all KeyEvents that have occurred
 	 */
 	public LinkedList<KeyEvent> flushKeystrokeQueue() {
 		LinkedList<KeyEvent> keyPresses = new LinkedList<>();
@@ -188,7 +188,7 @@ public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, L
 	}
 	
 	/**
-	 * resets the buffer
+	 * resets the image buffer
 	 */
 	private void resetBuffer() {
 		bufferWidth = this.getWidth();
@@ -208,7 +208,7 @@ public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, L
 	}
 	
 	/**
-	 * actually draws the image
+	 * drawing of the image
 	 *
 	 * @param g graphics to draw with
 	 */
@@ -222,7 +222,6 @@ public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, L
 				long diff = time - lastTime;
 				
 				if(diff > pauseTime) {
-					updateVars();
 					repaint();
 					lastTime = time;
 				}
@@ -238,11 +237,6 @@ public abstract class DoubleBufferedCanvas extends Canvas implements Runnable, L
 	public void start() {
 		thread.start();
 	}
-	
-	/**
-	 * for any global variable updating that may need to be done
-	 */
-	abstract protected void updateVars();
 	
 	/**
 	 * allows for the processing of mouse clicks and key presses

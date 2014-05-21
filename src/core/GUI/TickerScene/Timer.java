@@ -9,10 +9,19 @@ import java.awt.geom.Rectangle2D;
 import core.MarketSimulation;
 import core.GUI.GraphicalObject;
 
+/**
+ * Shows the time remaining
+ * @author Sam Maynard
+ *
+ */
 public class Timer extends GraphicalObject {
 	
 	MarketSimulation sim;
 	
+	/**
+	 * constructor
+	 * @param sim the {@link MarketSimulation} that has the timer data
+	 */
 	public Timer(int x, int y, int width, int height, MarketSimulation sim) {
 		super(x, y, width, height);
 		this.sim = sim;

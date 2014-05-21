@@ -9,9 +9,16 @@ import java.awt.geom.RoundRectangle2D;
 import core.GUI.Button;
 import core.GUI.Listener;
 
-
+/**
+ * Button that allows for a restart of game
+ * @author Sam Maynard
+ *
+ */
 public class RestartButton extends Button {
 	
+	/**
+	 * constructor
+	 */
 	public RestartButton(int x, int y, int width, int height, Listener listener) {
 		super(x, y, width, height, Color.WHITE, "Restart?", "Restart", listener);
 	}

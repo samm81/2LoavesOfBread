@@ -7,7 +7,7 @@ import java.awt.geom.RoundRectangle2D;
 
 /**
  * Class that holds the graphical representation of a commodity and
- * it's tickers.
+ * its tickers.
  *
  * @author Sam Maynard
  */
@@ -15,6 +15,14 @@ public class Graph extends GraphicalObject {
 
     private Commodity commodity;
 
+    /**
+     * constructor
+     * @param x x position of the top left corner
+     * @param y y position of the top left corner
+     * @param width width of the graph
+     * @param height height of the graph
+     * @param commodity commodity to graph
+     */
     public Graph(int x, int y, int width, int height, Commodity commodity) {
         super(x, y, width, height);
         this.commodity = commodity;

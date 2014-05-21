@@ -10,12 +10,19 @@ import java.awt.event.MouseEvent;
 import core.GUI.Button;
 import core.GUI.Listener;
 
-
+/**
+ * Checkbox to allow the user to filter offers
+ * @author Sam Maynard
+ *
+ */
 public class FilterCheckbox extends Button {
 
 	private boolean checked = true;
 	private int checkedSquareOffest = 6;
 	
+	/**
+	 * constructor
+	 */
 	public FilterCheckbox(int x, int y, int size, Listener listener) {
 		super(x, y, size, size, Color.WHITE, "acceptable offers at top", "Filter", listener);
 	}

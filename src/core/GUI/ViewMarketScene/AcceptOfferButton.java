@@ -9,9 +9,16 @@ import java.awt.geom.RoundRectangle2D;
 import core.GUI.Button;
 import core.GUI.Listener;
 
-
+/**
+ * Button to allow accepting offers
+ * @author Sam Maynard
+ *
+ */
 public class AcceptOfferButton extends Button {
 	
+	/**
+	 * constructor
+	 */
 	public AcceptOfferButton(int x, int y, int width, int height, Color backgroundColor, Listener listener) {
 		super(x, y, width, height, backgroundColor, "ACCEPT", "AcceptOffer", listener);
 	}

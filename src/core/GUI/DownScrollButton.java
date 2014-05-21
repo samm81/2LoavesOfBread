@@ -6,10 +6,18 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 
+/**
+ * Button to scroll down
+ * @author Sam Maynard
+ *
+ */
 public class DownScrollButton extends Button {
 	
 	Polygon arrow;
 	
+	/**
+	 * See Button
+	 */
 	public DownScrollButton(int x, int y, int width, int height, Color backgroundColor, Listener listener) {
 		super(x, y, width, height, backgroundColor, "", "ScrollDown", listener);
 		arrow = new Polygon();

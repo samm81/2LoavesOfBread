@@ -15,6 +15,11 @@ import core.actors.Player;
 import core.channels.OfferChannel;
 import core.commodities.Commodity;
 
+/**
+ * Class that holds all of the game's elements
+ * @author Sam Maynard
+ *
+ */
 public class Game extends TickableThread {
 	
 	final double dt = 2d;
@@ -35,6 +40,9 @@ public class Game extends TickableThread {
 	
 	private boolean won = false;
 	
+	/**
+	 * constructor
+	 */
 	public Game() {
 		super(1);
 		initializeObjects();
@@ -44,6 +52,9 @@ public class Game extends TickableThread {
 		r = new Random();
 	}
 	
+	/**
+	 * initializes all of the game's objects
+	 */
 	private void initializeObjects() {
 		commodities = new LinkedList<Commodity>();
 		for(Commodity item : Commodity.values())
@@ -84,6 +95,9 @@ public class Game extends TickableThread {
 		return this.marketCanvas;
 	}
 	
+	/**
+	 * starts the game
+	 */
 	public void play() {
 		this.start();
 	}
@@ -121,6 +135,11 @@ public class Game extends TickableThread {
 		}
 	}
 	
+	/**
+	 * removes all the items save one of a commodity from each actor's inventory
+	 * (besides the player's)
+	 * @param commodity commodity to remove
+	 */
 	private void crashCommodity(Commodity commodity) {
 		for(Actor actor : actors) {
 			if(!(actor instanceof Player) && actor.getCommodityVolume(commodity) > 1)

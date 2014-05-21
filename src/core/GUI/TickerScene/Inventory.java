@@ -26,6 +26,11 @@ public class Inventory extends GraphicalObject {
     List<Commodity> commodities;
     Player player;
 
+    /**
+     * constructor
+     * @param commodities list of commodities to be displayed
+     * @param player player object containing inventory data
+     */
     public Inventory(int x, int y, int width, int height, List<Commodity> commodities, Player player) {
         super(x, y, width, height);
         this.commodities = commodities;

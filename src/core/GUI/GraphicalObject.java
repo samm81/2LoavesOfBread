@@ -14,6 +14,13 @@ public abstract class GraphicalObject implements Clickable {
 	protected int height;
 	Shape shape;
 	
+	/**
+	 * constructor
+	 * @param x x position of upper left corner
+	 * @param y y position of upper left corner
+	 * @param width width of the object
+	 * @param height height of the object
+	 */
 	public GraphicalObject(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;
@@ -25,11 +32,11 @@ public abstract class GraphicalObject implements Clickable {
 	/**
 	 * Returns the specific shape that this GraphicalObject has
 	 *
-	 * @param x      x coordinate of the shape
-	 * @param y      y coordinate of the shape
-	 * @param width  width of the shape
+	 * @param x x coordinate of the shape
+	 * @param y y coordinate of the shape
+	 * @param width width of the shape
 	 * @param height height of the shape
-	 * @return Shape of this particular GraphicalObject
+	 * @return Shape shape of this particular GraphicalObject
 	 */
 	protected abstract Shape makeShape(int x, int y, int width, int height);
 	
@@ -45,6 +52,12 @@ public abstract class GraphicalObject implements Clickable {
 		return shape.contains(x, y);
 	}
 	
+	/**
+	 * Draws an outline of the graphical object
+	 * @param backgroundColor the color to fill in the outline with
+	 * @param outlineOffset the thickness of the outline
+	 * @param g graphics object to draw with
+	 */
 	protected void drawOutline(Color backgroundColor, int outlineOffset, Graphics2D g) {
 		g.setColor(BLACK);
 		g.fill(shape);
@@ -52,23 +65,10 @@ public abstract class GraphicalObject implements Clickable {
 		g.fill(makeShape(x + outlineOffset, y + outlineOffset, width - outlineOffset * 2, height - outlineOffset * 2));
 	}
 	
-	/**
-	 * Draws a rounded rectangle with a white inside and black border
-	 * based on the shape of the GraphicalObject
-	 *
-	 * @param backgroundColor background color to fill the outline with
-	 * @param g               Graphics2D object to do the drawing with
-	 */
 	protected void drawOutline(Color backgroundColor, Graphics2D g) {
 		drawOutline(backgroundColor, 3, g);
 	}
 	
-	/**
-	 * Draws a rounded rectangle with a white inside and black border
-	 * based on the shape of the GraphicalObject
-	 *
-	 * @param g Graphics2D object to do the drawing with
-	 */
 	protected void drawOutline(Graphics2D g) {
 		drawOutline(Color.WHITE, g);//new Color(0.17254902f, 0.17254902f, 0.17254902f, 1.0f), g);
 	}
@@ -77,8 +77,7 @@ public abstract class GraphicalObject implements Clickable {
 	public void clicked(MouseEvent click) {}
 	
 	/**
-	 * Allows the GraphicalObject to manipulate keyboard input
-	 *
+	 * Allows the GraphicalObject to manipulate keyboard input, if it wants
 	 * @param keystroke the KeyEvent of a key press
 	 */
 	public void keyPressed(KeyEvent keystroke) {}
