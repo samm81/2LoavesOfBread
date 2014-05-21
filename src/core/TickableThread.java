@@ -16,6 +16,10 @@ public abstract class TickableThread implements Runnable {
 	
 	Thread thread;
 	
+	/**
+	 * constructor
+	 * @param dt how often to tick
+	 */
 	public TickableThread(double dt) {
 		super();
 		this.dt = dt;
@@ -25,6 +29,9 @@ public abstract class TickableThread implements Runnable {
 		this.thread = new Thread(this);
 	}
 	
+	/**
+	 * starts the thread
+	 */
 	public void start() {
 		initialize();
 		time = System.currentTimeMillis();
@@ -49,8 +56,14 @@ public abstract class TickableThread implements Runnable {
 		}
 	}
 	
+	/**
+	 * allows for initialization of variables before the first tick
+	 */
 	protected abstract void initialize();
 	
+	/**
+	 * runs every dt
+	 */
 	protected abstract void tick();
 	
 }

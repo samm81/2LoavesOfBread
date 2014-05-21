@@ -17,22 +17,32 @@ import java.util.concurrent.LinkedBlockingQueue;
  * The main simulation running the game. Contains all the data objects, and
  * is given to the canvas in order to draw the graphs.
  * 
- * @author Sam "Fabulous Hands" Maynard
+ * @author Sam Maynard
  */
 public class MarketSimulation extends TickableThread {
 	
-	protected Player player;
-	protected HashSet<Actor> actors;
-	protected List<Commodity> commodities;
-	protected LinkedBlockingQueue<Transaction> transactions;
-	protected OfferChannel offerChannel;
+	protected Player player; // player that is trading
+	protected HashSet<Actor> actors; // list of all actors (including player)
+	protected List<Commodity> commodities; // commodities of the simulation
+	protected LinkedBlockingQueue<Transaction> transactions; // list of global transactions
+	protected OfferChannel offerChannel; // the offer channel where offers are submitted
 	
 	protected double[][] totalexchange;
 	protected double[] totalmarketshare;
 	
-	private long timeLimit;
-	private long startTime;
+	private long timeLimit; // the time limit the player has
+	private long startTime; // the time the sim started
 	
+	/**
+	 * constructor
+	 * @param commodities commodities of the simulation
+	 * @param transactions list of global transactions
+	 * @param player player that is trading
+	 * @param actors list of all actors (including player)
+	 * @param offerChannel the offer channel where offers are submitted
+	 * @param timeLimit the time limit the player has
+	 * @param dt how often to tick
+	 */
 	public MarketSimulation(LinkedList<Commodity> commodities, LinkedBlockingQueue<Transaction> transactions, Player player, HashSet<Actor> actors, OfferChannel offerChannel, long timeLimit, double dt) {
 		super(dt);
 		this.actors = actors;
@@ -97,6 +107,7 @@ public class MarketSimulation extends TickableThread {
 		 * }
 		 */
 
+		/*
 		System.out.println("World total market share for each item: ");
 		for(int i = 0; i < totalexchange.length; i++) {
 			System.out.print(commodities.get(i).name().charAt(0) + ": " + totalmarketshare[i] + " ");
@@ -118,6 +129,7 @@ public class MarketSimulation extends TickableThread {
 			}
 			System.out.print("\n");
 		}
+		*/
 		
 		// updates the tickers with the most recent ratio
 		for(Commodity commodity : this.commodities) { // go through all the commodities

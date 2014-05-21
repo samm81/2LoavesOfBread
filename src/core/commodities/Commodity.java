@@ -25,8 +25,12 @@ public enum Commodity {
 	HashMap<Commodity, LinkedBlockingQueue<Double>> mostRecentRatios; // the most recent trade ratio for each other commodity
 	Color color; // the commodity's color
 	
-	HashMap<Commodity, Double> lastAverages;
+	HashMap<Commodity, Double> lastAverages; // for each other commodity, what average rate has it been trading at
 	
+	/**
+	 * constructor
+	 * @param color the color of the commodity
+	 */
 	private Commodity(Color color) {
 		this.transactions = new LinkedBlockingQueue<>();
 		this.tickers = new HashMap<>();
@@ -57,6 +61,11 @@ public enum Commodity {
 		this.mostRecentRatios.get(commodity).clear();
 	}
 	
+	/**
+	 * returns the average ratio from this commodity to a commodity
+	 * @param commodity commodity to check ratio for
+	 * @return the average ratio from this commodity to a commodity
+	 */
 	public double getAverageRatio(Commodity commodity) {
 		double average = 0;
 		LinkedBlockingQueue<Double> datum = getMostRecentRatios(commodity);
@@ -68,6 +77,11 @@ public enum Commodity {
 		return average;
 	}
 	
+	/**
+	 * returns the average that happened before the most recent one
+	 * @param commodity  commodity to check ratio for
+	 * @return the average that happened before the most recent one
+	 */
 	public double getLastAverage(Commodity commodity) {
 		return this.lastAverages.get(commodity);
 	}
@@ -79,7 +93,7 @@ public enum Commodity {
 	/**
 	 * Fills this commodities tickers with new tickers,
 	 * one for every commodity given (besides itself)
-	 *  @param commodities     the commodities to create tickers from
+	 * @param commodities the commodities to create tickers from
 	 * @param tickerMagnitude the number of offers the ticker shows
 	 */
 	public void createTickersFromCommodities(List<Commodity> commodities, int tickerMagnitude) {
