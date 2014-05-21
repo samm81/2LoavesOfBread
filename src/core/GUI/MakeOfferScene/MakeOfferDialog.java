@@ -2,6 +2,8 @@ package core.GUI.MakeOfferScene;
 
 import core.GUI.GraphicalObject;
 import core.GUI.Listener;
+import core.GUI.NumericInput;
+import core.GUI.SelectInput;
 import core.commodities.Commodity;
 
 import java.awt.*;
@@ -31,6 +33,10 @@ public class MakeOfferDialog extends GraphicalObject {
 	
 	Listener listener;
 	
+	/**
+	 * constructor
+	 * @param commodities list of commodities that offers can be made for
+	 */
 	public MakeOfferDialog(int x, int y, int width, int height, Listener listener, List<Commodity> commodities) {
 		super(x, y, width, height);
 		this.commodities = commodities;

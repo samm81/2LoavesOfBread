@@ -12,7 +12,12 @@ import core.GUI.TickerScene.TickerScene;
 import core.actors.Player;
 import core.channels.OfferChannel;
 
-
+/**
+ * {@link Scene} that contains all the objects for the
+ * ViewMarketScene
+ * @author Sam Maynard
+ *
+ */
 public class ViewMarketScene extends Scene implements Listener {
 	
 	TickerScene tickerScene;
@@ -20,6 +25,12 @@ public class ViewMarketScene extends Scene implements Listener {
 	UpScrollButton upScroll;
 	DownScrollButton downScroll;
 	
+	/**
+	 * constructor
+	 * @param offerChannel offer channel where the offers are posted to
+	 * @param player player to accept offers
+	 * @param tickerScene scene underlying the viewmarketscene
+	 */
 	public ViewMarketScene(int width, int height, OfferChannel offerChannel, Player player, TickerScene tickerScene, Listener listener) {
 		super(listener);
 		this.tickerScene = tickerScene;

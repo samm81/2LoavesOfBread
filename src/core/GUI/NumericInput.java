@@ -1,6 +1,4 @@
-package core.GUI.MakeOfferScene;
-
-import core.GUI.GraphicalObject;
+package core.GUI;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -9,6 +7,11 @@ import java.awt.event.MouseEvent;
 import static java.awt.Color.BLACK;
 import static java.awt.event.KeyEvent.VK_BACK_SPACE;
 
+/**
+ * Object that allows the user to enter numeric input
+ * @author Sam Maynard
+ *
+ */
 public class NumericInput extends GraphicalObject {
 	
 	private String underscores = "";
@@ -22,6 +25,10 @@ public class NumericInput extends GraphicalObject {
 	private long blink = 450;
 	private boolean drawingCursor = true;
 	
+	/**
+	 * constructor
+	 * @param inputChars number of characters to allowed to be inputted
+	 */
 	public NumericInput(int x, int y, int width, int height, int inputChars) {
 		super(x, y, width, height);
 		input = new char[inputChars];
@@ -39,6 +46,10 @@ public class NumericInput extends GraphicalObject {
 		this.focused = focused;
 	}
 	
+	/**
+	 * tries to get the current user input as an int
+	 * @return the user's input as an int
+	 */
 	public Integer getInput() {
 		Integer num = null;
 		try {

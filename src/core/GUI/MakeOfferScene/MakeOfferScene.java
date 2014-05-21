@@ -13,6 +13,11 @@ import core.GUI.TickerScene.TickerScene;
 import core.actors.Player;
 import core.commodities.Commodity;
 
+/**
+ * {@link Scene} that holds the make offer dialog
+ * @author Sam Maynard
+ *
+ */
 public class MakeOfferScene extends Scene implements Listener {
 	
 	Player player;
@@ -20,6 +25,12 @@ public class MakeOfferScene extends Scene implements Listener {
 	MakeOfferDialog makeOfferPopup;
 	GoButton goButton;
 	
+	/**
+	 * constructor
+	 * @param commodities commodities that can be traded
+	 * @param player player that is trading
+	 * @param tickerScene scene that is underlying this one
+	 */
 	public MakeOfferScene(int width, int height, List<Commodity> commodities, Player player, TickerScene tickerScene, Listener listener) {
 		super(listener);
 		this.player = player;
@@ -42,7 +53,10 @@ public class MakeOfferScene extends Scene implements Listener {
 		this.goButton = goButton;
 	}
 	
-	public Transaction getSubmittedTransaction() {
+	/**
+	 * @return the transaction that the player has submitted
+	 */
+	private Transaction getSubmittedTransaction() {
 		Commodity commodity1 = makeOfferPopup.getCommodity1();
 		Commodity commodity2 = makeOfferPopup.getCommodity2();
 		Integer volume1 = makeOfferPopup.getVolume1();

@@ -8,13 +8,22 @@ import core.GUI.Scene;
 import core.GUI.TransparencyOverlay;
 import core.commodities.Commodity;
 
-
+/**
+ * {@link Scene} that contains the commodity crash message
+ * @author Sam Maynard
+ *
+ */
 public class CommodityCrashScene extends Scene implements Listener {
 
 	Scene underlyingScene;
 	
 	Commodity commodity;
 	
+	/**
+	 * constructor
+	 * @param commodity commodity that has crashed
+	 * @param scene scene underlying the message
+	 */
 	public CommodityCrashScene(int width, int height, Commodity commodity, Scene scene, Listener listener) {
 		super(listener);
 		this.underlyingScene = scene;

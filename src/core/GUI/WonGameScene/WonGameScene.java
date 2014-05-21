@@ -6,9 +6,16 @@ import core.GUI.Listener;
 import core.GUI.Scene;
 import core.GUI.TransparencyOverlay;
 
-
+/**
+ * {@link Scene} to hold the won game message
+ * @author samwm_000
+ *
+ */
 public class WonGameScene extends Scene implements Listener {
 
+	/**
+	 * constructor
+	 */
 	public WonGameScene(int width, int height, Listener listener) {
 		super(listener);
 		

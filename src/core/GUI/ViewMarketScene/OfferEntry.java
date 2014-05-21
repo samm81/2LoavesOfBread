@@ -12,12 +12,21 @@ import core.GUI.GraphicalObject;
 import core.GUI.Listener;
 import core.commodities.Commodity;
 
+/**
+ * Class that displays a single offer listing
+ * @author Sam Maynard
+ *
+ */
 public class OfferEntry extends GraphicalObject implements Listener {
 	
 	private Offer offer;
 	private Listener listener;
 	private AcceptOfferButton acceptOfferButton;
 	
+	/**
+	 * constructor
+	 * @param offer offer being displayed
+	 */
 	public OfferEntry(int x, int y, int width, int height, boolean acceptable, Offer offer, Listener listener) {
 		super(x, y, width, height);
 		this.offer = offer;

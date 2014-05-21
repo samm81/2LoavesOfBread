@@ -8,8 +8,17 @@ import java.awt.geom.Rectangle2D;
 import core.GUI.Button;
 import core.GUI.Listener;
 
+/**
+ * Button for play text
+ * @author Sam Maynard
+ *
+ */
 public class PlayButton extends Button {
 	
+	/**
+	 * constructor
+	 * @see Button
+	 */
 	public PlayButton(int x, int y, int width, int height, Listener listener) {
 		super(x, y, width, height, Color.WHITE, "", "Play", listener);
 	}

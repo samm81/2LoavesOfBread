@@ -12,8 +12,17 @@ import java.awt.geom.RoundRectangle2D;
 import core.GUI.Button;
 import core.GUI.Listener;
 
+/**
+ * A generic button fulfilling the implementation of the abstract {@link Button}
+ * @author samwm_000
+ *
+ */
 public class GenericButton extends Button {
 	
+	/**
+	 * constructor
+	 * @see Button
+	 */
 	public GenericButton(int x, int y, int width, int height, Color backgroundColor, String text, String message, Listener listener) {
 		super(x, y, width, height, backgroundColor, text, message, listener);
 	}

@@ -18,6 +18,10 @@ public class Key extends GraphicalObject {
 
     List<Commodity> commodities;
 
+    /**
+     * constructor
+     * @param commodities list of commodities to display on the key
+     */
     public Key(int x, int y, int width, int height, List<Commodity> commodities) {
         super(x, y, width, height);
         this.commodities = commodities;

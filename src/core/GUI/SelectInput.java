@@ -1,10 +1,9 @@
-package core.GUI.MakeOfferScene;
+package core.GUI;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
-import core.GUI.GraphicalObject;
 import static java.awt.Color.RED;
 
 

@@ -3,7 +3,11 @@ package core.GUI.EndGameScene;
 import core.GUI.Listener;
 import core.GUI.Scene;
 
-
+/**
+ * {@link Scene} that contains the end game message
+ * @author Sam Maynard
+ *
+ */
 public class EndGameScene extends Scene implements Listener {
 
 	public EndGameScene(Listener listener) {
